@@ -85,7 +85,6 @@ public class CustomFeedTailView extends View {
         mPaint = new Paint();
         mLeftRect = new Rect();
         mTextRect = new Rect();
-        mLeftRect = new Rect();
         mRightRect = new Rect();
         mTextBound = new Rect();
         mPaint.setTextSize(mTitleSize);
@@ -131,31 +130,53 @@ public class CustomFeedTailView extends View {
         canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), mPaint);
 
         // draw left icon
-        mLeftRect.left = getPaddingLeft();
-        mLeftRect.top = mHeight / 2 - mLeftIcon.getHeight() / 2;
-        mLeftRect.right = mLeftRect.left + mLeftIcon.getWidth();
-        mLeftRect.bottom = mHeight / 2 + mLeftIcon.getHeight() / 2;
+        if (mLeftIcon.getHeight() > mHeight) {
+            mLeftRect.left = getPaddingLeft();
+            mLeftRect.top = getPaddingTop();
+            mLeftRect.right = mHeight + getPaddingLeft();
+            mLeftRect.bottom = mHeight - getPaddingBottom();
+        } else {
+            mLeftRect.left = getPaddingLeft();
+            mLeftRect.top = mHeight / 2 - mLeftIcon.getHeight() / 2;
+            mLeftRect.right = mLeftRect.left + mLeftIcon.getWidth();
+            mLeftRect.bottom = mHeight / 2 + mLeftIcon.getHeight() / 2;
+        }
         canvas.drawBitmap(mLeftIcon, null, mLeftRect, mPaint);
 
         // draw right icon
-        mRightRect.left = mWidth - getPaddingRight() - mRightIcon.getWidth();
-        mRightRect.top = mHeight / 2 - mRightIcon.getHeight() / 2;
-        mRightRect.right = mWidth - getPaddingRight();
-        mRightRect.bottom = mHeight / 2 + mRightIcon.getHeight() / 2;
+        if (mRightIcon.getHeight() > mHeight) {
+            mRightRect.left = mWidth - getPaddingRight() - mHeight;
+            mRightRect.top = getPaddingTop();
+            mRightRect.right = mWidth - getPaddingRight();
+            mRightRect.bottom = mHeight - getPaddingBottom();
+        } else {
+            mRightRect.left = mWidth - getPaddingRight() - mRightIcon.getWidth();
+            mRightRect.top = mHeight / 2 - mRightIcon.getHeight() / 2;
+            mRightRect.right = mWidth - getPaddingRight();
+            mRightRect.bottom = mHeight / 2 + mRightIcon.getHeight() / 2;
+        }
         canvas.drawBitmap(mRightIcon, null, mRightRect, mPaint);
 
         // draw text
         mTextRect.left = mLeftRect.right;
-        mTextRect.top = mHeight / 2 - mTextBound.width() / 2;
+        mTextRect.top = mHeight / 2 - mTextBound.height() / 2;
         mTextRect.right = mRightRect.left;
         mTextRect.bottom = mHeight / 2 + mTextBound.height() / 2;
-
-        int textResidueWidth = mWidth - mLeftIcon.getWidth() - mRightIcon.getWidth() - getPaddingLeft() - getPaddingRight();
-
+        int textResidueWidth = mWidth - mLeftRect.width() - mRightRect.width() - getPaddingLeft() - getPaddingRight();
         if (mTextBound.width() > textResidueWidth) {
             mTitle = TextUtils.ellipsize(mTitle, mTextPaint, (float) textResidueWidth,
                     TextUtils.TruncateAt.END).toString();
         }
-        canvas.drawText(mTitle, mLeftRect.right, mHeight / 2f + mTextBound.height() / 2f, mPaint);
+//        canvas.drawRect(mTextRect, mPaint);
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setColor(Color.BLACK);
+        canvas.drawText(mTitle, mTextRect.left, getBaseLine(), mPaint);
     }
+
+    // 中文垂直居中
+    private int getBaseLine() {
+        Paint.FontMetricsInt fontMetrics = mPaint.getFontMetricsInt();
+        return (mTextRect.bottom + mTextRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
+    }
+
 }

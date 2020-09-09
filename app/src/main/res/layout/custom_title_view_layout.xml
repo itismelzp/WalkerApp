@@ -30,13 +30,13 @@
 
     <com.demo.customview.view.CustomFeedTailView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginTop="10dp"
         custom:layout_constraintTop_toBottomOf="@+id/custome_image_view"
         custom:leftImage="@drawable/qcircle_icon"
         custom:rightImage="@drawable/qcircle_recommend_more_icon"
         custom:titleText="来至小世界：我不抽烟的内容"
         custom:titleTextColor="#00ff00"
-        custom:titleTextSize="20sp" />
+        custom:titleTextSize="16sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,6 +30,7 @@ public class CustomFeedTailView extends View {
 
     private Bitmap mLeftIcon;
     private Bitmap mRightIcon;
+    private Bitmap mBackGround;
     private String mTitle;
     private int mTitleColor;
     private int mTitleSize;
@@ -75,6 +76,8 @@ public class CustomFeedTailView extends View {
                     int defSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                             16, getResources().getDisplayMetrics());
                     mTitleSize = array.getDimensionPixelSize(attr, defSize);
+                case R.styleable.CustomFeedTailView_background:
+//                    mBackGround = BitmapFactory.decodeResource(getResources(), array.getResourceId(attr, 0));
                     break;
                 default:
                     break;

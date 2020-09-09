@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,34 +9,61 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        custom:layout_constraintLeft_toLeftOf="parent"
-        custom:layout_constraintTop_toTopOf="parent"
-        custom:titleText="1218"
-        custom:titleTextColor="#ff0000"
-        custom:titleTextSize="40sp" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="1218"
+        app:titleTextColor="#ff0000"
+        app:titleTextSize="40sp" />
 
     <com.demo.customview.view.CustomImageView
         android:id="@+id/custome_image_view"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="10dp"
-        custom:image="@drawable/zhaoyun"
-        custom:imageScaleType="fillXY"
-        custom:layout_constraintLeft_toLeftOf="parent"
-        custom:layout_constraintTop_toBottomOf="@+id/custom_titile_view"
-        custom:titleText="walker"
-        custom:titleTextColor="#00ff00"
-        custom:titleTextSize="20sp" />
+        app:image="@drawable/zhaoyun"
+        app:imageScaleType="fillXY"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/custom_titile_view"
+        app:titleText="walker"
+        app:titleTextColor="#00ff00"
+        app:titleTextSize="20sp" />
 
     <com.demo.customview.view.CustomFeedTailView
+        android:id="@+id/custom_feed_tail_view"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
-        custom:layout_constraintTop_toBottomOf="@+id/custome_image_view"
-        custom:leftImage="@drawable/qcircle_icon"
-        custom:rightImage="@drawable/qcircle_recommend_more_icon"
-        custom:titleText="来至小世界：我不抽烟的内容"
-        custom:titleTextColor="#00ff00"
-        custom:titleTextSize="16sp" />
+        android:background="@drawable/qzone_feed_qcircle_tail_bg"
+        app:layout_constraintTop_toBottomOf="@+id/custome_image_view"
+        app:leftImage="@drawable/qcircle_icon"
+        app:rightImage="@drawable/qcircle_recommend_more_icon"
+        app:titleText="来至小世界：我不抽烟的内容"
+        app:titleTextColor="#00ff00"
+        app:titleTextSize="16sp" />
+
+    <com.demo.customview.view.CustomProgressBar
+        android:id="@+id/custom_progress_bar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:circleWidth="30dp"
+        app:firstColor="#D4F668"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:secondColor="#2F9DD2"
+        app:speed="50" />
+
+    <com.demo.customview.view.CustomVolumeControlBar
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/zhaoyun"
+        app:circleWidth="30dp"
+        app:dotCount="15"
+        app:firstColor="#D4F668"
+        app:layout_constraintLeft_toRightOf="@+id/custom_progress_bar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:secondColor="#2F9DD2"
+        app:splitSize="10" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

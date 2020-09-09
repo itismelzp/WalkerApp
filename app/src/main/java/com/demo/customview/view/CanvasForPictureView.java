@@ -1,4 +1,4 @@
-package com.demo.customview;
+package com.demo.customview.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,6 +13,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import com.demo.customview.R;
 
 /**
  * Created by walkerzpli on 2020-07-09.

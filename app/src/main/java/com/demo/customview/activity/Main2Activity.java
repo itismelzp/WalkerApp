@@ -1,7 +1,8 @@
-package com.demo.customview;
+package com.demo.customview.activity;
 
 import android.os.Bundle;
 
+import com.demo.customview.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 

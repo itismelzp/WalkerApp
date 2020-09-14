@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Shader;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -42,7 +41,7 @@ public class CustomFeedTailView extends View {
     private String mTitle;
     private int mTitleColor;
     private int mTitleSize;
-    private RectF mRect;
+    private Rect mRect;
     private Rect mLeftIconRect, mTextRect, mRightTextRect, mRightIconRect;
     private Rect mTextBound, mRightTextRound;
 
@@ -115,7 +114,7 @@ public class CustomFeedTailView extends View {
         mPaint = new Paint();
         mGradientPaint = new Paint();
 
-        mRect = new RectF(); // 整个view的边框
+        mRect = new Rect(); // 整个view的边框
         mLeftIconRect = new Rect();
         mTextRect = new Rect();
         mRightTextRect = new Rect();
@@ -160,6 +159,20 @@ public class CustomFeedTailView extends View {
         super.onDraw(canvas);
 
         // draw bg
+        initBackGround(canvas, mPaint);
+        // draw left icon
+        initLeftIcon(canvas, mPaint);
+        // draw right icon
+        initRightIcon(canvas, mPaint);
+        // draw right text
+        initRightText(canvas, mTextPaint);
+        // draw text
+        initText(canvas, mTextPaint);
+
+//        drawProgress(canvas); // 进度条
+    }
+
+    private void initBackGround(Canvas canvas, Paint paint) {
         if (mGradient == null) {
             mGradient = new LinearGradient(0, 0, mWidth, mHeight,
                     new int[]{Color.parseColor("#DFE4FF"), Color.parseColor("#FFF0FF"), Color.parseColor("#FFEEED")},
@@ -167,76 +180,87 @@ public class CustomFeedTailView extends View {
                     Shader.TileMode.CLAMP);
         }
         mGradientPaint.setShader(mGradient);
-        canvas.drawRect(0, 0, mWidth, mHeight, mGradientPaint);
-        // draw rect
-        mPaint.setStrokeWidth(4);
-        mPaint.setStyle(Paint.Style.STROKE);
-//        mPaint.setColor(Color.RED);
-//        canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), mPaint);
+        mRect.set(0, 0, mWidth, mHeight);
+        canvas.drawRect(mRect, mGradientPaint);
+//        drawRectByColor(canvas, paint, mRect, Color.parseColor("#55FF0000"));
+    }
 
-        // draw left icon
+    private void initLeftIcon(Canvas canvas, Paint paint) {
         if (mLeftIconSize > mHeight) {
             mLeftIconRect.left = getPaddingLeft();
             mLeftIconRect.top = getPaddingTop();
             mLeftIconRect.right = mHeight + getPaddingLeft();
             mLeftIconRect.bottom = mHeight - getPaddingBottom();
         } else {
-            mLeftIconRect.left = getPaddingLeft();
+            mLeftIconRect.left = getPaddingLeft() + ViewUtils.dpToPx(7);
             mLeftIconRect.top = mHeight / 2 - mLeftIconSize / 2;
             mLeftIconRect.right = mLeftIconRect.left + mLeftIconSize;
             mLeftIconRect.bottom = mHeight / 2 + mLeftIconSize / 2;
         }
         canvas.drawBitmap(mLeftIcon, null, mLeftIconRect, mPaint);
-        mPaint.setColor(Color.GREEN);
-//        canvas.drawRect(mLeftRect, mPaint);
+//        drawRectByColor(canvas, paint, mLeftIconRect, Color.parseColor("#5500FF00"));
+    }
 
-        // draw right icon
+    private void initRightIcon(Canvas canvas, Paint paint) {
         if (mRightIconSize > mHeight) {
             mRightIconRect.left = mWidth - getPaddingRight() - mHeight;
             mRightIconRect.top = getPaddingTop();
             mRightIconRect.right = mWidth - getPaddingRight();
             mRightIconRect.bottom = mHeight - getPaddingBottom();
         } else {
-            mRightIconRect.left = mWidth - getPaddingRight() - mRightIconSize;
+            mRightIconRect.left = mWidth - mRightIconSize - ViewUtils.dpToPx(6) - getPaddingRight();
             mRightIconRect.top = mHeight / 2 - mRightIconSize / 2;
-            mRightIconRect.right = mWidth - getPaddingRight();
+            mRightIconRect.right = mWidth - ViewUtils.dpToPx(6) - getPaddingRight();
             mRightIconRect.bottom = mHeight / 2 + mRightIconSize / 2;
         }
         canvas.drawBitmap(mRightIcon, null, mRightIconRect, mPaint);
+//        drawRectByColor(canvas, paint, mRightIconRect, Color.parseColor("#550000FF"));
+    }
 
-        // draw right text
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(Color.parseColor("#FF03081A"));
-        mPaint.setAntiAlias(true);
-        initRightText(canvas);
+    private void initRightText(Canvas canvas, Paint paint) {
+        // init paint
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setColor(Color.parseColor("#FF03081A"));
+        paint.setAntiAlias(true);
+        paint.setStrokeWidth(0.5f); // 控制字体加粗的程度
+        // draw text
+        mRightTextRect.left = mRightIconRect.left - mRightTextRound.width() - ViewUtils.dpToPx(6);
+        mRightTextRect.top = mHeight / 2 - mRightTextRound.height() / 2;
+        mRightTextRect.right = mRightIconRect.left - ViewUtils.dpToPx(6);
+        mRightTextRect.bottom = mHeight / 2 + mRightTextRound.height() / 2;
+        canvas.drawText(mRightText, mRightTextRect.left, getBaseLine(mRightTextRect, paint), paint);
+//        drawRectByColor(canvas, paint, mRightTextRect, Color.parseColor("#5500FF00"));
+    }
 
+    private void initText(Canvas canvas, Paint paint) {
+        // init paint
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setColor(Color.parseColor("#FF03081A"));
+        paint.setAntiAlias(true);
+        paint.setStrokeWidth(0.5f); // 控制字体加粗的程度
         // draw text
         mTextRect.left = mLeftIconRect.right + ViewUtils.dpToPx(7);
         mTextRect.top = mHeight / 2 - mTextBound.height() / 2;
-        mTextRect.right = mWidth - mRightTextRect.width() - mRightIconRect.width() - getPaddingRight();
+        mTextRect.right = mRightTextRect.left;
         mTextRect.bottom = mHeight / 2 + mTextBound.height() / 2;
         int textResidueWidth = mWidth - mLeftIconRect.width() - mRightIconRect.width() - mRightTextRect.width() - getPaddingLeft() - getPaddingRight();
         if (mTextBound.width() > textResidueWidth) {
             mTitle = TextUtils.ellipsize(mTitle, mTextPaint, (float) textResidueWidth,
                     TextUtils.TruncateAt.END).toString();
         }
-//        canvas.drawRect(mTextRect, mPaint);
-        canvas.drawText(mTitle, mTextRect.left, getBaseLine(mTextRect, mPaint), mPaint);
-
-//        drawProgress(canvas); // 进度条
+        canvas.drawText(mTitle, mTextRect.left, getBaseLine(mTextRect, paint), paint);
+//        drawRectByColor(canvas, paint, mTextRect, Color.parseColor("#550000FF"));
     }
 
-    private void initRightText(Canvas canvas) {
-        mRightTextRect.left = mRightIconRect.left - mRightTextRound.width();
-        mRightTextRect.top = mHeight / 2 - mRightTextRound.height() / 2;
-        mRightTextRect.right = mWidth - getPaddingRight() - mRightIconRect.width();
-        mRightTextRect.bottom = mHeight / 2 + mRightTextRound.height() / 2;
-        canvas.drawText(mRightText, mRightTextRect.left, getBaseLine(mRightTextRect, mPaint), mPaint);
+    private void drawRectByColor(Canvas canvas, Paint paint, Rect rect, int color) {
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setColor(color);
+        canvas.drawRect(rect, paint);
     }
 
     private void drawProgress(Canvas canvas) {
         mPaint.setColor(Color.parseColor("#55555555"));
-        mRect.set(0, 0, mWidth * mProgress, mHeight);
+        mRect.set(0, 0, (int) (mWidth * mProgress), mHeight);
         canvas.drawRect(mRect, mPaint);
         mProgress += 1f / mDurTime;
 
@@ -248,7 +272,7 @@ public class CustomFeedTailView extends View {
     // 中文垂直居中
     private int getBaseLine(Rect rect, Paint paint) {
         Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
-        return (rect.bottom + rect.top - fontMetrics.bottom - fontMetrics.top) / 2;
+        return (rect.bottom + rect.top - fontMetrics.bottom - fontMetrics.top - 2) / 2;
     }
 
 }

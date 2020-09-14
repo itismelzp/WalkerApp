@@ -6,9 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -18,6 +20,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.demo.customview.R;
+import com.demo.customview.utils.ViewUtils;
 
 /**
  * Created by walkerzpli on 2020/9/8.
@@ -27,22 +30,28 @@ public class CustomFeedTailView extends View {
     public static final String TAG = "CustomFeedTailView";
 
     private Paint mPaint;
+    private Paint mGradientPaint;
     private TextPaint mTextPaint;
 
     private Bitmap mLeftIcon;
+    private int mLeftIconSize;
+    private String mRightText;
     private Bitmap mRightIcon;
+    private int mRightIconSize;
     private Bitmap mBackGround;
     private String mTitle;
     private int mTitleColor;
     private int mTitleSize;
     private RectF mRect;
-    private Rect mLeftRect, mTextRect, mRightRect;
-    private Rect mTextBound;
+    private Rect mLeftIconRect, mTextRect, mRightTextRect, mRightIconRect;
+    private Rect mTextBound, mRightTextRound;
 
     private int mWidth, mHeight;
 
     private float mProgress = 0.f;
     private int mDurTime = 500; // ms
+
+    private LinearGradient mGradient = null;
 
     public CustomFeedTailView(Context context) {
         this(context, null);
@@ -54,6 +63,7 @@ public class CustomFeedTailView extends View {
 
     public CustomFeedTailView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        ViewUtils.initContext(context);
 
         TypedArray array = context
                 .getTheme()
@@ -61,15 +71,26 @@ public class CustomFeedTailView extends View {
         int cnt = array.getIndexCount();
         for (int i = 0; i < cnt; i++) {
             int attr = array.getIndex(i);
+            int defSize;
             switch (attr) {
-                case R.styleable.CustomFeedTailView_leftImage:
-                    BitmapFactory.Options opts = new BitmapFactory.Options();
-                    opts.outWidth = 10;
-                    opts.outHeight = 10;
-                    mLeftIcon = BitmapFactory.decodeResource(getResources(), array.getResourceId(attr, 0), opts);
+                case R.styleable.CustomFeedTailView_leftIcon:
+                    mLeftIcon = BitmapFactory.decodeResource(getResources(), array.getResourceId(attr, 0));
                     break;
-                case R.styleable.CustomFeedTailView_rightImage:
+                case R.styleable.CustomFeedTailView_leftIconSize:
+                    defSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                            17, getResources().getDisplayMetrics());
+                    mLeftIconSize = array.getDimensionPixelSize(attr, defSize);
+                    break;
+                case R.styleable.CustomFeedTailView_rightText:
+                    mRightText = array.getString(attr);
+                    break;
+                case R.styleable.CustomFeedTailView_rightIcon:
                     mRightIcon = BitmapFactory.decodeResource(getResources(), array.getResourceId(attr, 0));
+                    break;
+                case R.styleable.CustomFeedTailView_rightIconSize:
+                    defSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                            12, getResources().getDisplayMetrics());
+                    mRightIconSize = array.getDimensionPixelSize(attr, defSize);
                     break;
                 case R.styleable.CustomFeedTailView_titleText:
                     mTitle = array.getString(attr);
@@ -78,7 +99,7 @@ public class CustomFeedTailView extends View {
                     mTitleColor = array.getIndex(attr);
                     break;
                 case R.styleable.CustomFeedTailView_titleTextSize:
-                    int defSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                    defSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                             16, getResources().getDisplayMetrics());
                     mTitleSize = array.getDimensionPixelSize(attr, defSize);
                     break;
@@ -92,14 +113,18 @@ public class CustomFeedTailView extends View {
 
         array.recycle();
         mPaint = new Paint();
+        mGradientPaint = new Paint();
 
         mRect = new RectF(); // 整个view的边框
-        mLeftRect = new Rect();
+        mLeftIconRect = new Rect();
         mTextRect = new Rect();
-        mRightRect = new Rect();
+        mRightTextRect = new Rect();
+        mRightIconRect = new Rect();
         mTextBound = new Rect();
+        mRightTextRound = new Rect();
         mPaint.setTextSize(mTitleSize);
         mPaint.getTextBounds(mTitle, 0, mTitle.length(), mTextBound);
+        mPaint.getTextBounds(mRightText, 0, mRightText.length(), mRightTextRound);
         mTextPaint = new TextPaint(mPaint);
     }
 
@@ -134,60 +159,86 @@ public class CustomFeedTailView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // draw bg
+        if (mGradient == null) {
+            mGradient = new LinearGradient(0, 0, mWidth, mHeight,
+                    new int[]{Color.parseColor("#DFE4FF"), Color.parseColor("#FFF0FF"), Color.parseColor("#FFEEED")},
+                    new float[]{0, 0.8F, 1.F},
+                    Shader.TileMode.CLAMP);
+        }
+        mGradientPaint.setShader(mGradient);
+        canvas.drawRect(0, 0, mWidth, mHeight, mGradientPaint);
         // draw rect
         mPaint.setStrokeWidth(4);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setColor(Color.RED);
-        canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), mPaint);
+//        mPaint.setColor(Color.RED);
+//        canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), mPaint);
 
         // draw left icon
-        if (mLeftIcon.getHeight() > mHeight) {
-            mLeftRect.left = getPaddingLeft();
-            mLeftRect.top = getPaddingTop();
-            mLeftRect.right = mHeight + getPaddingLeft();
-            mLeftRect.bottom = mHeight - getPaddingBottom();
+        if (mLeftIconSize > mHeight) {
+            mLeftIconRect.left = getPaddingLeft();
+            mLeftIconRect.top = getPaddingTop();
+            mLeftIconRect.right = mHeight + getPaddingLeft();
+            mLeftIconRect.bottom = mHeight - getPaddingBottom();
         } else {
-            mLeftRect.left = getPaddingLeft();
-            mLeftRect.top = mHeight / 2 - mLeftIcon.getHeight() / 2;
-            mLeftRect.right = mLeftRect.left + mLeftIcon.getWidth();
-            mLeftRect.bottom = mHeight / 2 + mLeftIcon.getHeight() / 2;
+            mLeftIconRect.left = getPaddingLeft();
+            mLeftIconRect.top = mHeight / 2 - mLeftIconSize / 2;
+            mLeftIconRect.right = mLeftIconRect.left + mLeftIconSize;
+            mLeftIconRect.bottom = mHeight / 2 + mLeftIconSize / 2;
         }
-        canvas.drawBitmap(mLeftIcon, null, mLeftRect, mPaint);
+        canvas.drawBitmap(mLeftIcon, null, mLeftIconRect, mPaint);
+        mPaint.setColor(Color.GREEN);
+//        canvas.drawRect(mLeftRect, mPaint);
 
         // draw right icon
-        if (mRightIcon.getHeight() > mHeight) {
-            mRightRect.left = mWidth - getPaddingRight() - mHeight;
-            mRightRect.top = getPaddingTop();
-            mRightRect.right = mWidth - getPaddingRight();
-            mRightRect.bottom = mHeight - getPaddingBottom();
+        if (mRightIconSize > mHeight) {
+            mRightIconRect.left = mWidth - getPaddingRight() - mHeight;
+            mRightIconRect.top = getPaddingTop();
+            mRightIconRect.right = mWidth - getPaddingRight();
+            mRightIconRect.bottom = mHeight - getPaddingBottom();
         } else {
-            mRightRect.left = mWidth - getPaddingRight() - mRightIcon.getWidth();
-            mRightRect.top = mHeight / 2 - mRightIcon.getHeight() / 2;
-            mRightRect.right = mWidth - getPaddingRight();
-            mRightRect.bottom = mHeight / 2 + mRightIcon.getHeight() / 2;
+            mRightIconRect.left = mWidth - getPaddingRight() - mRightIconSize;
+            mRightIconRect.top = mHeight / 2 - mRightIconSize / 2;
+            mRightIconRect.right = mWidth - getPaddingRight();
+            mRightIconRect.bottom = mHeight / 2 + mRightIconSize / 2;
         }
-        canvas.drawBitmap(mRightIcon, null, mRightRect, mPaint);
+        canvas.drawBitmap(mRightIcon, null, mRightIconRect, mPaint);
+
+        // draw right text
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setColor(Color.parseColor("#FF03081A"));
+        mPaint.setAntiAlias(true);
+        initRightText(canvas);
 
         // draw text
-        mTextRect.left = mLeftRect.right;
+        mTextRect.left = mLeftIconRect.right + ViewUtils.dpToPx(7);
         mTextRect.top = mHeight / 2 - mTextBound.height() / 2;
-        mTextRect.right = mRightRect.left;
+        mTextRect.right = mWidth - mRightTextRect.width() - mRightIconRect.width() - getPaddingRight();
         mTextRect.bottom = mHeight / 2 + mTextBound.height() / 2;
-        int textResidueWidth = mWidth - mLeftRect.width() - mRightRect.width() - getPaddingLeft() - getPaddingRight();
+        int textResidueWidth = mWidth - mLeftIconRect.width() - mRightIconRect.width() - mRightTextRect.width() - getPaddingLeft() - getPaddingRight();
         if (mTextBound.width() > textResidueWidth) {
             mTitle = TextUtils.ellipsize(mTitle, mTextPaint, (float) textResidueWidth,
                     TextUtils.TruncateAt.END).toString();
         }
 //        canvas.drawRect(mTextRect, mPaint);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(Color.BLACK);
-        canvas.drawText(mTitle, mTextRect.left, getBaseLine(), mPaint);
+        canvas.drawText(mTitle, mTextRect.left, getBaseLine(mTextRect, mPaint), mPaint);
 
-        // 进度条
+//        drawProgress(canvas); // 进度条
+    }
+
+    private void initRightText(Canvas canvas) {
+        mRightTextRect.left = mRightIconRect.left - mRightTextRound.width();
+        mRightTextRect.top = mHeight / 2 - mRightTextRound.height() / 2;
+        mRightTextRect.right = mWidth - getPaddingRight() - mRightIconRect.width();
+        mRightTextRect.bottom = mHeight / 2 + mRightTextRound.height() / 2;
+        canvas.drawText(mRightText, mRightTextRect.left, getBaseLine(mRightTextRect, mPaint), mPaint);
+    }
+
+    private void drawProgress(Canvas canvas) {
         mPaint.setColor(Color.parseColor("#55555555"));
         mRect.set(0, 0, mWidth * mProgress, mHeight);
         canvas.drawRect(mRect, mPaint);
-        mProgress +=  1f / mDurTime;
+        mProgress += 1f / mDurTime;
 
         if (mProgress < 1f) {
             postInvalidate();
@@ -195,9 +246,9 @@ public class CustomFeedTailView extends View {
     }
 
     // 中文垂直居中
-    private int getBaseLine() {
-        Paint.FontMetricsInt fontMetrics = mPaint.getFontMetricsInt();
-        return (mTextRect.bottom + mTextRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
+    private int getBaseLine(Rect rect, Paint paint) {
+        Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
+        return (rect.bottom + rect.top - fontMetrics.bottom - fontMetrics.top) / 2;
     }
 
 }

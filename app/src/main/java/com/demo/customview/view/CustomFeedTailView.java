@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -34,10 +35,14 @@ public class CustomFeedTailView extends View {
     private String mTitle;
     private int mTitleColor;
     private int mTitleSize;
+    private RectF mRect;
     private Rect mLeftRect, mTextRect, mRightRect;
     private Rect mTextBound;
 
     private int mWidth, mHeight;
+
+    private float mProgress = 0.f;
+    private int mDurTime = 500; // ms
 
     public CustomFeedTailView(Context context) {
         this(context, null);
@@ -76,6 +81,7 @@ public class CustomFeedTailView extends View {
                     int defSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                             16, getResources().getDisplayMetrics());
                     mTitleSize = array.getDimensionPixelSize(attr, defSize);
+                    break;
                 case R.styleable.CustomFeedTailView_background:
 //                    mBackGround = BitmapFactory.decodeResource(getResources(), array.getResourceId(attr, 0));
                     break;
@@ -86,6 +92,8 @@ public class CustomFeedTailView extends View {
 
         array.recycle();
         mPaint = new Paint();
+
+        mRect = new RectF(); // 整个view的边框
         mLeftRect = new Rect();
         mTextRect = new Rect();
         mRightRect = new Rect();
@@ -174,6 +182,16 @@ public class CustomFeedTailView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(Color.BLACK);
         canvas.drawText(mTitle, mTextRect.left, getBaseLine(), mPaint);
+
+        // 进度条
+        mPaint.setColor(Color.parseColor("#55555555"));
+        mRect.set(0, 0, mWidth * mProgress, mHeight);
+        canvas.drawRect(mRect, mPaint);
+        mProgress +=  1f / mDurTime;
+
+        if (mProgress < 1f) {
+            postInvalidate();
+        }
     }
 
     // 中文垂直居中

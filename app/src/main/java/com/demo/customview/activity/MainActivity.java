@@ -11,18 +11,22 @@ import com.demo.customview.R;
 public class MainActivity extends AppCompatActivity {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initButton(R.id.btn_custom_view, CustomViewActivity.class);
+        initButton(R.id.btn_custom_drawable, CustomDrawableActivity.class);
 
-        findViewById(R.id.btn_custom_title_view).setOnClickListener(new View.OnClickListener() {
+    }
+
+    private void initButton(int redId, final Class clz) {
+        findViewById(redId).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(CustomTitleViewActivity.class);
+                startActivity(clz);
             }
         });
     }

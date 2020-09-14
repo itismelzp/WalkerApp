@@ -6,12 +6,12 @@ import android.os.Bundle;
 
 import com.demo.customview.R;
 
-public class CustomTitleViewActivity extends AppCompatActivity {
+public class CustomViewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.custom_title_view_layout);
+        setContentView(R.layout.custom_view_layout);
 
     }
 }

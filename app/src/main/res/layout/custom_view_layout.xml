@@ -25,7 +25,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/custom_titile_view"
         app:titleText="walker"
-        app:titleTextColor="#00ff00"
+        app:titleTextColor="#FF03081A"
         app:titleTextSize="20sp" />
 
     <com.demo.customview.view.CustomProgressBar
@@ -59,16 +59,17 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="7dp"
+        app:background="@drawable/qzone_feed_qcircle_tail_bg"
         app:layout_constraintTop_toBottomOf="@+id/custome_image_view"
         app:leftIcon="@drawable/qcircle_icon"
         app:leftIconSize="18dp"
         app:rightIcon="@drawable/qcircle_recommend_more_icon"
-        app:rightIconSize="12dp"
+        app:rightIconSize="12sp"
         app:rightText="去看看"
         app:titleText="来自小世界：我不抽烟的动态"
-        app:titleTextColor="#00ff00"
+        app:titleTextColor="#FF03081A"
         app:titleTextSize="12sp" />
 
     <TextView

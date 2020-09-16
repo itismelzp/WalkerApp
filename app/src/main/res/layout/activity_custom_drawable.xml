@@ -10,28 +10,29 @@
         android:id="@+id/custom_drawable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.demo.customview.view.BrickView
-        app:layout_constraintTop_toBottomOf="@+id/custom_drawable"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintTop_toBottomOf="@+id/custom_drawable" />
 
     <com.demo.customview.view.ShaderView
-        android:layout_marginTop="100dp"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/custom_drawable" />
 
     <com.demo.customview.view.ReflectView
-        app:layout_constraintTop_toBottomOf="@+id/custom_drawable"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/custom_drawable" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

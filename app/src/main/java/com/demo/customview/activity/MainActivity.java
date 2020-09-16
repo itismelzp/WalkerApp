@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         initButton(R.id.btn_custom_view, CustomViewActivity.class);
         initButton(R.id.btn_custom_drawable, CustomShaderActivity.class);
+        initButton(R.id.btn_custom_sloop_view, CustomSloopViewActivity.class);
 
     }
 

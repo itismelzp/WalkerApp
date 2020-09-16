@@ -187,7 +187,7 @@ public class CustomFeedTailView extends View {
         if (mGradient == null) {
             mGradient = new LinearGradient(0, 0, mWidth, mHeight,
                     new int[]{0xFFDFE4FF, 0xFFFFF0FF, 0xFFFFEEED},
-                    new float[]{0, 0.8F, 1.F},
+                    new float[]{0, .8F, 1.F},
                     Shader.TileMode.CLAMP);
         }
         // set background by shader
@@ -273,7 +273,7 @@ public class CustomFeedTailView extends View {
     }
 
     private void drawProgress(Canvas canvas) {
-        mPaint.setColor(Color.parseColor("#55555555"));
+        mPaint.setColor(0x55555555);
         mRect.set(0, 0, (int) (mWidth * mProgress), mHeight);
         canvas.drawRect(mRect, mPaint);
         mProgress += 1f / mDurTime;

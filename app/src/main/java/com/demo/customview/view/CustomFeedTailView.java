@@ -30,13 +30,12 @@ public class CustomFeedTailView extends View {
     public static final String TAG = "CustomFeedTailView";
 
     private Paint mPaint;
-//    private Paint mGradientPaint;
     private TextPaint mTextPaint;
 
     private Bitmap mLeftIcon;
     private Drawable mLeftIconDrawable;
     private int mLeftIconSize;
-    private String mRightText;
+    private String mRightText = "";
     private Bitmap mRightIcon;
     private Drawable mRightIconDrawable;
     private int mRightIconSize;
@@ -117,7 +116,6 @@ public class CustomFeedTailView extends View {
 
         array.recycle();
         mPaint = new Paint();
-//        mGradientPaint = new Paint();
 
         mRect = new Rect(); // 整个view的边框
         mLeftIconRect = new Rect();
@@ -188,7 +186,7 @@ public class CustomFeedTailView extends View {
 
         if (mGradient == null) {
             mGradient = new LinearGradient(0, 0, mWidth, mHeight,
-                    new int[]{Color.parseColor("#DFE4FF"), Color.parseColor("#FFF0FF"), Color.parseColor("#FFEEED")},
+                    new int[]{0xFFDFE4FF, 0xFFFFF0FF, 0xFFFFEEED},
                     new float[]{0, 0.8F, 1.F},
                     Shader.TileMode.CLAMP);
         }

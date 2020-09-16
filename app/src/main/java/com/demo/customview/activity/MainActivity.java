@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initButton(R.id.btn_custom_view, CustomViewActivity.class);
-        initButton(R.id.btn_custom_drawable, CustomDrawableActivity.class);
+        initButton(R.id.btn_custom_drawable, CustomShaderActivity.class);
 
     }
 

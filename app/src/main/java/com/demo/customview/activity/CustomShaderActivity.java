@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.demo.customview.R;
 import com.demo.customview.drawable.RoundImageDrawable;
 
-public class CustomDrawableActivity extends AppCompatActivity {
+public class CustomShaderActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

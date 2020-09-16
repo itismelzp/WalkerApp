@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.graphics.RadialGradient;
 import android.graphics.Shader;
+import android.graphics.SweepGradient;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.View;
@@ -26,9 +25,14 @@ import com.demo.customview.utils.MeasureUtil;
 public class ShaderView extends View {
 
     private static final int RECT_SIZE_WIDTH = 400;// 矩形尺寸的一半
-    private static final int RECT_SIZE_HEIGHT = 32;// 矩形尺寸的一半
+    private static final int RECT_SIZE_HEIGHT = 400;// 矩形尺寸的一半
 
     private Paint mPaint;// 画笔
+    private SweepGradient mSweepGradient = null;
+    private RadialGradient mRadialGradient;
+
+    private int mWidth, mHeight;
+    private float mCenterX, mCenterY;
 
     private int left, top, right, bottom;// 矩形坐上右下坐标
 
@@ -57,30 +61,48 @@ public class ShaderView extends View {
 
         // 设置着色器
 //        mPaint.setShader(new BitmapShader(mBitmap, Shader.TileMode.MIRROR, Shader.TileMode.CLAMP));
-
 //        mPaint.setShader(new LinearGradient(left, top, right, bottom, Color.RED, Color.YELLOW, Shader.TileMode.REPEAT));
-
-        /*
-        <gradient
-        android:angle="0"
-        android:centerColor="#FFF0FF"
-        android:centerX="0.8"
-        android:endColor="#FFEEED"
-        android:startColor="#DFE4FF" />
-         */
 
         LinearGradient gradient = new LinearGradient(left, top, right, bottom,
                 new int[]{Color.parseColor("#DFE4FF"), Color.parseColor("#FFF0FF"), Color.parseColor("#FFEEED")},
                 new float[]{0, 0.8F, 1.F},
                 Shader.TileMode.CLAMP);
-        mPaint.setShader(gradient);
 
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawRect(left, top, right, bottom, mPaint);
+
+        if (mSweepGradient == null) {
+            mSweepGradient = new SweepGradient(mCenterX, mCenterY, Color.RED, Color.YELLOW);
+        }
+
+        if (mRadialGradient == null) {
+            mRadialGradient = new RadialGradient(
+                    mCenterX, mCenterY,
+//                    (float) Math.sqrt(mCenterX * mCenterX + mCenterY * mCenterY),
+                    mCenterX,
+                    Color.WHITE, Color.GREEN,
+                    Shader.TileMode.REPEAT
+            );
+        }
+        mPaint.setShader(mRadialGradient);
+
+        canvas.drawRect(0, 0, mWidth, mHeight, mPaint);
+        mPaint.setShader(null);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(4);
+        canvas.drawRect(0, 0, mWidth, mHeight, mPaint);
 //        canvas.drawBitmap(mBitmap, null, new Rect(left, top, right, bottom),mPaint);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mWidth = MeasureSpec.getSize(widthMeasureSpec);
+        mHeight = MeasureSpec.getSize(heightMeasureSpec);
+        mCenterX= mWidth / 2f;
+        mCenterY = mHeight / 2f;
     }
 
     /**

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.demo.customview.R;
+import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,13 +20,13 @@ public class MainActivity extends AppCompatActivity {
 
         initButton(R.id.btn_custom_view, CustomViewActivity.class);
         initButton(R.id.btn_custom_drawable, CustomShaderActivity.class);
-        initButton(R.id.btn_custom_sloop_view, CustomSloopViewActivity.class);
+        initButton(R.id.btn_custom_sloop_menu, CustomSloopMenuActivity.class);
         initButton(R.id.btn_custom_matrix_view, CustomMatrixActivity.class);
 
     }
 
-    private void initButton(int redId, final Class clz) {
-        findViewById(redId).setOnClickListener(new View.OnClickListener() {
+    private void initButton(int resId, final Class clz) {
+        findViewById(resId).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(clz);

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".sloop.activity.CustomSloopMenuActivity">
+
+    <Button
+        android:id="@+id/btn_corner_pathEffect"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="corner pathEffect test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btn_path_demo"
+        app:layout_constraintTop_toBottomOf="@id/btn_corner_pathEffect"
+        android:text="path test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

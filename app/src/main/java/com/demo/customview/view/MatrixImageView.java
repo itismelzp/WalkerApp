@@ -22,7 +22,7 @@ import com.demo.customview.utils.MeasureUtil;
 /**
  * Created by walkerzpli on 2020/9/17.
  */
-public class MatrixImageView extends ImageView {
+public class MatrixImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     private static final String TAG = "MatrixImageView";
 

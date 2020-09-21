@@ -1,4 +1,4 @@
-package com.demo.customview.view;
+package com.demo.customview.sloop.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

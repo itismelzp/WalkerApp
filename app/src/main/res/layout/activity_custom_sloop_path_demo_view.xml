@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".sloop.activity.CustomSloopViewActivity">
 
-    <com.demo.customview.sloop.view.CornerPathEffectTestView
+    <com.demo.customview.sloop.view.PathDemoView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

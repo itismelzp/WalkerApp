@@ -13,11 +13,7 @@
         <activity android:name=".activity.CustomMatrixActivity" />
         <activity android:name=".sloop.activity.CustomSloopViewActivity" />
         <activity android:name=".activity.CustomShaderActivity" />
-        <activity android:name=".activity.CustomViewActivity" />
-        <activity
-            android:name=".activity.Main2Activity"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".zhy.activity.CustomViewActivity" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

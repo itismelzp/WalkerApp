@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.demo.customview.R;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
+import com.demo.customview.zhy.activity.CustomViewActivity;
 
 public class MainActivity extends AppCompatActivity {
 

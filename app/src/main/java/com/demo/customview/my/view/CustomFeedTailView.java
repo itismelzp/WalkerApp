@@ -1,4 +1,4 @@
-package com.demo.customview.view;
+package com.demo.customview.my.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,7 +8,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
@@ -31,6 +33,7 @@ public class CustomFeedTailView extends View {
 
     private Paint mPaint;
     private TextPaint mTextPaint;
+    private Path mPath;
 
     private Bitmap mLeftIcon;
     private Drawable mLeftIconDrawable;
@@ -43,7 +46,7 @@ public class CustomFeedTailView extends View {
     private String mTitle;
     private int mTitleColor;
     private int mTitleSize;
-    private Rect mRect;
+    private RectF mRect;
     private Rect mLeftIconRect, mTextRect, mRightTextRect, mRightIconRect;
     private Rect mTextBound, mRightTextRound;
 
@@ -53,6 +56,12 @@ public class CustomFeedTailView extends View {
     private int mDurTime = 500; // ms
 
     private LinearGradient mGradient = null;
+    private float[] mRadii = {
+            0f, 0f,
+            0f, 0f,
+            20f, 20f,
+            20f, 20f
+    };
 
     public CustomFeedTailView(Context context) {
         this(context, null);
@@ -116,8 +125,8 @@ public class CustomFeedTailView extends View {
 
         array.recycle();
         mPaint = new Paint();
-
-        mRect = new Rect(); // 整个view的边框
+        mPath = new Path();
+        mRect = new RectF(); // 整个view的边框
         mLeftIconRect = new Rect();
         mTextRect = new Rect();
         mRightTextRect = new Rect();
@@ -192,6 +201,8 @@ public class CustomFeedTailView extends View {
         }
         // set background by shader
         paint.setShader(mGradient);
+        mPath.addRoundRect(mRect, mRadii, Path.Direction.CW);
+        canvas.clipPath(mPath);
         canvas.drawRect(mRect, paint);
         paint.setShader(null);
 
@@ -258,9 +269,10 @@ public class CustomFeedTailView extends View {
         mTextRect.top = mHeight / 2 - mTextBound.height() / 2;
         mTextRect.right = mRightTextRect.left;
         mTextRect.bottom = mHeight / 2 + mTextBound.height() / 2;
-        float restWidth = mWidth - mLeftIconRect.width() - mRightIconRect.width() - mRightTextRect.width() - getPaddingLeft() - getPaddingRight();
+//        float restWidth = mWidth - mLeftIconRect.width() - mRightIconRect.width() - mRightTextRect.width() - getPaddingLeft() - getPaddingRight();
+        float restWidth = mRightTextRect.left - mLeftIconRect.right - ViewUtils.dpToPx(15);
         if (mTextBound.width() > restWidth) {
-            mTitle = TextUtils.ellipsize(mTitle, mTextPaint, restWidth, TextUtils.TruncateAt.END).toString();
+            mTitle = TextUtils.ellipsize(mTitle, mTextPaint, restWidth, TextUtils.TruncateAt.MIDDLE).toString();
         }
         canvas.drawText(mTitle, mTextRect.left, getBaseLine(mTextRect, paint), paint);
 //        drawRectByColor(canvas, paint, mTextRect, Color.parseColor("#550000FF"));

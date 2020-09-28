@@ -18,13 +18,28 @@ import com.demo.customview.R;
 import com.demo.customview.utils.ViewUtils;
 
 /**
- * Created by walkerzpli on 2020/9/21.
+ * Created by walkerzpli on 2020/9/23.
  */
-public class CustomFeedTitleView extends View {
+public class FeedQCircleRecomView extends View {
 
-    private int VIEW_WIDTH = ViewUtils.dip2px(358);
-    private int VIEW_HEIGHT = ViewUtils.dip2px(71);
+    private int VIEW_WIDTH, VIEW_HEIGHT;
+    private int TITLE_WIDTH = ViewUtils.dip2px(358);
+    private int TITLE_HEIGHT = ViewUtils.dip2px(71);
+    private int BAR_WIDTH = ViewUtils.dip2px(358);
+    private int BAR_HEIGHT = ViewUtils.dip2px(71);
 
+    // recom bar
+    private Paint mBarPaint;
+    private RectF mBarTitleRectF;
+    private Rect mIconRect;
+    private Rect mTextBound;
+    private Drawable mCloseIcon;
+    private int mCloseIconSize;
+
+    private String mBarTitle = "猜你喜欢";
+
+
+    // recom title
     private Drawable mRecomFeedsBg, mRecomContestBg;
     private Drawable mIcon;
     private Drawable mAvatar;
@@ -47,14 +62,28 @@ public class CustomFeedTitleView extends View {
 
     private boolean isShowRecomFeedHead = true;
 
-    public CustomFeedTitleView(Context context) {
+    public FeedQCircleRecomView(Context context) {
         this(context, null);
     }
 
-    public CustomFeedTitleView(Context context, @Nullable AttributeSet attrs) {
+    public FeedQCircleRecomView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        ViewUtils.initContext(context);
 
+        // recom bar
+        mBarTitleRectF = new RectF();
+        mIconRect = new Rect();
+        mBarPaint = new Paint();
+        mBarPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mBarPaint.setTextSize(ViewUtils.dpToPx(14f));
+        mBarPaint.setStrokeWidth(2f);
+        mBarPaint.setColor(0xFF03081A);
+        mTextBound = new Rect();
+        mBarPaint.getTextBounds(mBarTitle, 0, mBarTitle.length(), mTextBound);
+
+        mCloseIcon = getResources().getDrawable(R.drawable.circle_close_icon);
+        mCloseIconSize = ViewUtils.dpToPx(16f);
+
+        // recom title
         mIconSize = ViewUtils.dpToPx(20);
         mAvatarSize = ViewUtils.dpToPx(59);
 
@@ -75,21 +104,28 @@ public class CustomFeedTitleView extends View {
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setStrokeWidth(2f);
         mPaint.getTextBounds(mTitle, 0, mTitle.length(), mTitleBound);
-
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        setMeasuredDimension(VIEW_WIDTH = width, VIEW_HEIGHT = height);
+        BAR_WIDTH = ViewUtils.getScreenWidth();
+        BAR_HEIGHT = ViewUtils.getScreenHeight();
+        TITLE_WIDTH = BAR_WIDTH - ViewUtils.dpToPx(7F);
+        TITLE_HEIGHT = ViewUtils.dip2px(71);
+
+        setMeasuredDimension(VIEW_WIDTH = BAR_WIDTH, VIEW_HEIGHT = height);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // draw recom bar
+        drawRecomBar(canvas);
+
+        // draw recom title
         if (isShowRecomFeedHead) {
             drawRecomFeedsHead(canvas);
         } else {
@@ -98,33 +134,26 @@ public class CustomFeedTitleView extends View {
 
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    private void drawRecomBar(Canvas canvas) {
+        // draw title
+        mBarTitleRectF.left = ViewUtils.dpToPx(8f);
+        mBarTitleRectF.top = BAR_HEIGHT / 2f - mTextBound.height() / 2f;
+        mBarTitleRectF.right = ViewUtils.dpToPx(8f) + mTextBound.width();
+        mBarTitleRectF.bottom = BAR_HEIGHT / 2f + mTextBound.height() / 2f;
+        canvas.drawText(mBarTitle, mBarTitleRectF.left, getBaseLine(mBarTitleRectF, mBarPaint), mBarPaint);
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_UP:
-                float x = event.getX();
-                float y = event.getY();
-                if (isInRect(x, y, mRect)) {
-                    isShowRecomFeedHead = !isShowRecomFeedHead;
-                    postInvalidate();
-                }
-                break;
-            default:
-                break;
-        }
-
-        return true;
-    }
-
-    private boolean isInRect(float x, float y, Rect rect) {
-        return rect.left <= x && x <= rect.right
-                && rect.top <= y && y <= rect.bottom;
+        // draw close icon
+        mIconRect.left = BAR_WIDTH - ViewUtils.dpToPx(8f) - mCloseIconSize;
+        mIconRect.top = BAR_HEIGHT / 2 - mCloseIconSize / 2;
+        mIconRect.right = BAR_WIDTH - ViewUtils.dpToPx(8f);
+        mIconRect.bottom = BAR_HEIGHT / 2 + mCloseIconSize / 2;
+        mCloseIcon.setBounds(mIconRect);
+        mCloseIcon.draw(canvas);
     }
 
     private void drawRecomContestHead(Canvas canvas) {
         // draw bg
-        mRecomContestBg.setBounds(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
+        mRecomContestBg.setBounds(0, 0, TITLE_WIDTH, TITLE_HEIGHT);
         mRecomContestBg.draw(canvas);
         // draw icon
         mRect.left = ViewUtils.dpToPx(10);
@@ -141,7 +170,7 @@ public class CustomFeedTitleView extends View {
         mPaint.setStrokeWidth(2f);
         mPaint.getTextBounds(mContestTitle, 0, mContestTitle.length(), mTitleBound);
 
-        int restWidth = VIEW_WIDTH - mRect.right - ViewUtils.dpToPx(10);
+        int restWidth = TITLE_WIDTH - mRect.right - ViewUtils.dpToPx(10);
         if (mTitleBound.width() > restWidth) {
             mContestTitle = TextUtils.ellipsize(mContestTitle, new TextPaint(mPaint), restWidth, TextUtils.TruncateAt.END).toString();
             mPaint.getTextBounds(mContestTitle, 0, mContestTitle.length(), mTitleBound);
@@ -161,7 +190,7 @@ public class CustomFeedTitleView extends View {
 
     private void drawRecomFeedsHead(Canvas canvas) {
         // draw bg
-        mRecomFeedsBg.setBounds(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
+        mRecomFeedsBg.setBounds(0, 0, TITLE_WIDTH, TITLE_HEIGHT);
         mRecomFeedsBg.draw(canvas);
 
         // draw avatar
@@ -178,7 +207,7 @@ public class CustomFeedTitleView extends View {
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setStrokeWidth(2f);
         mPaint.getTextBounds(mTitle, 0, mTitle.length(), mTitleBound);
-        int restWidth = VIEW_WIDTH - mRect.right - ViewUtils.dpToPx(5);
+        int restWidth = TITLE_WIDTH - mRect.right - ViewUtils.dpToPx(5);
         if (mTitleBound.width() > restWidth) {
             mTitle = TextUtils.ellipsize(mTitle, new TextPaint(mPaint), restWidth, TextUtils.TruncateAt.END).toString();
             mPaint.getTextBounds(mTitle, 0, mTitle.length(), mTitleBound);
@@ -238,6 +267,30 @@ public class CustomFeedTitleView extends View {
     private float getBaseLine(RectF rect, Paint paint) {
         Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
         return (rect.bottom + rect.top - fontMetrics.bottom - fontMetrics.top - 2) / 2;
+    }
+
+    private boolean isInRect(float x, float y, Rect rect) {
+        return rect.left <= x && x <= rect.right
+                && rect.top <= y && y <= rect.bottom;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                float x = event.getX();
+                float y = event.getY();
+                if (isInRect(x, y, mRect)) {
+                    isShowRecomFeedHead = !isShowRecomFeedHead;
+                    postInvalidate();
+                }
+                break;
+            default:
+                break;
+        }
+
+        return true;
     }
 
 }

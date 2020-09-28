@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -34,6 +35,23 @@ public class CustomFeedTailView extends View {
     private Paint mPaint;
     private TextPaint mTextPaint;
     private Path mPath;
+
+    //发光的paint
+    private Paint mMaskPaint;
+    private BlurMaskFilter mBlurMaskFilter;
+    //散射半径
+    private float mMaskRadius;
+    //背景渐变开始颜色
+    private int mStartColor;
+    //背景渐变结束颜色
+    private int mEndColor;
+    //阴影渐变开始颜色
+    private int mMaskStartColor;
+    //阴影渐变结束颜色
+    private int mMaskEndColor;
+
+    //背景圆角和散射的圆角
+    private float mRadius = ViewUtils.dpToPx(25);
 
     private Bitmap mLeftIcon;
     private Drawable mLeftIconDrawable;
@@ -73,7 +91,8 @@ public class CustomFeedTailView extends View {
 
     public CustomFeedTailView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        ViewUtils.initContext(context);
+
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         TypedArray array = context
                 .getTheme()
@@ -137,6 +156,15 @@ public class CustomFeedTailView extends View {
         mPaint.getTextBounds(mTitle, 0, mTitle.length(), mTextBound);
         mPaint.getTextBounds(mRightText, 0, mRightText.length(), mRightTextRound);
         mTextPaint = new TextPaint(mPaint);
+
+        // shader paint
+        mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mMaskRadius = ViewUtils.dpToPx(10);
+        mStartColor = 0xFFE0563F;
+        mEndColor = 0xFFFF7954;
+        mMaskStartColor = 0xFFE0563F;
+        mMaskEndColor = 0xFFFF7954;
+
     }
 
     @Override
@@ -180,6 +208,7 @@ public class CustomFeedTailView extends View {
         // init paint
         mTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mTextPaint.setColor(mTitleColor);
+//        mTextPaint.setColor(0xFFffffff);
         mTextPaint.setAntiAlias(true);
         mTextPaint.setStrokeWidth(0.5f); // 控制字体加粗的程度
         // draw right text
@@ -200,6 +229,10 @@ public class CustomFeedTailView extends View {
                     Shader.TileMode.CLAMP);
         }
         // set background by shader
+//        setMaskPaint();
+        setMaskPaint2();
+        drawShaderBackground(canvas);
+
         paint.setShader(mGradient);
         mPath.addRoundRect(mRect, mRadii, Path.Direction.CW);
         canvas.clipPath(mPath);
@@ -212,6 +245,62 @@ public class CustomFeedTailView extends View {
 
         // draw rect
 //        drawRectByColor(canvas, paint, mRect, Color.parseColor("#55FF0000"));
+    }
+
+
+    /***
+     * 初始化阴影paint
+     */
+    private void setMaskPaint() {
+        LinearGradient maskLinearGradient = new LinearGradient(0, 0, mWidth, 0
+                , new int[]{mMaskStartColor, mMaskEndColor}
+                , new float[]{0, .9F}
+                , Shader.TileMode.CLAMP);
+        mMaskPaint.setShader(maskLinearGradient);
+        mBlurMaskFilter = new BlurMaskFilter(mMaskRadius, BlurMaskFilter.Blur.NORMAL);
+        setLayerType(View.LAYER_TYPE_SOFTWARE, mMaskPaint);
+        mMaskPaint.setMaskFilter(mBlurMaskFilter);
+    }
+
+    /***
+     * 初始化阴影paint
+     */
+    private void setMaskPaint2() {
+        LinearGradient maskLinearGradient = new LinearGradient(0, 0, mWidth, 0
+                , new int[]{mMaskStartColor, mMaskEndColor}
+                , new float[]{0, .9F}
+                , Shader.TileMode.CLAMP);
+        mMaskPaint.setShader(maskLinearGradient);
+        mMaskPaint.setShadowLayer(mMaskRadius / 2, 0, ViewUtils.dpToPx(1), Color.BLACK);
+    }
+    /***
+     * 初始化阴影paint
+     */
+    private void setMaskPaint2(Paint paint) {
+        LinearGradient maskLinearGradient = new LinearGradient(0, 0, mWidth, 0
+                , new int[]{mMaskStartColor, mMaskEndColor}
+                , new float[]{0, .9F}
+                , Shader.TileMode.CLAMP);
+        paint.setShader(maskLinearGradient);
+        paint.setShadowLayer(mMaskRadius / 2, 0, ViewUtils.dpToPx(10), Color.BLACK);
+    }
+
+    private void drawShaderBackground(Canvas canvas) {
+        int x = getPaddingLeft();
+        int y = getPaddingTop();
+        int right = getWidth() - getPaddingRight();
+        int bottom = getHeight() - getPaddingBottom();
+
+        Paint paint = new Paint();
+        paint.setColor(0xFFFFFFFF);
+        int dx = ViewUtils.dpToPx(4);;
+        int dy = ViewUtils.dpToPx(4);
+        int blur = ViewUtils.dpToPx(4);
+        paint.setShadowLayer(blur, dx, dy, 0x14000000);
+
+        int borderRadius = ViewUtils.dpToPx(10);
+        RectF rectF = new RectF(x, y, right, bottom);
+        canvas.drawRoundRect(rectF, borderRadius, borderRadius, paint);
     }
 
     private void drawLeftIcon(Canvas canvas, Paint paint) {

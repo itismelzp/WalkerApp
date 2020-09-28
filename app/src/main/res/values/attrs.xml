@@ -68,4 +68,18 @@
         <attr name="bg" />
     </declare-styleable>
 
+    <declare-styleable name="ShadowTextView">
+        <attr name="shadowTextColor" format="color" />
+        <attr name="shadowBgStartColor" format="color" />
+        <attr name="shadowBgEndColor" format="color" />
+        <attr name="shadowSelectEndColor" format="color" />
+        <attr name="shadowStartColor" format="color" />
+        <attr name="shadowSelectStartColor" format="color" />
+        <attr name="shadowEndColor" format="color" />
+        <attr name="shadowTextRadius" format="dimension" />
+        <attr name="shadowTextCornerRadius" format="dimension" />
+        <attr name="shadowTextSize" format="dimension" />
+        <attr name="shadowText" format="string" />
+    </declare-styleable>
+
 </resources>

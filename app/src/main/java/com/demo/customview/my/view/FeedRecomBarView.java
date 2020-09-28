@@ -17,40 +17,38 @@ import com.demo.customview.utils.ViewUtils;
 /**
  * Created by walkerzpli on 2020/9/22.
  */
-public class CustomFeedRecomBarView extends View {
+public class FeedRecomBarView extends View {
 
     private int VIEW_WIDTH = ViewUtils.dip2px(358);
     private int VIEW_HEIGHT = ViewUtils.dip2px(71);
 
-    private Paint mPaint;
-    private Rect mRect, mIconRect;
+    private Paint mBarPaint;
+    private Rect mBarTitleRect, mIconRect;
     private Rect mTextBound;
     private Drawable mCloseIcon;
     private int mCloseIconSize;
 
-    private String mTitle = "猜你喜欢";
+    private String mBarTitle = "猜你喜欢";
 
-    public CustomFeedRecomBarView(Context context) {
+    public FeedRecomBarView(Context context) {
         this(context, null);
     }
 
-    public CustomFeedRecomBarView(Context context, @Nullable AttributeSet attrs) {
+    public FeedRecomBarView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        ViewUtils.initContext(context);
 
-        mRect = new Rect();
+        mBarTitleRect = new Rect();
         mIconRect = new Rect();
-        mPaint = new Paint();
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaint.setTextSize(ViewUtils.dpToPx(14f));
-        mPaint.setStrokeWidth(2f);
-        mPaint.setColor(0xFF03081A);
+        mBarPaint = new Paint();
+        mBarPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mBarPaint.setTextSize(ViewUtils.dpToPx(14f));
+        mBarPaint.setStrokeWidth(2f);
+        mBarPaint.setColor(0xFF03081A);
         mTextBound = new Rect();
-        mPaint.getTextBounds(mTitle, 0, mTitle.length(), mTextBound);
+        mBarPaint.getTextBounds(mBarTitle, 0, mBarTitle.length(), mTextBound);
 
         mCloseIcon = getResources().getDrawable(R.drawable.circle_close_icon);
         mCloseIconSize = ViewUtils.dpToPx(16f);
-
 
     }
 
@@ -66,12 +64,16 @@ public class CustomFeedRecomBarView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        drawRecommBar(canvas);
+    }
+
+    private void drawRecommBar(Canvas canvas) {
         // draw title
-        mRect.left = ViewUtils.dpToPx(8f);
-        mRect.top = VIEW_HEIGHT / 2 - mTextBound.height() / 2;
-        mRect.right = ViewUtils.dpToPx(8f) + mTextBound.width();
-        mRect.bottom = VIEW_HEIGHT / 2 + mTextBound.height() / 2;
-        canvas.drawText(mTitle, mRect.left, getBaseLine(mRect, mPaint), mPaint);
+        mBarTitleRect.left = ViewUtils.dpToPx(8f);
+        mBarTitleRect.top = VIEW_HEIGHT / 2 - mTextBound.height() / 2;
+        mBarTitleRect.right = ViewUtils.dpToPx(8f) + mTextBound.width();
+        mBarTitleRect.bottom = VIEW_HEIGHT / 2 + mTextBound.height() / 2;
+        canvas.drawText(mBarTitle, mBarTitleRect.left, getBaseLine(mBarTitleRect, mBarPaint), mBarPaint);
 
         // draw close icon
         mIconRect.left = VIEW_WIDTH - ViewUtils.dpToPx(8f) - mCloseIconSize;

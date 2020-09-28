@@ -21,9 +21,10 @@
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/custom_drawable" />
 
-    <com.demo.customview.view.ShaderView
+    <com.demo.customview.aige.view.ShaderView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/custom_drawable" />
 
     <com.demo.customview.view.ReflectView
@@ -31,6 +32,11 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/custom_drawable" />
+
+    <com.demo.customview.my.view.ShadowTextView
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

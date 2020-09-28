@@ -2,13 +2,18 @@ package com.demo.customview.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.widget.Toast;
 
 import com.demo.customview.R;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
+
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 

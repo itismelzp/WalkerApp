@@ -1,4 +1,4 @@
-package com.demo.customview.view;
+package com.demo.customview.aige.view;
 
 import android.app.Activity;
 import android.content.Context;

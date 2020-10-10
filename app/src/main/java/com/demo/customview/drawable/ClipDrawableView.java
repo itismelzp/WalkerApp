@@ -22,6 +22,8 @@ import com.demo.customview.R;
  */
 public class ClipDrawableView extends View {
 
+    public static final String TAG = "ClipDrawableView";
+
     private int mWidth, mHeight;
 
     private Paint mPaint;
@@ -67,13 +69,15 @@ public class ClipDrawableView extends View {
         mPaint.setStrokeWidth(4);
         mPaint.setStyle(Paint.Style.STROKE);
         canvas.drawRect(0, 0, mWidth, mHeight, mPaint);
+        drawable.setBounds(0, calQCircleSharedImgTop(imgWidth, imgHeight, mWidth), mWidth, calQCircleSharedImgBottom(imgWidth, imgHeight, mWidth));
+        drawable.draw(canvas);
 
 //        drawable.setBounds(0, 0, mWidth, mHeight * clipLevel / CLIP_LEVEL);
 //        drawable.setLevel(clipLevel);
 //        drawable.draw(canvas);
-        clipDrawable.setBounds(0, 0, mWidth, mHeight);
-        clipDrawable.setLevel(clipLevel);
-        clipDrawable.draw(canvas);
+//        clipDrawable.setBounds(0, 0, mWidth, mHeight);
+//        clipDrawable.setLevel(clipLevel);
+//        clipDrawable.draw(canvas);
 
 
 //        int clipWidth = imgWidth;
@@ -104,5 +108,38 @@ public class ClipDrawableView extends View {
         return true;
     }
 
+    private int calClipLevel(int imgWidth, int imgHeight, int viewWidth) {
+
+        float needWidth = viewWidth;
+        float needHeight = (float) viewWidth / imgWidth * imgHeight;
+
+        float clipHeight = viewWidth * 1.13f;
+
+        int clipLevel = 0;
+        if (needHeight > clipHeight) {
+            clipLevel = (int) (clipHeight / needHeight * CLIP_LEVEL);
+        }
+        return clipLevel;
+    }
+
+    private int calQCircleSharedImgTop(int imgWidth, int imgHeight, int viewWidth) {
+        float needHeight = (float) viewWidth / imgWidth * imgHeight;
+        float clipHeight = viewWidth * 1.13f;
+        int diffTop = 0;
+        if (needHeight > clipHeight) {
+            diffTop = (int) (clipHeight / 2 - needHeight / 2);
+        }
+        return diffTop;
+    }
+
+    private int calQCircleSharedImgBottom(int imgWidth, int imgHeight, int viewWidth) {
+        float needHeight = (float) viewWidth / imgWidth * imgHeight;
+        float clipHeight = viewWidth * 1.13f;
+        int diffBottom = 0;
+        if (needHeight > clipHeight) {
+            diffBottom = (int) (clipHeight / 2 + needHeight / 2);
+        }
+        return diffBottom;
+    }
 
 }

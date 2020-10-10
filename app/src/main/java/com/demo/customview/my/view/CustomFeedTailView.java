@@ -18,6 +18,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -53,6 +54,8 @@ public class CustomFeedTailView extends View {
     //背景圆角和散射的圆角
     private float mRadius = ViewUtils.dpToPx(25);
 
+    private boolean mIsNeedDrawGrayBg = false;
+
     private Bitmap mLeftIcon;
     private Drawable mLeftIconDrawable;
     private int mLeftIconSize;
@@ -65,13 +68,18 @@ public class CustomFeedTailView extends View {
     private int mTitleColor;
     private int mTitleSize;
     private RectF mRect;
+    private Rect mGrayBgRect;
     private Rect mLeftIconRect, mTextRect, mRightTextRect, mRightIconRect;
     private Rect mTextBound, mRightTextRound;
 
-    private int mWidth, mHeight;
+    private int mViewWidth, mViewHeight;
+    private int TAIL_WIDTH, TAIL_HEIGHT;
 
     private float mProgress = 0.f;
     private int mDurTime = 500; // ms
+
+    private static final int TAIL_LEFT_GAP = ViewUtils.dpToPx(7);
+    private static final int TAIL_RIGHT_GAP = ViewUtils.dpToPx(7);
 
     private LinearGradient mGradient = null;
     private float[] mRadii = {
@@ -137,6 +145,9 @@ public class CustomFeedTailView extends View {
                 case R.styleable.CustomFeedTailView_background:
                     mBgDrawable = getResources().getDrawable(array.getResourceId(attr, 0));
                     break;
+                case R.styleable.CustomFeedTailView_needGrayBg:
+                    mIsNeedDrawGrayBg = array.getBoolean(attr, false);
+                    break;
                 default:
                     break;
             }
@@ -146,6 +157,7 @@ public class CustomFeedTailView extends View {
         mPaint = new Paint();
         mPath = new Path();
         mRect = new RectF(); // 整个view的边框
+        mGrayBgRect = new Rect(); // 分享背景
         mLeftIconRect = new Rect();
         mTextRect = new Rect();
         mRightTextRect = new Rect();
@@ -175,28 +187,40 @@ public class CustomFeedTailView extends View {
         int specSize = MeasureSpec.getSize(widthMeasureSpec);
 
         if (specMode == MeasureSpec.EXACTLY) {
-            mWidth = specSize;
+            mViewWidth = specSize;
         } else if (specMode == MeasureSpec.AT_MOST) {
             int desireWidth = getPaddingLeft() + mLeftIconSize + mTextBound.width() + mRightIconSize + getPaddingRight();
-            mWidth = Math.min(desireWidth, specSize);
+            mViewWidth = Math.min(desireWidth, specSize);
         }
 
         specMode = MeasureSpec.getMode(heightMeasureSpec);
         specSize = MeasureSpec.getSize(heightMeasureSpec);
 
         if (specMode == MeasureSpec.EXACTLY) {
-            mHeight = specSize;
+            mViewHeight = specSize;
         } else if (specMode == MeasureSpec.AT_MOST) {
             int desireHeight = Math.max(mLeftIconSize, mTextBound.height());
-            mHeight = getPaddingLeft() + desireHeight + getPaddingRight();
+            mViewHeight = getPaddingLeft() + desireHeight + getPaddingRight();
         }
 
-        setMeasuredDimension(mWidth, mHeight);
+        TAIL_WIDTH = mViewWidth - 2 * ViewUtils.dpToPx(7);
+        TAIL_HEIGHT = ViewUtils.dpToPx(32);
+
+        if (mIsNeedDrawGrayBg) {
+            mViewHeight = TAIL_HEIGHT + ViewUtils.dpToPx(7);
+        } else {
+            mViewHeight = TAIL_HEIGHT;
+        }
+        setMeasuredDimension(mViewWidth, mViewHeight);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        if (mIsNeedDrawGrayBg) {
+            drawGrayBackGround(canvas, mPaint);
+        }
 
         // draw bg
         drawBackGround(canvas, mPaint);
@@ -219,19 +243,26 @@ public class CustomFeedTailView extends View {
 //        drawProgress(canvas); // 进度条
     }
 
+    private void drawGrayBackGround(Canvas canvas, Paint paint) {
+        mGrayBgRect.set(0, 0, mViewWidth, mViewHeight);
+        mPaint.setColor(0xFF5566AA);
+        mPaint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(mGrayBgRect, mPaint);
+    }
+
     private void drawBackGround(Canvas canvas, Paint paint) {
-        mRect.set(0, 0, mWidth, mHeight);
+        mRect.set(TAIL_LEFT_GAP, 0, TAIL_WIDTH + TAIL_LEFT_GAP, TAIL_HEIGHT);
 
         if (mGradient == null) {
-            mGradient = new LinearGradient(0, 0, mWidth, mHeight,
+            mGradient = new LinearGradient(0, 0, TAIL_WIDTH, TAIL_HEIGHT,
                     new int[]{0xFFDFE4FF, 0xFFFFF0FF, 0xFFFFEEED},
                     new float[]{0, .8F, 1.F},
                     Shader.TileMode.CLAMP);
         }
         // set background by shader
 //        setMaskPaint();
-        setMaskPaint2();
-        drawShaderBackground(canvas);
+//        setMaskPaint2();
+//        drawShaderBackground(canvas);
 
         paint.setShader(mGradient);
         mPath.addRoundRect(mRect, mRadii, Path.Direction.CW);
@@ -252,7 +283,7 @@ public class CustomFeedTailView extends View {
      * 初始化阴影paint
      */
     private void setMaskPaint() {
-        LinearGradient maskLinearGradient = new LinearGradient(0, 0, mWidth, 0
+        LinearGradient maskLinearGradient = new LinearGradient(0, 0, TAIL_WIDTH, 0
                 , new int[]{mMaskStartColor, mMaskEndColor}
                 , new float[]{0, .9F}
                 , Shader.TileMode.CLAMP);
@@ -266,18 +297,19 @@ public class CustomFeedTailView extends View {
      * 初始化阴影paint
      */
     private void setMaskPaint2() {
-        LinearGradient maskLinearGradient = new LinearGradient(0, 0, mWidth, 0
+        LinearGradient maskLinearGradient = new LinearGradient(0, 0, TAIL_WIDTH, 0
                 , new int[]{mMaskStartColor, mMaskEndColor}
                 , new float[]{0, .9F}
                 , Shader.TileMode.CLAMP);
         mMaskPaint.setShader(maskLinearGradient);
         mMaskPaint.setShadowLayer(mMaskRadius / 2, 0, ViewUtils.dpToPx(1), Color.BLACK);
     }
+
     /***
      * 初始化阴影paint
      */
     private void setMaskPaint2(Paint paint) {
-        LinearGradient maskLinearGradient = new LinearGradient(0, 0, mWidth, 0
+        LinearGradient maskLinearGradient = new LinearGradient(0, 0, TAIL_WIDTH, 0
                 , new int[]{mMaskStartColor, mMaskEndColor}
                 , new float[]{0, .9F}
                 , Shader.TileMode.CLAMP);
@@ -304,16 +336,16 @@ public class CustomFeedTailView extends View {
     }
 
     private void drawLeftIcon(Canvas canvas, Paint paint) {
-        if (mLeftIconSize > mHeight) {
-            mLeftIconRect.left = getPaddingLeft();
+        if (mLeftIconSize > TAIL_HEIGHT) {
+            mLeftIconRect.left = getPaddingLeft() + TAIL_LEFT_GAP;
             mLeftIconRect.top = getPaddingTop();
-            mLeftIconRect.right = mHeight + getPaddingLeft();
-            mLeftIconRect.bottom = mHeight - getPaddingBottom();
+            mLeftIconRect.right = TAIL_HEIGHT + getPaddingLeft();
+            mLeftIconRect.bottom = TAIL_HEIGHT - getPaddingBottom();
         } else {
-            mLeftIconRect.left = getPaddingLeft() + ViewUtils.dpToPx(7);
-            mLeftIconRect.top = mHeight / 2 - mLeftIconSize / 2;
+            mLeftIconRect.left = getPaddingLeft() + ViewUtils.dpToPx(7) + TAIL_LEFT_GAP;
+            mLeftIconRect.top = TAIL_HEIGHT / 2 - mLeftIconSize / 2;
             mLeftIconRect.right = mLeftIconRect.left + mLeftIconSize;
-            mLeftIconRect.bottom = mHeight / 2 + mLeftIconSize / 2;
+            mLeftIconRect.bottom = TAIL_HEIGHT / 2 + mLeftIconSize / 2;
         }
 //        canvas.drawBitmap(mLeftIcon, null, mLeftIconRect, mPaint);
 
@@ -324,16 +356,16 @@ public class CustomFeedTailView extends View {
     }
 
     private void drawRightIcon(Canvas canvas, Paint paint) {
-        if (mRightIconSize > mHeight) {
-            mRightIconRect.left = mWidth - getPaddingRight() - mHeight;
+        if (mRightIconSize > TAIL_HEIGHT) {
+            mRightIconRect.left = mViewWidth - getPaddingRight() - TAIL_HEIGHT;
             mRightIconRect.top = getPaddingTop();
-            mRightIconRect.right = mWidth - getPaddingRight();
-            mRightIconRect.bottom = mHeight - getPaddingBottom();
+            mRightIconRect.right = mViewWidth - getPaddingRight();
+            mRightIconRect.bottom = TAIL_HEIGHT - getPaddingBottom();
         } else {
-            mRightIconRect.left = mWidth - mRightIconSize - ViewUtils.dpToPx(6) - getPaddingRight();
-            mRightIconRect.top = mHeight / 2 - mRightIconSize / 2;
-            mRightIconRect.right = mWidth - ViewUtils.dpToPx(6) - getPaddingRight();
-            mRightIconRect.bottom = mHeight / 2 + mRightIconSize / 2;
+            mRightIconRect.left = mViewWidth- TAIL_RIGHT_GAP - mRightIconSize - ViewUtils.dpToPx(6) - getPaddingRight();
+            mRightIconRect.top = TAIL_HEIGHT / 2 - mRightIconSize / 2;
+            mRightIconRect.right = mViewWidth - TAIL_RIGHT_GAP - ViewUtils.dpToPx(6) - getPaddingRight();
+            mRightIconRect.bottom = TAIL_HEIGHT / 2 + mRightIconSize / 2;
         }
         canvas.drawBitmap(mRightIcon, null, mRightIconRect, mPaint);
 
@@ -345,9 +377,9 @@ public class CustomFeedTailView extends View {
     private void drawRightText(Canvas canvas, Paint paint) {
         // draw text
         mRightTextRect.left = mRightIconRect.left - mRightTextRound.width() - ViewUtils.dpToPx(6);
-        mRightTextRect.top = mHeight / 2 - mRightTextRound.height() / 2;
+        mRightTextRect.top = TAIL_HEIGHT / 2 - mRightTextRound.height() / 2;
         mRightTextRect.right = mRightIconRect.left - ViewUtils.dpToPx(6);
-        mRightTextRect.bottom = mHeight / 2 + mRightTextRound.height() / 2;
+        mRightTextRect.bottom = TAIL_HEIGHT / 2 + mRightTextRound.height() / 2;
         canvas.drawText(mRightText, mRightTextRect.left, getBaseLine(mRightTextRect, paint), paint);
 //        drawRectByColor(canvas, paint, mRightTextRect, Color.parseColor("#5500FF00"));
     }
@@ -355,9 +387,9 @@ public class CustomFeedTailView extends View {
     private void drawText(Canvas canvas, Paint paint) {
         // draw text
         mTextRect.left = mLeftIconRect.right + ViewUtils.dpToPx(7);
-        mTextRect.top = mHeight / 2 - mTextBound.height() / 2;
+        mTextRect.top = TAIL_HEIGHT / 2 - mTextBound.height() / 2;
         mTextRect.right = mRightTextRect.left;
-        mTextRect.bottom = mHeight / 2 + mTextBound.height() / 2;
+        mTextRect.bottom = TAIL_HEIGHT / 2 + mTextBound.height() / 2;
 //        float restWidth = mWidth - mLeftIconRect.width() - mRightIconRect.width() - mRightTextRect.width() - getPaddingLeft() - getPaddingRight();
         float restWidth = mRightTextRect.left - mLeftIconRect.right - ViewUtils.dpToPx(15);
         if (mTextBound.width() > restWidth) {
@@ -375,7 +407,7 @@ public class CustomFeedTailView extends View {
 
     private void drawProgress(Canvas canvas) {
         mPaint.setColor(0x55555555);
-        mRect.set(0, 0, (int) (mWidth * mProgress), mHeight);
+        mRect.set(0, 0, (int) (TAIL_WIDTH * mProgress), TAIL_HEIGHT);
         canvas.drawRect(mRect, mPaint);
         mProgress += 1f / mDurTime;
 
@@ -390,4 +422,16 @@ public class CustomFeedTailView extends View {
         return (rect.bottom + rect.top - fontMetrics.bottom - fontMetrics.top - 2) / 2;
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                mIsNeedDrawGrayBg = !mIsNeedDrawGrayBg;
+                requestLayout();
+                break;
+        }
+
+        return true;
+    }
 }

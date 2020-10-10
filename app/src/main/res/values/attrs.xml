@@ -31,6 +31,7 @@
     <attr name="rightIcon" format="reference" />
     <attr name="rightIconSize" format="dimension" />
     <attr name="background" format="reference" />
+    <attr name="needGrayBg" format="boolean" />
     <declare-styleable name="CustomFeedTailView">
         <attr name="titleText" />
         <attr name="titleTextColor" />
@@ -41,6 +42,7 @@
         <attr name="rightIcon" />
         <attr name="rightIconSize" />
         <attr name="background" />
+        <attr name="needGrayBg" />
     </declare-styleable>
 
     <!--for circle animation view-->

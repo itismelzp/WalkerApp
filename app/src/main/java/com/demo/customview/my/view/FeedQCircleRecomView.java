@@ -3,6 +3,7 @@ package com.demo.customview.my.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -48,6 +49,7 @@ public class FeedQCircleRecomView extends View {
     private Rect mRect;
     private RectF mRectF;
     private Rect mTitleBound, mBottomTextBound;
+    private Path mPath;
 
     private String mTitle = "乌云碎大石";
     private String mContestTitle = "我上过的荣耀";
@@ -61,6 +63,13 @@ public class FeedQCircleRecomView extends View {
     private int mAvatarSize;
 
     private boolean isShowRecomFeedHead = true;
+
+    private float[] mRadii = {
+            20f, 20f,
+            20f, 20f,
+            0f, 0f,
+            0f, 0f
+    };
 
     public FeedQCircleRecomView(Context context) {
         this(context, null);
@@ -104,6 +113,8 @@ public class FeedQCircleRecomView extends View {
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setStrokeWidth(2f);
         mPaint.getTextBounds(mTitle, 0, mTitle.length(), mTitleBound);
+
+        mPath = new Path();
     }
 
     @Override
@@ -153,7 +164,13 @@ public class FeedQCircleRecomView extends View {
 
     private void drawRecomContestHead(Canvas canvas) {
         // draw bg
+        setShadowSize(canvas, ViewUtils.dpToPx(2), ViewUtils.dpToPx(2.5f), ViewUtils.dpToPx(2), 0);
+
         mRecomContestBg.setBounds(0, 0, TITLE_WIDTH, TITLE_HEIGHT);
+        mRectF.set(0, 0, TITLE_WIDTH, TITLE_HEIGHT);
+        mPath.addRoundRect(mRectF, mRadii, Path.Direction.CW);
+        canvas.clipPath(mPath);
+
         mRecomContestBg.draw(canvas);
         // draw icon
         mRect.left = ViewUtils.dpToPx(10);
@@ -190,7 +207,13 @@ public class FeedQCircleRecomView extends View {
 
     private void drawRecomFeedsHead(Canvas canvas) {
         // draw bg
+        setShadowSize(canvas, ViewUtils.dpToPx(2), ViewUtils.dpToPx(2.5f), ViewUtils.dpToPx(2), 0);
         mRecomFeedsBg.setBounds(0, 0, TITLE_WIDTH, TITLE_HEIGHT);
+
+        mRectF.set(0, 0, TITLE_WIDTH, TITLE_HEIGHT);
+        mPath.addRoundRect(mRectF, mRadii, Path.Direction.CW);
+        canvas.clipPath(mPath);
+
         mRecomFeedsBg.draw(canvas);
 
         // draw avatar
@@ -291,6 +314,18 @@ public class FeedQCircleRecomView extends View {
         }
 
         return true;
+    }
+
+    Drawable shadowDrawable = getResources().getDrawable(R.drawable.qzone_adv_single_pic_background_up);
+
+    public void setShadowSize(Canvas canvas, int left, int top, int right, int bottom) {
+        int shadowWidth = TITLE_WIDTH + left + right;
+        int shadowHeight = TITLE_HEIGHT + top + bottom;
+        if (shadowDrawable != null) {
+            Rect newShadowBound = new Rect(-ViewUtils.dip2px(4), -ViewUtils.dip2px(4), shadowWidth, shadowHeight);
+            shadowDrawable.setBounds(newShadowBound);
+            shadowDrawable.draw(canvas);
+        }
     }
 
 }

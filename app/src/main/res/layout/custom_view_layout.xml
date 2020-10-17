@@ -60,7 +60,6 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginTop="10dp"
-        android:background="#ffff0000"
         app:layout_constraintTop_toBottomOf="@+id/custome_image_view" />
 
     <com.demo.customview.my.view.FeedRecomTitleView
@@ -69,7 +68,6 @@
         android:layout_height="71dp"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
-        android:background="#ffff0000"
         app:layout_constraintTop_toBottomOf="@+id/custom_feed_recom_bar_view" />
 
     <com.demo.customview.my.view.FeedQCircleRecomView
@@ -149,7 +147,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        app:background="@drawable/qzone_feed_qcircle_tail_bg"
         app:layout_constraintTop_toBottomOf="@+id/feed_app_share_card_bottom_bar_container"
         app:leftIcon="@drawable/qcircle_icon"
         app:leftIconSize="50dp"
@@ -166,7 +163,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        app:background="@drawable/qzone_feed_qcircle_tail_bg"
         app:layout_constraintTop_toBottomOf="@+id/custom_feed_tail_view"
         app:leftIcon="@drawable/qcircle_icon"
         app:leftIconSize="18dp"
@@ -174,6 +170,7 @@
         app:rightIcon="@drawable/icon_general_arrow_right_secondary"
         app:rightIconSize="12sp"
         app:rightText="去看看"
+        app:showShadow="true"
         app:titleText="来自小世界：我不抽烟xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx的动态"
         app:titleTextColor="#FF03081A"
         app:titleTextSize="12sp" />

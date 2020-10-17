@@ -132,10 +132,11 @@ public class ShadowTextView extends View {
      * 初始化阴影paint
      */
     private void setMaskPaint() {
-        LinearGradient maskLinearGradient = new LinearGradient(0, 0, dp2px(mWidth), 0
-                , new int[]{mMaskStartColor, mMaskEndColor}
-                , new float[]{0, .9F}
-                , Shader.TileMode.CLAMP);
+
+        LinearGradient maskLinearGradient = new LinearGradient(0, 0, dp2px(mWidth), 0,
+                new int[]{mMaskStartColor, mMaskEndColor},
+                new float[]{0, 1.F},
+                Shader.TileMode.CLAMP);
         mMaskPaint.setShader(maskLinearGradient);
         mMaskPaint.setShadowLayer(mMaskRadius / 2, dx, dy, getResources().getColor(R.color.colorWhite));
     }
@@ -219,14 +220,6 @@ public class ShadowTextView extends View {
     private int dp2px(float dp) {
         float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
-    }
-
-    /**
-     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
-     */
-    public int px2dip(float pxValue) {
-        float scale = getResources().getDisplayMetrics().density;
-        return (int) (pxValue / scale + 0.5f);
     }
 
     /**

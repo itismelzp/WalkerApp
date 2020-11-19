@@ -33,6 +33,7 @@
     <attr name="background" format="reference" />
     <attr name="needGrayBg" format="boolean" />
     <attr name="showShadow" format="boolean" />
+    <attr name="bgAlpha" format="integer" />
     <declare-styleable name="CustomFeedTailView">
         <attr name="titleText" />
         <attr name="titleTextColor" />
@@ -45,6 +46,7 @@
         <attr name="background" />
         <attr name="needGrayBg" />
         <attr name="showShadow" />
+        <attr name="bgAlpha" />
     </declare-styleable>
 
     <!--for circle animation view-->

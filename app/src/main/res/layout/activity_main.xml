@@ -45,4 +45,12 @@
         android:text="custom matrix view"
         app:layout_constraintTop_toBottomOf="@id/btn_custom_sloop_menu" />
 
+    <Button
+        android:id="@+id/btn_aige_custom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="aige custom view"
+        app:layout_constraintTop_toBottomOf="@id/btn_custom_matrix_view" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -56,6 +57,7 @@ public class CustomFeedTailView extends View {
 
     private boolean mIsNeedDrawGrayBg = false;
     private boolean mNeedShowShadow = false;
+    private int bgAlpha = 255;
 
     private Bitmap mLeftIcon;
     private Drawable mLeftIconDrawable;
@@ -72,6 +74,8 @@ public class CustomFeedTailView extends View {
     private Rect mGrayBgRect;
     private Rect mLeftIconRect, mTextRect, mRightTextRect, mRightIconRect;
     private Rect mTextBound, mRightTextRound;
+
+    private final Drawable mForwardBgDrawable = new ColorDrawable(getResources().getColor(R.color.qzone_skin_feed_second_background_color));
 
     private static final int MARGIN_LEFT = ViewUtils.dpToPx(8);
     private static final int MARGIN_RIGHT = ViewUtils.dpToPx(8);
@@ -156,6 +160,9 @@ public class CustomFeedTailView extends View {
                 case R.styleable.CustomFeedTailView_showShadow:
                     mNeedShowShadow = array.getBoolean(attr, false);
                     break;
+                case R.styleable.CustomFeedTailView_bgAlpha:
+                    bgAlpha = array.getInt(attr, 255);
+                    break;
                 default:
                     break;
             }
@@ -237,10 +244,10 @@ public class CustomFeedTailView extends View {
 
 //        setBackgroundColor(getResources().getColor(R.color.qzone_skin_feed_second_background_color));
         if (mIsNeedDrawGrayBg) {
-            drawGrayBackGround(canvas, mPaint);
+//            drawGrayBackGround(canvas, mPaint);
         }
         if (mNeedShowShadow) {
-            setShadowSize(canvas, ViewUtils.dpToPx(2.5f), 0, ViewUtils.dpToPx(8.5f), ViewUtils.dpToPx(5.5f));
+//            setShadowSize(canvas, ViewUtils.dpToPx(2.5f), 0, ViewUtils.dpToPx(8.5f), ViewUtils.dpToPx(5.5f));
 //            setMaskPaint();
 //            RectF rectF = new RectF(mMaskRadius, mMaskRadius, TAIL_WIDTH - mMaskRadius, TAIL_HEIGHT - mMaskRadius);
 //            canvas.drawRoundRect(rectF, mRadius, mRadius, mMaskPaint);
@@ -268,10 +275,14 @@ public class CustomFeedTailView extends View {
     }
 
     private void drawGrayBackGround(Canvas canvas, Paint paint) {
-        mGrayBgRect.set(0, 0, mViewWidth, mViewHeight);
-        mPaint.setColor(0xFFF5F6FA);
-        mPaint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(mGrayBgRect, mPaint);
+//        mGrayBgRect.set(0, 0, mViewWidth, mViewHeight);
+//        mPaint.setColor(0xFFF5F6FA);
+//        mPaint.setStyle(Paint.Style.FILL);
+//        canvas.drawRect(mGrayBgRect, mPaint);
+
+        mForwardBgDrawable.setAlpha(bgAlpha);
+        mForwardBgDrawable.setBounds(0, 0, mViewWidth, mViewHeight);
+        mForwardBgDrawable.draw(canvas);
     }
 
     private void drawBackGround(Canvas canvas, Paint paint) {
@@ -288,10 +299,31 @@ public class CustomFeedTailView extends View {
 //        setMaskPaint2();
 //        drawShaderBackground(canvas);
 
+        Path path = new Path();
+        path.addRect(mRect, Path.Direction.CW);
+
+        if (mLeftIconSize > TAIL_HEIGHT) {
+            mLeftIconRect.left = getPaddingLeft() + TAIL_LEFT_GAP;
+            mLeftIconRect.top = getPaddingTop();
+            mLeftIconRect.right = TAIL_HEIGHT + getPaddingLeft();
+            mLeftIconRect.bottom = TAIL_HEIGHT - getPaddingBottom();
+        } else {
+            mLeftIconRect.left = getPaddingLeft() + ViewUtils.dpToPx(7) + TAIL_LEFT_GAP;
+            mLeftIconRect.top = TAIL_HEIGHT / 2 - mLeftIconSize / 2;
+            mLeftIconRect.right = mLeftIconRect.left + mLeftIconSize;
+            mLeftIconRect.bottom = TAIL_HEIGHT / 2 + mLeftIconSize / 2;
+        }
+//        path.addRect(mLeftIconRect.left,
+//                mLeftIconRect.top,
+//                mLeftIconRect.right,
+//                mLeftIconRect.bottom, Path.Direction.CCW);
+        path.addCircle(mLeftIconRect.width() / 2f, mLeftIconRect.height()/ 2f, mLeftIconRect.width() / 2f, Path.Direction.CCW);
+
         paint.setShader(mGradient);
         mPath.addRoundRect(mRect, mRadii, Path.Direction.CW);
         canvas.clipPath(mPath);
-        canvas.drawRect(mRect, paint);
+//        canvas.drawRect(mRect, paint);
+        canvas.drawPath(path, paint);
         paint.setShader(null);
 
         // set background by drawable

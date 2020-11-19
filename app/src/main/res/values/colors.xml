@@ -6,7 +6,7 @@
 
 
 
-    // shadow text view
+    <!--shadow text view-->
     <color name="my_bg_start">#E0563F</color>
     <color name="my_bg_end">#FF7954</color>
     <color name="my_bg_selected_start">#B63C27</color>

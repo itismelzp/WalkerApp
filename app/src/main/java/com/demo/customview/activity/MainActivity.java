@@ -2,19 +2,14 @@ package com.demo.customview.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
-import android.widget.Toast;
 
 import com.demo.customview.R;
 import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
-
-import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         initButton(R.id.btn_custom_sloop_menu, CustomSloopMenuActivity.class);
         initButton(R.id.btn_custom_matrix_view, CustomMatrixActivity.class);
         initButton(R.id.btn_aige_custom_view, AigeActivity.class);
+        initButton(R.id.btn_list_view_demo, ListViewDemoActivity.class);
+
 
     }
 

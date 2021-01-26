@@ -2,6 +2,7 @@ package com.demo.customview.my.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -161,9 +162,9 @@ public class FeedRecomTitleView extends View {
         }
 
         mRectF.left = mRect.right + ViewUtils.dpToPx(4);
-        mRectF.top = ViewUtils.dpToPx(16);
+        mRectF.top = VIEW_HEIGHT / 2f - mTitleBound.height() / 2f;
         mRectF.right = mRectF.left + mTitleBound.width();
-        mRectF.bottom = mRectF.top + mTitleBound.height();
+        mRectF.bottom = VIEW_HEIGHT / 2f - mTitleBound.height() / 2f;
         canvas.drawText(mContestTitle, mRectF.left, getBaseLine(mRectF, mPaint), mPaint);
 
         // draw bottom text

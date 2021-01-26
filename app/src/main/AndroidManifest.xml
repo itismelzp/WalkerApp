@@ -16,6 +16,9 @@
         <activity android:name=".sloop.activity.CustomSloopViewActivity" />
         <activity android:name=".activity.CustomShaderActivity" />
         <activity android:name=".zhy.activity.CustomViewActivity" />
+        <activity
+            android:name=".activity.ListViewDemoActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

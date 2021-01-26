@@ -13,4 +13,7 @@
     <color name="my_bg_selected_end">#E95A33</color>
     <color name="colorWhite">#FFFFFF</color>
 
+    <color name="color_hei_8">#E95A33</color>
+    <color name="transparent">@color/color_hei_8</color>
+
 </resources>

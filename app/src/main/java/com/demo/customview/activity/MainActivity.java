@@ -13,6 +13,7 @@ import com.demo.customview.zhy.activity.CustomViewActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         initButton(R.id.btn_custom_matrix_view, CustomMatrixActivity.class);
         initButton(R.id.btn_aige_custom_view, AigeActivity.class);
         initButton(R.id.btn_list_view_demo, ListViewDemoActivity.class);
+        initButton(R.id.test_android_11, QzoneDualWarmActivity.class);
 
 
     }

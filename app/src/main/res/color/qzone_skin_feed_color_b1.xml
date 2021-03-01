@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--   重要. 这里颜色必须写死色值. 不要写@color/XXX, 否则换肤将出问题!!!   -->
+<!--   背景色值style, 默认#FFFFFF，黑夜模式#282828-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="#FFFFFF"/>
+</selector>

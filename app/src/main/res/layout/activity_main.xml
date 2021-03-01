@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+  android:background="@drawable/a"
     tools:context=".activity.MainActivity">
 
     <com.demo.customview.view.CanvasForPictureView
@@ -61,11 +62,12 @@
         android:text="btn list view demo"
         app:layout_constraintTop_toBottomOf="@id/btn_aige_custom_view" />
 
-    <ViewStub
-        android:id="@+id/view_stub"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/view_stub_layout"
-        app:layout_constraintTop_toBottomOf="@id/btn_list_view_demo" />
+    <Button
+      android:id="@+id/test_android_11"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:text="测试android111"
+      app:layout_constraintTop_toBottomOf="@id/btn_list_view_demo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

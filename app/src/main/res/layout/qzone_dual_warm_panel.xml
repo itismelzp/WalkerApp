@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/qz_dual_warm_panel_root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="bottom"
+  android:orientation="vertical">
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/qz_dual_warm_whole_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/qzone_skin_feed_color_b1_drawable"
+    android:gravity="bottom"
+    android:orientation="vertical">
+    <LinearLayout
+      android:id="@+id/qz_dual_warm_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:layout_marginBottom="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="12dp"
+      android:background="@drawable/qzone_skin_feed_second_background"
+      android:orientation="vertical"> <!-- 这里统一使用灰色背景了 -->
+    </LinearLayout>
+
+    <LinearLayout
+      android:id="@+id/qz_dual_warm_shuffle_btn"
+      android:layout_width="match_parent"
+      android:layout_height="39dp"
+      android:gravity="center">
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="qqstr_qzonedua_59d7701c"
+        android:textColor="@color/qzone_skin_feed_content_text_color"
+        android:textSize="14sp" />
+    </LinearLayout>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="0.5dp"
+      android:background="@drawable/qzone_skin_feed_split_line" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="0.5dp"
+      android:background="@drawable/qzone_skin_feed_split_line" />
+
+  </LinearLayout>
+
+</LinearLayout>

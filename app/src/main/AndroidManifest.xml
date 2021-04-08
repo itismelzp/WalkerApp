@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.demo.widget.RecyclerViewActivity"></activity>
+        <activity android:name="com.demo.widget.activity.RecyclerViewActivity"></activity>
         <activity
             android:name=".activity.OtherProcessActivity"
             android:process=":qzone"></activity>

@@ -23,7 +23,7 @@ import com.demo.customview.activity.OtherProcessActivity;
 import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
-import com.demo.widget.RecyclerViewActivity;
+import com.demo.widget.activity.RecyclerViewActivity;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().getName());
 
+//        startTMGame();
+    }
+
+    private void startTMGame() {
+
         try {
             getAppInfo(this);
         } catch (Exception e) {
@@ -63,10 +68,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        startTMGame();
-    }
 
-    private void startTMGame() {
         String customPkgName = System.getenv("CUSTOM_PACKAGE_NAME");
         Log.d(TAG, "getenv: " + customPkgName);
         Set<ProviderInfo> sets = new HashSet<>();

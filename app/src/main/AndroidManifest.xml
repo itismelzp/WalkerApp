@@ -10,17 +10,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name="com.demo.widget.RecyclerViewActivity"></activity>
+        <activity
+            android:name=".activity.OtherProcessActivity"
+            android:process=":qzone"></activity>
         <activity android:name=".aige.activity.AigeActivity" />
         <activity android:name=".sloop.activity.CustomSloopMenuActivity" />
         <activity android:name=".activity.CustomMatrixActivity" />
         <activity android:name=".sloop.activity.CustomSloopViewActivity" />
         <activity android:name=".activity.CustomShaderActivity" />
         <activity android:name=".zhy.activity.CustomViewActivity" />
-        <activity android:name=".activity.QzoneDualWarmActivity" />
         <activity
             android:name=".activity.ListViewDemoActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="com.demo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

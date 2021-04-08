@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  android:background="@drawable/a"
-    tools:context=".activity.MainActivity">
+    android:background="@drawable/a"
+    tools:context="com.demo.MainActivity">
 
     <com.demo.customview.view.CanvasForPictureView
         android:id="@+id/cfpv"
@@ -63,11 +63,20 @@
         app:layout_constraintTop_toBottomOf="@id/btn_aige_custom_view" />
 
     <Button
-      android:id="@+id/test_android_11"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="5dp"
-      android:text="测试android111"
-      app:layout_constraintTop_toBottomOf="@id/btn_list_view_demo" />
+        android:id="@+id/test_other_process"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="test_other_process"
+        app:layout_constraintTop_toBottomOf="@id/btn_list_view_demo" />
+
+    <Button
+        android:id="@+id/btn_test_recycle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test recycleview"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/test_other_process" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

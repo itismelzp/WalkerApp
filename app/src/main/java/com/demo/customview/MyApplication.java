@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.demo.customview.utils.ViewUtils;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 /**
  * Created by walkerzpli on 2020/9/23.
@@ -18,6 +19,7 @@ public class MyApplication extends Application {
 
         mContext = getApplicationContext();
         ViewUtils.initContext(mContext);
+        SensorsDataAPI.init(this);
     }
 
     public static Context getInstance() {

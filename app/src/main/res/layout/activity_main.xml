@@ -79,4 +79,32 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/test_other_process" />
 
+    <ImageView
+        android:id="@+id/heif_img"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_test_recycle_view" />
+
+    <Button
+        android:id="@+id/shape_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="shape background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_test_recycle_view" />
+
+
+    <Button
+        android:id="@+id/wink_pg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="wink page"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shape_bg" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

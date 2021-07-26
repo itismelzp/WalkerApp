@@ -23,7 +23,9 @@ import com.demo.customview.activity.OtherProcessActivity;
 import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
-import com.demo.widget.activity.RecyclerViewActivity;
+import com.demo.widget.activity.ScaleActivity;
+import com.demo.widget.activity.ShapeBgActivity;
+import com.demo.wink.WinkActivity;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -47,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
         initButton(R.id.btn_aige_custom_view, AigeActivity.class);
         initButton(R.id.btn_list_view_demo, ListViewDemoActivity.class);
         initButton(R.id.test_other_process, OtherProcessActivity.class);
-        initButton(R.id.btn_test_recycle_view, RecyclerViewActivity.class);
+        initButton(R.id.btn_test_recycle_view, ScaleActivity.class);
+        initButton(R.id.shape_bg, ShapeBgActivity.class);
+        initButton(R.id.wink_pg, WinkActivity.class);
+//        initButton(R.id.btn_test_recycle_view, ScaleActivity.class);
 
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().getName());
 

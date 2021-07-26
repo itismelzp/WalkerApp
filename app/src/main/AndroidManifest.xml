@@ -10,10 +10,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.demo.widget.activity.RecyclerViewActivity"></activity>
+        <activity android:name="com.demo.wink.WinkActivity" />
+        <activity android:name="com.demo.widget.activity.ShapeBgActivity" />
+        <activity android:name="com.demo.widget.activity.ScaleActivity" />
+        <activity android:name="com.demo.widget.activity.RecyclerViewActivity" />
         <activity
             android:name=".activity.OtherProcessActivity"
-            android:process=":qzone"></activity>
+            android:process=":qzone" />
         <activity android:name=".aige.activity.AigeActivity" />
         <activity android:name=".sloop.activity.CustomSloopMenuActivity" />
         <activity android:name=".activity.CustomMatrixActivity" />

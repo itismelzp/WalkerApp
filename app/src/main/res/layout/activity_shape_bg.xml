@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context="com.demo.widget.activity.ShapeBgActivity">
+
+
+    <FrameLayout
+        android:id="@+id/qfs_publish_status"
+        android:layout_width="60dp"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/qcircle_publish_status_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.demo.customview.view.RoundCornerImageView
+            android:src="@drawable/wid_grid_bg"
+            android:id="@+id/qfs_publish_status_cover"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop" />
+
+<!--        <View-->
+<!--            android:id="@+id/qfs_publish_status_mask"-->
+<!--            android:layout_width="60dp"-->
+<!--            android:layout_height="80dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:background="@drawable/qcircle_publish_box_corner" />-->
+
+        <com.demo.customview.view.QFSRoundProgressBar
+            android:id="@+id/qfs_roundProgressBar"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            app:bgColorRound="#73FFFFFF"
+            app:circleWidthRound="3dp"
+            app:currentColorRound="#CCFFFFFF"
+            app:loadSpeedRound="10"
+            app:textColorRound="#ffffff"
+            app:textSizeRound="11sp" />
+
+    </FrameLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,6 +23,7 @@ import com.demo.customview.activity.OtherProcessActivity;
 import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
+import com.demo.proto.PersonProtos;
 import com.demo.widget.activity.ScaleActivity;
 import com.demo.widget.activity.ShapeBgActivity;
 import com.demo.wink.WinkActivity;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().getName());
 
 //        startTMGame();
+//        LanguageGuide.SearchResponse response;
     }
 
     private void startTMGame() {

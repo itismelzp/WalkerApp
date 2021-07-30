@@ -1,0 +1,48 @@
+
+
+/* SearchRequest represents a search query, with pagination options to
+ * indicate which results to include in the response. */
+
+message SearchRequest {
+    required string query = 1;
+    optional int32 page_number = 2; // Which page number do we want?
+    optional int32 result_per_page = 3 [default = 10]; // Number of results to return per page.
+
+    enum Corpus {
+        UNIVERSAL = 0;
+        WEB = 1;
+        IMAGES = 2;
+        LOCAL = 3;
+        NEWS = 4;
+        PRODUCTS = 5;
+        VIDEO = 6;
+    }
+
+    repeated int32 samples = 4 [packed = true]; // use the special option [packed=true] to get a more efficient encoding.
+
+    enum EnumAllowingAlias {
+        option allow_alias = true;
+        UNKNOWN = 0;
+        STARTED = 1;
+        RUNNING = 1;
+    }
+//    enum EnumNotAllowingAlias {
+//        UNKNOWN = 0;
+//        STARTED = 1;
+////         RUNNING = 1;  // Uncommenting this line will cause a compile error inside Google and a warning message outside.
+//    }
+
+}
+
+
+message SearchResponse {
+    repeated Result result = 1;
+//    repeated Person person = 2;
+}
+
+
+message Result {
+    required string url = 1;
+    optional string title = 2;
+    required string snippets = 3;
+}

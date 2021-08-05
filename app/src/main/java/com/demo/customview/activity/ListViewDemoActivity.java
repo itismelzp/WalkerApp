@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 import java.util.ArrayList;
 import java.util.List;

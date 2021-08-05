@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.demo.customview.R;
+import com.demo.R;
 import com.demo.customview.drawable.RoundImageDrawable;
 
 public class CustomShaderActivity extends AppCompatActivity {

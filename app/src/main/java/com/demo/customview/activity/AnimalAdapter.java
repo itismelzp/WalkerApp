@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 import java.util.List;
 

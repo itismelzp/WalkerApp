@@ -16,7 +16,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 /**
  * 尝试一个自定义阴影View

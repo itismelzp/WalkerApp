@@ -13,7 +13,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 import java.util.HashSet;
 import java.util.Random;

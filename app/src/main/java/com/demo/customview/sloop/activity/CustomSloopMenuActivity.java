@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 public class CustomSloopMenuActivity extends AppCompatActivity {
 

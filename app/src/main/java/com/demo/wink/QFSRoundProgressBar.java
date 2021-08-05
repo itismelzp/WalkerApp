@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 
 /**

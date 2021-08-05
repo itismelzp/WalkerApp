@@ -16,7 +16,7 @@ import android.util.TypedValue;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 /**
  * Created by walkerzpli on 2021/7/19.

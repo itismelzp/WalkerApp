@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
-import com.demo.customview.R;
+import com.demo.R;
 import com.demo.customview.utils.MeasureUtil;
 
 /**

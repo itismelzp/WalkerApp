@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat;
 import android.os.Bundle;
 import android.view.View;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 public class WinkActivity extends AppCompatActivity {
 

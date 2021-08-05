@@ -15,11 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.demo.MainActivity;
-import com.demo.customview.R;
+import com.demo.R;
 import com.demo.widget.bean.Fruit;
 import com.demo.widget.utils.FruitAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewActivity extends AppCompatActivity implements View.OnClickListener {

@@ -11,7 +11,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 /**
  * Created by walkerzpli on 2020/9/27.

@@ -18,7 +18,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.demo.customview.R;
+import com.demo.R;
 import com.demo.customview.utils.MeasureUtil;
 
 /**

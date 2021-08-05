@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.demo.customview.R;
+import com.demo.R;
 import com.demo.widget.bean.Fruit;
 
 import java.util.ArrayList;

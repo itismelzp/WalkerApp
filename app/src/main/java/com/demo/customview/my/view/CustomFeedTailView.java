@@ -24,7 +24,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.demo.customview.R;
+import com.demo.R;
 import com.demo.customview.utils.ViewUtils;
 
 /**

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 public class OtherProcessActivity extends AppCompatActivity {
 

@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.demo.customview.R;
+import com.demo.R;
 
 public class CustomViewActivity extends AppCompatActivity {
 

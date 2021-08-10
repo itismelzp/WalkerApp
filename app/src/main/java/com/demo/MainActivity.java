@@ -9,13 +9,13 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.demo.R;
 import com.demo.customview.activity.CustomMatrixActivity;
 import com.demo.customview.activity.CustomShaderActivity;
 import com.demo.customview.activity.ListViewDemoActivity;
@@ -23,7 +23,6 @@ import com.demo.customview.activity.OtherProcessActivity;
 import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
-import com.demo.proto.PersonProtos;
 import com.demo.storage.RoomActivity;
 import com.demo.widget.activity.ScaleActivity;
 import com.demo.widget.activity.ShapeBgActivity;
@@ -55,12 +54,9 @@ public class MainActivity extends AppCompatActivity {
         initButton(R.id.shape_bg, ShapeBgActivity.class);
         initButton(R.id.wink_pg, WinkActivity.class);
         initButton(R.id.btn_storage, RoomActivity.class);
-//        initButton(R.id.btn_test_recycle_view, ScaleActivity.class);
 
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().getName());
 
-//        startTMGame();
-//        LanguageGuide.SearchResponse response;
     }
 
     private void startTMGame() {
@@ -106,12 +102,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initButton(int resId, final Class<?> clz) {
-        findViewById(resId).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(clz);
-            }
-        });
+        findViewById(resId).setOnClickListener(v -> startActivity(clz));
     }
 
     private void startActivity(Class<?> clz) {
@@ -120,4 +111,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

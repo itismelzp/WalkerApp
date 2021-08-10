@@ -3,12 +3,12 @@ apply plugin: 'com.sensorsdata.android'
 apply plugin: 'com.google.protobuf'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     buildToolsVersion "28.0.3"
     defaultConfig {
-        applicationId "com.demo.customview"
-        minSdkVersion 16
-        targetSdkVersion 28
+        applicationId "com.demo"
+        minSdkVersion 21
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -31,6 +31,10 @@ android {
             }
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 protobuf {
@@ -52,6 +56,7 @@ protobuf {
 
 dependencies {
     implementation project(':track_sdk')
+    implementation project(':storage_sdk')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

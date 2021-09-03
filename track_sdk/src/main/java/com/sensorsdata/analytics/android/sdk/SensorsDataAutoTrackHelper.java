@@ -22,7 +22,9 @@ public class SensorsDataAutoTrackHelper {
                 jsonObject.put("$activity", activity.getClass().getCanonicalName());
             }
 
-            SensorsDataAPI.getInstance().track("$AppClick", jsonObject);
+            if (SensorsDataAPI.getInstance() != null) {
+                SensorsDataAPI.getInstance().track("$AppClick", jsonObject);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

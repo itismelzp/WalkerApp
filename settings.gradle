@@ -1,4 +1,4 @@
-rootProject.name='CustomView'
+rootProject.name='WalkerApp'
 include ':track_sdk'
 include ':app'
 include ':storage_sdk'

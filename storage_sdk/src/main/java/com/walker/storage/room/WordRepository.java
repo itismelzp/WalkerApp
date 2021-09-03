@@ -25,8 +25,10 @@ class WordRepository {
     }
 
     void insert(Word word) {
-        WordRoomDatabase.databaseWriteExecutor.execute(() ->
-                mWordDao.insert(word));
+        WordRoomDatabase.databaseWriteExecutor.execute(() -> mWordDao.insert(word));
     }
 
+    void delete(String content) {
+        WordRoomDatabase.databaseWriteExecutor.execute(() -> mWordDao.delete(content));
+    }
 }

@@ -29,11 +29,13 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final WordListAdapter adapter = new WordListAdapter(new WordListAdapter.WordDiff());
+
+        mWordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
+        final WordListAdapter adapter = new WordListAdapter(new WordListAdapter.WordDiff(), mWordViewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mWordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
+        // Update the cached copy of the words in the adapter.
         mWordViewModel.getAllWords().observe(this, adapter::submitList);
 
         FloatingActionButton fab = findViewById(R.id.fab);

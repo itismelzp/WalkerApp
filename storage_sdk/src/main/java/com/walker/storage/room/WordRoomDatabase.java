@@ -1,6 +1,7 @@
 package com.walker.storage.room;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -18,6 +19,8 @@ import java.util.concurrent.Executors;
 @Database(entities = {Word.class}, version = 1, exportSchema = false)
 public abstract class WordRoomDatabase extends RoomDatabase {
 
+    private static final String TAG = "WordRoomDatabase";
+
     public abstract WordDao wordDao();
 
     private static volatile WordRoomDatabase INSTANCE;
@@ -31,7 +34,7 @@ public abstract class WordRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             WordRoomDatabase.class, "word_database")
-                            .addCallback(sRoomDatabaseCallback)
+                            .addCallback(sRoomDatabaseCallback) // 数据库创建的时候回调
                             .build();
                 }
             }
@@ -43,6 +46,8 @@ public abstract class WordRoomDatabase extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
+
+            Log.d(TAG, "[onCreate] SupportSQLiteDatabase attachedDbs: " + db.getAttachedDbs());
 
             databaseWriteExecutor.execute(() -> {
                 WordDao dao = INSTANCE.wordDao();

@@ -23,7 +23,10 @@ public interface WordDao {
     @Query("DELETE FROM word_table")
     void deleteAll();
 
-    @Query("SELECT * FROM word_table ORDER BY word ASC")
+    @Query("DELETE FROM word_table WHERE content = :content")
+    void delete(String content);
+
+    @Query("SELECT * FROM word_table ORDER BY content ASC")
     LiveData<List<Word>> getAlphabetizedWords();
 
 }

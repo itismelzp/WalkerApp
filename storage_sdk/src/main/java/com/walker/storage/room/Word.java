@@ -12,19 +12,28 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "word_table")
 public class Word {
 
-//    @PrimaryKey(autoGenerate = true)
-//    private int id;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
-    @PrimaryKey
     @NonNull
-    @ColumnInfo(name = "word")
-    private String mWord;
+    @ColumnInfo(name = "content")
+    private String mContent;
 
-    public Word(@NonNull String word) {
-        this.mWord = word;
+
+    public Word(@NonNull String content) {
+        this.mContent = content;
     }
 
-    public String getWord() {
-        return mWord;
+    public void setId(int id) {
+        this.id = id;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return mContent;
+    }
+
 }

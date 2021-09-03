@@ -2,12 +2,64 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     tools:context="com.demo.wink.WinkActivity">
 
-<!--    android:src="@drawable/wid_grid_bg"-->
+    <ImageView
+        android:id="@+id/guild_channel_left_back_tv"
+        android:layout_width="10dp"
+        android:layout_height="17dp"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/guild_channel_detail_left_back_icon"
+        android:contentDescription="左边的三角形返回按钮"
+        android:includeFontPadding="false"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_line"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/guild_channel_detail_title_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="16dp"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:singleLine="true"
+        android:text="xxxxxxxx"
+        android:textColor="#FF222222"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_line"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toRightOf="@id/guild_channel_left_back_tv"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="wrap"
+        tools:text="xxxxxxxx" />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/notice_off"-->
+<!--        android:layout_width="17dp"-->
+<!--        android:layout_height="17dp"-->
+<!--        android:layout_marginLeft="3dp"-->
+<!--        android:layout_marginRight="17dp"-->
+<!--        android:src="@drawable/guild_detail_notice_off_title_icon"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/bottom_line"-->
+<!--        app:layout_constraintLeft_toRightOf="@id/guild_channel_detail_title_tv"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bottom_line"
+        app:layout_constraintGuide_begin="44dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <com.demo.wink.QFSRoundProgressView
         android:id="@+id/progress_cv"
         android:layout_width="60dp"

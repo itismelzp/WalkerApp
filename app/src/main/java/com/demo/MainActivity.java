@@ -21,6 +21,7 @@ import com.demo.customview.activity.CustomShaderActivity;
 import com.demo.customview.activity.ListViewDemoActivity;
 import com.demo.customview.activity.OtherProcessActivity;
 import com.demo.customview.aige.activity.AigeActivity;
+import com.demo.customview.ryg.ViewEventDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
 import com.demo.storage.RoomActivity;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         initButton(R.id.shape_bg, ShapeBgActivity.class);
         initButton(R.id.wink_pg, WinkActivity.class);
         initButton(R.id.btn_storage, RoomActivity.class);
+        initButton(R.id.view_dispatch_demo, ViewEventDispatchDemoActivity.class);
 
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().getName());
 

@@ -10,6 +10,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
@@ -31,6 +32,10 @@ public class ViewUtils {
         DisplayMetrics dm = ctx.getResources().getDisplayMetrics();
         mDensity = dm.density;    /* FixMe: Android 7.0以后Target API为23以上时Display Size Change改变不会重启App，而是调用onConfigurationChanged，需要对mDensity重新赋值 */
         densityDpi = dm.densityDpi;
+    }
+
+    public static int getTouchSlop() {
+        return ViewConfiguration.get(mContext).getScaledTouchSlop();
     }
 
     public static float getSpValue(float value) {

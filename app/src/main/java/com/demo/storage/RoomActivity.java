@@ -1,5 +1,7 @@
 package com.demo.storage;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -10,7 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.demo.MainActivity;
 import com.demo.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.walker.storage.room.Word;
@@ -51,6 +52,7 @@ public class RoomActivity extends AppCompatActivity {
 
         if(requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
+            word.setCreateTime(System.currentTimeMillis());
             mWordViewModel.insert(word);
         } else {
             Toast.makeText(getApplicationContext(),

@@ -19,6 +19,8 @@ public class Word {
     @ColumnInfo(name = "content")
     private String mContent;
 
+    @ColumnInfo(name = "createTime")
+    private long mCreateTime;
 
     public Word(@NonNull String content) {
         this.mContent = content;
@@ -34,6 +36,14 @@ public class Word {
 
     public String getContent() {
         return mContent;
+    }
+
+    public long getCreateTime() {
+        return mCreateTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.mCreateTime = createTime;
     }
 
 }

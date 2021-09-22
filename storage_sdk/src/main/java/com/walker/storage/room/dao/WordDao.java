@@ -1,10 +1,12 @@
-package com.walker.storage.room;
+package com.walker.storage.room.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
+import com.walker.storage.room.model.Word;
 
 import java.util.List;
 
@@ -23,8 +25,8 @@ public interface WordDao {
     @Query("DELETE FROM word_table")
     void deleteAll();
 
-    @Query("DELETE FROM word_table WHERE content = :content")
-    void delete(String content);
+    @Query("DELETE FROM word_table WHERE content = :arg0")
+    void delete(String arg0);
 
     @Query("SELECT * FROM word_table ORDER BY content ASC")
     LiveData<List<Word>> getAlphabetizedWords();

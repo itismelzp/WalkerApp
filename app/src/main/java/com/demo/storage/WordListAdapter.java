@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.walker.storage.room.Word;
-import com.walker.storage.room.WordViewModel;
+import com.walker.storage.room.model.Word;
+import com.walker.storage.room.viewmodel.WordViewModel;
 
 /**
  * Created by walkerzpli on 2021/8/6.

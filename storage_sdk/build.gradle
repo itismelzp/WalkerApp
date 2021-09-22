@@ -39,6 +39,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:$rootProject.lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata:$rootProject.lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
+    implementation 'com.google.code.gson:gson:2.8.8'
 
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
 

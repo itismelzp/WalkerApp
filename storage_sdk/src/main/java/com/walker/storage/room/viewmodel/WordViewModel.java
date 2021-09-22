@@ -1,9 +1,12 @@
-package com.walker.storage.room;
+package com.walker.storage.room.viewmodel;
 
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.walker.storage.room.model.Word;
+import com.walker.storage.room.repository.WordRepository;
 
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
  */
 public class WordViewModel extends AndroidViewModel {
 
-    private WordRepository mRepository;
+    private final WordRepository mRepository;
 
     private final LiveData<List<Word>> mAllWords;
 

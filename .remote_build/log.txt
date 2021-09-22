@@ -1,0 +1,385 @@
+[RB][19:09:51][index=0]-qC
+[RB][19:09:51][index=1]-Pfcp
+[RB][19:09:51][index=2]-PFeature=all
+[RB][19:09:51]当前工作目录：/Users/walkerzpli/walker/android_demo/WalkerApp
+[RB][19:09:51]当前版本：v6.1.3
+[RB][19:09:51]jar路径：/Users/walkerzpli/.fef/universal_modules/feflow-plugin-remotebuild@latest
+
+[RB][][exec]: /Users/walkerzpli/Library/Android/sdk/platform-tools/adb shell getprop ro.build.version.sdk
+[RB][19:09:51]CheckProjectConfigTask 开始执行
+[RB][19:09:51]QuickCheckTask 开始执行
+[RB][19:09:51]CIWebSocketServerTask[async] 开始执行
+[RB][19:09:51]AutoServerTask 开始执行
+[RB][19:09:51]当前使用的服务地址：ws://9.135.167.201:8080/ws
+[RB][19:09:51]CheckSSHTask 开始执行
+[RB][19:09:51]CICheckTask 开始执行
+[RB][19:09:51]CommandTranslateTask 开始执行
+[RB][19:09:51]InitVersionControlTask 开始执行
+[RB][19:09:51]VersionControlTask 开始执行
+[RB][19:09:51]CIPushTask 开始执行
+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git add . 
+[RB][19:09:51]尝试连接
+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git rev-parse --abbrev-ref HEAD
+[RB][19:09:51]CIWebSocketServerTask[async] 完成
+[RB][19:09:51]master
+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git rev-parse HEAD
+[RB][19:09:51]00c7a00efd1a7848956fa2d99267b4b1cba55513
+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git diff --name-status -p HEAD
+[RB][19:09:51]A	.orange-ci.token
+[RB][19:09:51]A	.remote_build/config
+[RB][19:09:51]A	.remote_build/ignore
+[RB][19:09:51]A	.remote_build/ignore_local
+[RB][19:09:51]A	.remote_build/ignore_remote
+[RB][19:09:51]A	.remote_build/log.txt
+[RB][19:09:51]A	.remote_build/misc
+[RB][19:09:51]M	app/src/main/java/com/demo/storage/RoomActivity.java
+[RB][19:09:51]A	storage_sdk/src/main/java/com/walker/storage/room/Description.java
+[RB][19:09:51]M	storage_sdk/src/main/java/com/walker/storage/room/Word.java
+[RB][19:09:51]M	storage_sdk/src/main/java/com/walker/storage/room/WordRoomDatabase.java
+[RB][19:09:51]推送CodeSync消息：CodeSync(gitCommit=00c7a00efd1a7848956fa2d99267b4b1cba55513, files=[FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.orange-ci.token', fileSize=11), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/config', fileSize=77), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/ignore', fileSize=532), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/ignore_local', fileSize=140), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/ignore_remote', fileSize=1970), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/log.txt', fileSize=2054), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/misc', fileSize=83), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='app/src/main/java/com/demo/storage/RoomActivity.java', fileSize=2409), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='storage_sdk/src/main/java/com/walker/storage/room/Description.java', fileSize=208), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='storage_sdk/src/main/java/com/walker/storage/room/Word.java', fileSize=898), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='storage_sdk/src/main/java/com/walker/storage/room/WordRoomDatabase.java', fileSize=2047)])
+[RB][19:09:51]CIRequestTask 开始执行
+[RB][19:09:51]remotebuild/walkerzpli_master 分配资源池：1[9.135.14.231]
+[RB][19:09:51]与远程建立连接
+[RB][19:09:51]1、将本地当前的HEAD，push到远程仓库
+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git rev-parse --abbrev-ref HEAD
+[RB][19:09:51]master
+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git push -f origin HEAD:refs/heads/remotebuild/temp_walkerzpli_master
+[RB][19:09:52]停止上一次的构建[orange-ci-64rsat-1ff7ltjfo]: {"success":false,"data":null,"code":1002,"message":"Unauthorized"}
+[RB][19:09:52]Everything up-to-date
+[RB][19:09:52]2、保存本地代码
+[RB][19:09:52][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git diff HEAD
+[RB][19:09:52]diff --git a/.orange-ci.token b/.orange-ci.token
+[RB][19:09:52]new file mode 100644
+[RB][19:09:52]index 0000000..e6b0a8f
+[RB][19:09:52]--- /dev/null
+[RB][19:09:52]+++ b/.orange-ci.token
+[RB][19:09:52]@@ -0,0 +1 @@
+[RB][19:09:52]+remotebuild
+[RB][19:09:52]\ No newline at end of file
+[RB][19:09:52]diff --git a/.remote_build/config b/.remote_build/config
+[RB][19:09:52]new file mode 100644
+[RB][19:09:52]index 0000000..ea74bf2
+[RB][19:09:52]--- /dev/null
+[RB][19:09:52]+++ b/.remote_build/config
+[RB][19:09:52]@@ -0,0 +1,4 @@
+[RB][19:09:52]+# 服务器名，name@ip
+[RB][19:09:52]+serverName=ci_server
+[RB][19:09:52]+# 服务器端口
+[RB][19:09:52]+serverPort=0
+[RB][19:09:52]diff --git a/.remote_build/ignore b/.remote_build/ignore
+[RB][19:09:52]new file mode 100644
+[RB][19:09:52]index 0000000..c277cd0
+[RB][19:09:52]--- /dev/null
+[RB][19:09:52]+++ b/.remote_build/ignore
+[RB][19:09:52]@@ -0,0 +1,13 @@
+[RB][19:09:52]+# .gradle folder contains machine specific loc and bin files, no need to sync it between machines. 
+[RB][19:09:52]+.gradle/
+[RB][19:09:52]+
+[RB][19:09:52]+# Synching .git or other VCS folders is very bad idea, they are usually very heavy and not required for the build.
+[RB][19:09:52]+.git/
+[RB][19:09:52]+# Synching IDE specific folders is really not needed for remote build.
+[RB][19:09:52]+.idea/
+[RB][19:09:52]+
+[RB][19:09:52]+# Synching local.properties usually very bad idea because they contain machine specific properties like paths to SDKs and so on.
+[RB][19:09:52]+/local.properties
+[RB][19:09:52]+
+[RB][19:09:52]+# Syncing captures from Android Studio is usually not required.
+[RB][19:09:52]+/captures
+[RB][19:09:52]diff --git a/.remote_build/ignore_local b/.remote_build/ignore_local
+[RB][19:09:52]new file mode 100644
+[RB][19:09:52]index 0000000..801c839
+[RB][19:09:52]--- /dev/null
+[RB][19:09:52]+++ b/.remote_build/ignore_local
+[RB][19:09:52]@@ -0,0 +1,3 @@
+[RB][19:09:52]+# Usually you don't need to sync build folder to remote machine since it will have one as result of build.
+[RB][19:09:52]+build/
+[RB][19:09:52]+/AQQLite/AQQLiteApp/build
+[RB][19:09:52]diff --git a/.remote_build/ignore_remote b/.remote_build/ignore_remote
+[RB][19:09:52]new file mode 100644
+[RB][19:09:52]index 0000000..40d0dc8
+[RB][19:09:52]--- /dev/null
+[RB][19:09:52]+++ b/.remote_build/ignore_remote
+[RB][19:09:52]@@ -0,0 +1,39 @@
+[RB][19:09:52]+# Usually you don't need to sync sources back from remote to local machine.
+[RB][19:09:52]+# Btw, this syntax supports multimodule Gradle projects.
+[RB][19:09:52]+- /AQQLite/AQQLiteApp/build/intermediates/qqLite/apks/unsigned/
+[RB][19:09:52]+- /AQQLite/AQQLiteApp/build/intermediates/qqLite/compact/unsigned/
+[RB][19:09:52]++ /AQQLite/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/intermediates/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/intermediates/qqLite/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/intermediates/qqLite/compact/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/intermediates/qqLite/compact/signed/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/intermediates/qqLite/compact/signed/compact.apk
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/intermediates/qqLite/apks/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/intermediates/qqLite/apks/signed/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/intermediates/qqLite/apks/signed/*
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/*
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/*
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/*
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/classes/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/classes/*
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/css/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/css/*
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/js/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/js/*
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/packages/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/tests/testDebugUnitTest/packages/*
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/jacoco/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/jacoco/jacocoTestReport/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/jacoco/jacocoTestReport/html/
+[RB][19:09:52]++ /AQQLite/AQQLiteApp/build/reports/jacoco/jacocoTestReport/html/**
+[RB][19:09:52]++ /Business/
+[RB][19:09:52]++ /Business/*/
+[RB][19:09:52]++ /Business/*/build/
+[RB][19:09:52]++ /Business/*/build/**/
+[RB][19:09:52]++ /Business/*/build/**/*.apk
+[RB][19:09:52]+- *
+[RB][19:09:52]diff --git a/.remote_build/log.txt b/.remote_build/log.txt
+[RB][19:09:52]new file mode 100644
+[RB][19:09:52]index 0000000..8739b1f
+[RB][19:09:52]--- /dev/null
+[RB][19:09:52]+++ b/.remote_build/log.txt
+[RB][19:09:52]@@ -0,0 +1,50 @@
+[RB][19:09:52]+[RB][19:09:51][index=0]-qC
+[RB][19:09:52]+[RB][19:09:51][index=1]-Pfcp
+[RB][19:09:52]+[RB][19:09:51][index=2]-PFeature=all
+[RB][19:09:52]+[RB][19:09:51]当前工作目录：/Users/walkerzpli/walker/android_demo/WalkerApp
+[RB][19:09:52]+[RB][19:09:51]当前版本：v6.1.3
+[RB][19:09:52]+[RB][19:09:51]jar路径：/Users/walkerzpli/.fef/universal_modules/feflow-plugin-remotebuild@latest
+[RB][19:09:52]+
+[RB][19:09:52]+[RB][][exec]: /Users/walkerzpli/Library/Android/sdk/platform-tools/adb shell getprop ro.build.version.sdk
+[RB][19:09:52]+[RB][19:09:51]CheckProjectConfigTask 开始执行
+[RB][19:09:52]+[RB][19:09:51]QuickCheckTask 开始执行
+[RB][19:09:52]+[RB][19:09:51]CIWebSocketServerTask[async] 开始执行
+[RB][19:09:52]+[RB][19:09:51]AutoServerTask 开始执行
+[RB][19:09:52]+[RB][19:09:51]当前使用的服务地址：ws://9.135.167.201:8080/ws
+[RB][19:09:52]+[RB][19:09:51]CheckSSHTask 开始执行
+[RB][19:09:52]+[RB][19:09:51]CICheckTask 开始执行
+[RB][19:09:52]+[RB][19:09:51]CommandTranslateTask 开始执行
+[RB][19:09:52]+[RB][19:09:51]InitVersionControlTask 开始执行
+[RB][19:09:52]+[RB][19:09:51]VersionControlTask 开始执行
+[RB][19:09:52]+[RB][19:09:51]CIPushTask 开始执行
+[RB][19:09:52]+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git add . 
+[RB][19:09:52]+[RB][19:09:51]尝试连接
+[RB][19:09:52]+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git rev-parse --abbrev-ref HEAD
+[RB][19:09:52]+[RB][19:09:51]CIWebSocketServerTask[async] 完成
+[RB][19:09:52]+[RB][19:09:51]master
+[RB][19:09:52]+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git rev-parse HEAD
+[RB][19:09:52]+[RB][19:09:51]00c7a00efd1a7848956fa2d99267b4b1cba55513
+[RB][19:09:52]+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git diff --name-status -p HEAD
+[RB][19:09:52]+[RB][19:09:51]A	.orange-ci.token
+[RB][19:09:52]+[RB][19:09:51]A	.remote_build/config
+[RB][19:09:52]+[RB][19:09:51]A	.remote_build/ignore
+[RB][19:09:52]+[RB][19:09:51]A	.remote_build/ignore_local
+[RB][19:09:52]+[RB][19:09:51]A	.remote_build/ignore_remote
+[RB][19:09:52]+[RB][19:09:51]A	.remote_build/log.txt
+[RB][19:09:52]+[RB][19:09:51]A	.remote_build/misc
+[RB][19:09:52]+[RB][19:09:51]M	app/src/main/java/com/demo/storage/RoomActivity.java
+[RB][19:09:52]+[RB][19:09:51]A	storage_sdk/src/main/java/com/walker/storage/room/Description.java
+[RB][19:09:52]+[RB][19:09:51]M	storage_sdk/src/main/java/com/walker/storage/room/Word.java
+[RB][19:09:52]+[RB][19:09:51]M	storage_sdk/src/main/java/com/walker/storage/room/WordRoomDatabase.java
+[RB][19:09:52]+[RB][19:09:51]推送CodeSync消息：CodeSync(gitCommit=00c7a00efd1a7848956fa2d99267b4b1cba55513, files=[FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.orange-ci.token', fileSize=11), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/config', fileSize=77), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/ignore', fileSize=532), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/ignore_local', fileSize=140), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/ignore_remote', fileSize=1970), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/log.txt', fileSize=2054), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='.remote_build/misc', fileSize=83), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='app/src/main/java/com/demo/storage/RoomActivity.java', fileSize=2409), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='storage_sdk/src/main/java/com/walker/storage/room/Description.java', fileSize=208), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='storage_sdk/src/main/java/com/walker/storage/room/Word.java', fileSize=898), FileTrunk(root=/Users/walkerzpli/walker/android_demo/WalkerApp, relativePath='storage_sdk/src/main/java/com/walker/storage/room/WordRoomDatabase.java', fileSize=2047)])
+[RB][19:09:53]+[RB][19:09:51]CIRequestTask 开始执行
+[RB][19:09:53]+[RB][19:09:51]remotebuild/walkerzpli_master 分配资源池：1[9.135.14.231]
+[RB][19:09:53]+[RB][19:09:51]与远程建立连接
+[RB][19:09:53]+[RB][19:09:51]1、将本地当前的HEAD，push到远程仓库
+[RB][19:09:53]+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git rev-parse --abbrev-ref HEAD
+[RB][19:09:53]+[RB][19:09:51]master
+[RB][19:09:53]+[RB][19:09:51][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git push -f origin HEAD:refs/heads/remotebuild/temp_walkerzpli_master
+[RB][19:09:53]+[RB][19:09:52]停止上一次的构建[orange-ci-64rsat-1ff7ltjfo]: {"success":false,"data":null,"code":1002,"message":"Unauthorized"}
+[RB][19:09:53]+[RB][19:09:52]Everything up-to-date
+[RB][19:09:53]+[RB][19:09:52]2、保存本地代码
+[RB][19:09:53]+[RB][19:09:52][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git diff HEAD
+[RB][19:09:53]diff --git a/.remote_build/misc b/.remote_build/misc
+[RB][19:09:53]new file mode 100644
+[RB][19:09:53]index 0000000..6be5579
+[RB][19:09:53]--- /dev/null
+[RB][19:09:53]+++ b/.remote_build/misc
+[RB][19:09:53]@@ -0,0 +1,2 @@
+[RB][19:09:53]+last_ci_branch=remotebuild/walkerzpli_master
+[RB][19:09:53]+last_ci_sn=orange-ci-64rsat-1ff7ltjfo
+[RB][19:09:53]diff --git a/app/src/main/java/com/demo/storage/RoomActivity.java b/app/src/main/java/com/demo/storage/RoomActivity.java
+[RB][19:09:53]index 9159acd..f324cf6 100644
+[RB][19:09:53]--- a/app/src/main/java/com/demo/storage/RoomActivity.java
+[RB][19:09:53]+++ b/app/src/main/java/com/demo/storage/RoomActivity.java
+[RB][19:09:53]@@ -1,5 +1,7 @@
+[RB][19:09:53] package com.demo.storage;
+[RB][19:09:53] 
+[RB][19:09:53]+import androidx.activity.result.ActivityResultCallback;
+[RB][19:09:53]+import androidx.activity.result.contract.ActivityResultContracts;
+[RB][19:09:53] import androidx.annotation.Nullable;
+[RB][19:09:53] import androidx.appcompat.app.AppCompatActivity;
+[RB][19:09:53] import androidx.lifecycle.ViewModelProvider;
+[RB][19:09:53]@@ -10,7 +12,6 @@ import android.content.Intent;
+[RB][19:09:53] import android.os.Bundle;
+[RB][19:09:53] import android.widget.Toast;
+[RB][19:09:53] 
+[RB][19:09:53]-import com.demo.MainActivity;
+[RB][19:09:53] import com.demo.R;
+[RB][19:09:53] import com.google.android.material.floatingactionbutton.FloatingActionButton;
+[RB][19:09:53] import com.walker.storage.room.Word;
+[RB][19:09:53]@@ -51,6 +52,7 @@ public class RoomActivity extends AppCompatActivity {
+[RB][19:09:53] 
+[RB][19:09:53]         if(requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+[RB][19:09:53]             Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
+[RB][19:09:53]+            word.setCreateTime(System.currentTimeMillis());
+[RB][19:09:53]             mWordViewModel.insert(word);
+[RB][19:09:53]         } else {
+[RB][19:09:53]             Toast.makeText(getApplicationContext(),
+[RB][19:09:53]diff --git a/storage_sdk/src/main/java/com/walker/storage/room/Description.java b/storage_sdk/src/main/java/com/walker/storage/room/Description.java
+[RB][19:09:53]new file mode 100644
+[RB][19:09:53]index 0000000..cebafcd
+[RB][19:09:53]--- /dev/null
+[RB][19:09:53]+++ b/storage_sdk/src/main/java/com/walker/storage/room/Description.java
+[RB][19:09:53]@@ -0,0 +1,14 @@
+[RB][19:09:53]+package com.walker.storage.room;
+[RB][19:09:53]+
+[RB][19:09:53]+import androidx.room.Entity;
+[RB][19:09:53]+
+[RB][19:09:53]+/**
+[RB][19:09:53]+ * Created by walkerzpli on 2021/8/10.
+[RB][19:09:53]+ */
+[RB][19:09:53]+
+[RB][19:09:53]+@Entity(tableName = "description_table")
+[RB][19:09:53]+public class Description {
+[RB][19:09:53]+
+[RB][19:09:53]+    private int length;
+[RB][19:09:53]+
+[RB][19:09:53]+}
+[RB][19:09:53]diff --git a/storage_sdk/src/main/java/com/walker/storage/room/Word.java b/storage_sdk/src/main/java/com/walker/storage/room/Word.java
+[RB][19:09:53]index 1a34270..81afddd 100644
+[RB][19:09:53]--- a/storage_sdk/src/main/java/com/walker/storage/room/Word.java
+[RB][19:09:53]+++ b/storage_sdk/src/main/java/com/walker/storage/room/Word.java
+[RB][19:09:53]@@ -19,6 +19,8 @@ public class Word {
+[RB][19:09:53]     @ColumnInfo(name = "content")
+[RB][19:09:53]     private String mContent;
+[RB][19:09:53] 
+[RB][19:09:53]+    @ColumnInfo(name = "createTime")
+[RB][19:09:53]+    private long mCreateTime;
+[RB][19:09:53] 
+[RB][19:09:53]     public Word(@NonNull String content) {
+[RB][19:09:53]         this.mContent = content;
+[RB][19:09:53]@@ -36,4 +38,12 @@ public class Word {
+[RB][19:09:53]         return mContent;
+[RB][19:09:53]     }
+[RB][19:09:53] 
+[RB][19:09:53]+    public long getCreateTime() {
+[RB][19:09:53]+        return mCreateTime;
+[RB][19:09:53]+    }
+[RB][19:09:53]+
+[RB][19:09:53]+    public void setCreateTime(long createTime) {
+[RB][19:09:53]+        this.mCreateTime = createTime;
+[RB][19:09:53]+    }
+[RB][19:09:53]+
+[RB][19:09:53] }
+[RB][19:09:53]diff --git a/storage_sdk/src/main/java/com/walker/storage/room/WordRoomDatabase.java b/storage_sdk/src/main/java/com/walker/storage/room/WordRoomDatabase.java
+[RB][19:09:53]index 39328ee..777148a 100644
+[RB][19:09:53]--- a/storage_sdk/src/main/java/com/walker/storage/room/WordRoomDatabase.java
+[RB][19:09:53]+++ b/storage_sdk/src/main/java/com/walker/storage/room/WordRoomDatabase.java
+[RB][19:09:53]@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
+[RB][19:09:53]  * Created by walkerzpli on 2021/8/5.
+[RB][19:09:53]  */
+[RB][19:09:53] 
+[RB][19:09:53]-@Database(entities = {Word.class}, version = 1, exportSchema = false)
+[RB][19:09:53]+@Database(entities = {Word.class}, version = 2, exportSchema = false)
+[RB][19:09:53] public abstract class WordRoomDatabase extends RoomDatabase {
+[RB][19:09:53] 
+[RB][19:09:53]     private static final String TAG = "WordRoomDatabase";
+[RB][19:09:53][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git log -n 1 --oneline
+[RB][19:09:53]00c7a00 Create README.md
+[RB][19:09:53][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git commit --no-verify -m "remote temp commit" -m "--bug=12345678"
+[RB][19:09:53][master 1c34141] remote temp commit
+[RB][19:09:53] 11 files changed, 111 insertions(+), 2 deletions(-)
+[RB][19:09:53] create mode 100644 .orange-ci.token
+[RB][19:09:53] create mode 100644 .remote_build/config
+[RB][19:09:53] create mode 100644 .remote_build/ignore
+[RB][19:09:53] create mode 100644 .remote_build/ignore_local
+[RB][19:09:53] create mode 100644 .remote_build/ignore_remote
+[RB][19:09:53] create mode 100644 .remote_build/log.txt
+[RB][19:09:53] create mode 100644 .remote_build/misc
+[RB][19:09:53] create mode 100644 storage_sdk/src/main/java/com/walker/storage/room/Description.java
+[RB][19:09:53][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git log -n 1 --oneline
+[RB][19:09:53]1c34141 remote temp commit
+[RB][19:09:53]3、将本地代码push到远程仓库
+[RB][19:09:53][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git push -f origin HEAD:refs/heads/remotebuild/walkerzpli_master
+[RB][19:09:54]请求OCI: {"data":{"sn":"orange-ci-h3jobg-1ff7mciur","buildLogUrl":"https://orange-ci.woa.com/build/log/orange-ci-h3jobg-1ff7mciur"},"code":0,"message":"orange-ci received, but didn't finish build yet","success":true}
+[RB][19:09:54]保存sn=orange-ci-h3jobg-1ff7mciur
+[RB][19:09:54]CIExecuteTask 开始执行
+[RB][19:09:54]直连模式等待连接...
+[RB][19:09:54]尝试拉取全量编译包
+[RB][19:09:54]cisocket连接成功，切换为直连模式。
+[RB][19:09:54]remote: This repository moved. Please use the new location:        
+[RB][19:09:54]remote:   https://github.com/itismelzp/WalkerApp.git        
+[RB][19:09:55]To https://github.com/itismelzp/CustomViewDemo.git
+[RB][19:09:55] + 4918da2...1c34141 HEAD -> remotebuild/walkerzpli_master (forced update)
+[RB][19:09:55][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git lfs push origin HEAD
+[RB][19:09:57][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git log -n 1 --oneline
+[RB][19:09:57]1c34141 remote temp commit
+[RB][19:09:57][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git reset --soft HEAD~1
+[RB][19:09:57][exec][/Users/walkerzpli/walker/android_demo/WalkerApp]: git log -n 1 --oneline
+[RB][19:09:57]00c7a00 Create README.md
+[RB][19:09:58][index=0]--userName=walkerzpli
+[RB][19:09:58][index=1]--banchName=remotebuild/walkerzpli_master
+[RB][19:09:58][index=2]--gitCommit=00c7a00efd1a7848956fa2d99267b4b1cba55513
+[RB][19:09:58][index=3]--command=./gradlew qC --console=plain -PBUILD_OPT_APKSINGER_DISABLE_V1=true  -Pfcp -PFeature=all
+[RB][19:09:58][index=4]--wsToken=server-walkerzpli128250961
+[RB][19:09:58][index=5]--firstArg=-qC
+[RB][19:09:58][index=6]--serverName=9.135.14.231
+[RB][19:09:58][index=7]--buildTag=walkerzpli128250961
+[RB][19:09:58][index=8]--ws=ws://9.135.167.201:8080/ws
+[RB][19:09:58][index=9]--workTag=walkerzpli_remotebuild_walkerzpli_master
+[RB-D][19:09:58]RuntimeLogTask[async] 开始执行
+[RB-D][19:09:58]LockWorkDirTask[async] 开始执行
+[RB-D][19:09:58]InitVersionControlTask 开始执行
+[RB-D][19:09:58]WebSocketClientTask[async] 开始执行
+[RB-D][19:09:58]检查中转仓库是否存在
+[RB-D][19:09:58][exec][/data/cache/git_center]: git rev-parse --is-inside-work-tree
+[RB-D][19:09:58]尝试连接
+[RB-D][19:09:58]true
+[RB-D][19:09:58]与远程建立连接
+[RB-D][19:09:58]WebSocketClientTask[async] 完成
+[RB-D][19:09:58]WorkSpacePrepareTask 开始执行
+
+[RB-D][19:10:23]
+
+
+
+[RB-D][19:10:23]未收到代码同步消息，请重试
+[RB-D][19:10:23]原始命令： ./gradlew qC --console=plain -PBUILD_OPT_APKSINGER_DISABLE_V1=true  -Pfcp -PFeature=all
+[RB-D][19:10:23]执行命令： ./gradlew qC --console=plain -PBUILD_OPT_APKSINGER_DISABLE_V1=true  -Pfcp -PFeature=all
+[RB-D][19:10:23]Task Queue                    |Spend Time          
+[RB-D][19:10:23]RuntimeLogTask[async]         |0.0s                
+[RB-D][19:10:23]LockWorkDirTask[async]        |0.0s                
+[RB-D][19:10:23]WebSocketClientTask[async]    |0.0s                
+[RB-D][19:10:23]InitVersionControlTask        |0.262s              
+
+[RB][19:10:24]收到远程消息TaskError
+[RB][19:10:24]远程任务执行错误
+[RB][19:10:24]
+
+
+
+[RB][19:10:24]远程编译产生了编译错误，请查看编译日志，定位原因。
+如果是增量编译bug，请 remotebuild -clean 后再编译。
+如果是是代码问题，请修复后再编译。
+
+查看完整日志：https://mirrors.tencent.com/repository/generic/AndroidQQ-pipeline-caches/remotebuild-app/walkerzpli128250961
+[RB][19:10:24]原始命令： ./gradlew qC --console=plain -PBUILD_OPT_APKSINGER_DISABLE_V1=true  -Pfcp -PFeature=all 
+[RB][19:10:24]执行命令： ./gradlew qC --console=plain -PBUILD_OPT_APKSINGER_DISABLE_V1=true  -Pfcp -PFeature=all 
+[RB][19:10:24]Task Queue                    |Spend Time          
+[RB][19:10:24]CheckProjectConfigTask        |0.299s              
+[RB][19:10:24]CIWebSocketServerTask[async]  |0.0s                
+[RB][19:10:24]QuickCheckTask                |0.0s                
+[RB][19:10:24]AutoServerTask                |0.001s              
+[RB][19:10:24]CheckSSHTask                  |0.0s                
+[RB][19:10:24]CICheckTask                   |0.002s              
+[RB][19:10:24]CommandTranslateTask          |0.0s                
+[RB][19:10:24]InitVersionControlTask        |0.0s                
+[RB][19:10:24]VersionControlTask            |0.0s                
+[RB][19:10:24]CIPushTask                    |0.131s              
+[RB][19:10:24]CIRequestTask                 |2.828s              

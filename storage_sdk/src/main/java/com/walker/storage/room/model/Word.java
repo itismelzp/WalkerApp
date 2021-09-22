@@ -1,4 +1,4 @@
-package com.walker.storage.room;
+package com.walker.storage.room.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -19,6 +19,9 @@ public class Word {
     @ColumnInfo(name = "content")
     private String mContent;
 
+    @ColumnInfo(name = "createTime")
+    private long mCreateTime;
+
 
     public Word(@NonNull String content) {
         this.mContent = content;
@@ -36,4 +39,21 @@ public class Word {
         return mContent;
     }
 
+    public long getCreateTime() {
+        return mCreateTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.mCreateTime = createTime;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Word{" +
+                "id=" + id +
+                ", mContent='" + mContent + '\'' +
+                ", mCreateTime=" + mCreateTime +
+                '}';
+    }
 }

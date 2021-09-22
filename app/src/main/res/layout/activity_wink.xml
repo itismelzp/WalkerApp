@@ -39,6 +39,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_default="wrap"
+        android:enabled="false"
         tools:text="xxxxxxxx" />
 
 <!--    <ImageView-->

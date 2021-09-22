@@ -7,10 +7,12 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.walker.storage.room.DepartmentConvert;
-import com.walker.storage.room.ListConverter;
+import com.walker.storage.room.converter.DepartmentTypeConvert;
+import com.walker.storage.room.converter.ListTypeConverter;
+import com.walker.storage.room.converter.JobMapTypeConverter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by walkerzpli on 2021/9/10.
@@ -19,7 +21,7 @@ import java.util.List;
 @Entity(tableName = "users", indices = {
         @Index(name = "name", value = {"first_name", "last_name"}, unique = true)
 })
-@TypeConverters({DepartmentConvert.class, ListConverter.class})
+@TypeConverters({DepartmentTypeConvert.class, ListTypeConverter.class, JobMapTypeConverter.class})
 public class User {
 
     @PrimaryKey(autoGenerate = true)
@@ -37,10 +39,11 @@ public class User {
     @Embedded
     public Address address;
 
-//    @Embedded(prefix = "department")
     public Department department;
 
-    public List<String> jobs;
+    public List<String> company;
+
+    public Map<Integer, Job> jobs;
 
     @Override
     public String toString() {
@@ -50,6 +53,8 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", address=" + address +
                 ", department=" + department +
+                ", company=" + company +
+                ", jobs=" + jobs +
                 '}';
     }
 }

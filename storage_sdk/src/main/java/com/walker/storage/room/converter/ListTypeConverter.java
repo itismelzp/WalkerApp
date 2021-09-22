@@ -1,4 +1,4 @@
-package com.walker.storage.room;
+package com.walker.storage.room.converter;
 
 import androidx.room.TypeConverter;
 
@@ -11,16 +11,19 @@ import java.util.List;
 /**
  * Created by walkerzpli on 2021/9/22.
  */
-public class ListConverter {
+public class ListTypeConverter implements BaseListTypeConverter<String> {
 
     @TypeConverter
-    public String list2Str(List<String> list) {
+    @Override
+    public String converter(List<String> list) {
         return new Gson().toJson(list);
     }
 
     @TypeConverter
-    public List<String> str2List(String str) {
-        Type type = new TypeToken<List<String>>() {}.getType();
+    @Override
+    public List<String> revert(String str) {
+        Type type = new TypeToken<List<String>>() {
+        }.getType();
         return new Gson().fromJson(str, type);
     }
 

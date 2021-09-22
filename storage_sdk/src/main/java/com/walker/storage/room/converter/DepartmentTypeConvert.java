@@ -1,4 +1,4 @@
-package com.walker.storage.room;
+package com.walker.storage.room.converter;
 
 import androidx.room.TypeConverter;
 
@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 /**
  * Created by walkerzpli on 2021/9/22.
  */
-public class DepartmentConvert {
+public class DepartmentTypeConvert {
 
     @TypeConverter
     public Department revert(String jsonStr) {

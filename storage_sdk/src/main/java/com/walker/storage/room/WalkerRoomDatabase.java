@@ -15,13 +15,15 @@ import com.walker.storage.room.dao.UserDao;
 import com.walker.storage.room.dao.WordDao;
 import com.walker.storage.room.model.Address;
 import com.walker.storage.room.model.Department;
+import com.walker.storage.room.model.Job;
 import com.walker.storage.room.model.Library;
 import com.walker.storage.room.model.MusicList;
 import com.walker.storage.room.model.User;
 import com.walker.storage.room.model.Word;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -103,7 +105,15 @@ public abstract class WalkerRoomDatabase extends RoomDatabase {
         department1.id = 20001;
         department1.name = "pony";
         user1.department = department1;
-        user1.jobs = Arrays.asList("baidu", "tencent");
+        user1.company = Arrays.asList("baidu", "tencent");
+        Map<Integer, Job> map1 = new HashMap<>();
+        Job job1 = new Job("百度", 1.5);
+        job1.address = address1;
+        map1.put(1, job1);
+        Job job2= new Job("腾讯", 2);
+        job1.address = address1;
+        map1.put(2, job2);
+        user1.jobs = map1;
 
         User user2 = new User();
         user2.firstName = "cherry";

@@ -54,7 +54,7 @@ public class BindViewProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         // 根据注解生成Java文件
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[process]  start.");
+        mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] start.");
         mProxyMap.clear();
 
         // 得到所有的注解

@@ -104,7 +104,7 @@
         <attr name="currentColor" format="color" />
         <attr name="circleWidth" />
         <attr name="loadSpeed" format="integer" />
-        <attr name="circleRadius" format="dimension"/>
+        <attr name="circleRadiuss" format="dimension"/>
         <attr name="maskColor" format="color" />
         <attr name="cornerColor" format="color" />
         <attr name="corner" format="dimension" />

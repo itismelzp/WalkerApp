@@ -93,7 +93,7 @@ public class QFSRoundProgressView extends AppCompatImageView {
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         mCurrentColor = array.getColor(R.styleable.QFSRoundProgressView_currentColor, Color.BLACK);
         mLoadSpeed = array.getInt(R.styleable.QFSRoundProgressView_loadSpeed, 200);
-        mCircleRadius = array.getDimensionPixelSize(R.styleable.QFSRoundProgressView_circleRadius,
+        mCircleRadius = array.getDimensionPixelSize(R.styleable.QFSRoundProgressView_circleRadiuss,
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 35, getResources().getDisplayMetrics()));
         array.recycle();
     }

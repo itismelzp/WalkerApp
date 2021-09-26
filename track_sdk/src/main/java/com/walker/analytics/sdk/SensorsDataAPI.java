@@ -1,5 +1,4 @@
-package com.sensorsdata.analytics.android.sdk;
-
+package com.walker.analytics.sdk;
 
 import android.app.Application;
 import android.util.Log;
@@ -24,9 +23,11 @@ public class SensorsDataAPI {
 
     @Keep
     public static SensorsDataAPI init(Application application) {
-        synchronized (mLock) {
-            if (INSTANCE == null) {
-                INSTANCE = new SensorsDataAPI(application);
+        if (INSTANCE == null) {
+            synchronized (mLock) {
+                if (INSTANCE == null) {
+                    INSTANCE = new SensorsDataAPI(application);
+                }
             }
         }
         return INSTANCE;
@@ -51,9 +52,7 @@ public class SensorsDataAPI {
 
             JSONObject sendProperties = new JSONObject(mDeviceInfo);
 
-            if (properties != null) {
-                SensorsDataPrivate.mergeJSONObject(properties, sendProperties);
-            }
+            SensorsDataPrivate.mergeJSONObject(properties, sendProperties);
 
             jsonObject.put("properties", sendProperties);
             jsonObject.put("time", System.currentTimeMillis());

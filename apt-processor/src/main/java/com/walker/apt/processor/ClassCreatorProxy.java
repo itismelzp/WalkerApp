@@ -1,10 +1,15 @@
 package com.walker.apt.processor;
 
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 import com.walker.apt.annotation.AnnotationUtils;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -39,22 +44,48 @@ public class ClassCreatorProxy {
         builder.append("import com.walker.apt.library.*;\n\n");
         builder.append("public class ").append(mBindingClassName);
         builder.append(" {\n");
-
         generateMethods(builder);
         builder.append("}\n");
         return builder.toString();
     }
 
+    public TypeSpec generateJavaCodeByJavapoet() {
+        return TypeSpec.classBuilder(mBindingClassName)
+                .addModifiers(Modifier.PUBLIC)
+                .addMethod(generateMethodsByJavapoet())
+                .build();
+    }
+
     private void generateMethods(StringBuilder builder) {
-        builder.append("public void bind(" + mTypeElement.getQualifiedName() + " host) {\n");
+        builder.append(String.format("public void bind(%s host) {\n", mTypeElement.getQualifiedName()));
         for (int id : mVariableElementMap.keySet()) {
             VariableElement element = mVariableElementMap.get(id);
             String name = element.getSimpleName().toString();
             String type = element.asType().toString();
-            builder.append("        host." + name).append(" = ");
-            builder.append("(" + type + ")(((android.app.Activity) host).findViewById(" + id + "));\n");
+            String methodCode = String.format(Locale.getDefault(),
+                    "\t\thost.%s = (%s)(((android.app.Activity) host).findViewById(%d));\n", name, type, id);
+            builder.append(methodCode);
         }
-        builder.append("    }\n");
+        builder.append("\t}\n");
+    }
+
+    private MethodSpec generateMethodsByJavapoet() {
+        ClassName host = ClassName.bestGuess(mTypeElement.getQualifiedName().toString());
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("bind")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(void.class)
+                .addParameter(host, "host");
+
+        for (int id : mVariableElementMap.keySet()) {
+            VariableElement element = mVariableElementMap.get(id);
+            String name = element.getSimpleName().toString();
+            String type = element.asType().toString();
+            String methodCode = String.format(Locale.getDefault(),
+                    "host.%s = (%s)(((android.app.Activity) host).findViewById(%d));\n", name, type, id);
+            methodBuilder.addCode(methodCode);
+        }
+
+        return methodBuilder.build();
     }
 
     public String getProxyClassFullName() {
@@ -63,6 +94,10 @@ public class ClassCreatorProxy {
 
     public TypeElement getTypeElement() {
         return mTypeElement;
+    }
+
+    public String getPackageName() {
+        return mPackageName;
     }
 
 }

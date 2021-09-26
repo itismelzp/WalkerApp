@@ -1,6 +1,7 @@
 package com.walker.apt.processor;
 
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.JavaFile;
 import com.walker.apt.annotation.BindView;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class BindViewProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         // 根据注解生成Java文件
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "processing...");
+        mMessager.printMessage(Diagnostic.Kind.NOTE, "[process]  start.");
         mProxyMap.clear();
 
         // 得到所有的注解
@@ -72,30 +73,60 @@ public class BindViewProcessor extends AbstractProcessor {
             proxy.putElement(id, variableElement);
         }
 
+//        createSourceFile();
+        createSourceFileByJavapoet();
+        mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] finish.");
+        return true;
+    }
+
+    /**
+     * 通过StringBuilder生成源码
+     */
+    private void createSourceFile() {
         // 通过遍历mProxyMap，创建java文件
         for (String key : mProxyMap.keySet()) {
             ClassCreatorProxy classCreator = mProxyMap.get(key);
-            mMessager.printMessage(Diagnostic.Kind.NOTE, " --> create " + classCreator.getProxyClassFullName());
+            mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
             Writer writer = null;
             try {
-                JavaFileObject jfo = processingEnv.getFiler().createSourceFile(classCreator.getProxyClassFullName(), classCreator.getTypeElement());
+                JavaFileObject jfo = processingEnv.getFiler()
+                        .createSourceFile(classCreator.getProxyClassFullName(), classCreator.getTypeElement());
                 writer = jfo.openWriter();
                 writer.write(classCreator.generateJavaCode());
                 writer.flush();
             } catch (IOException e) {
-                mMessager.printMessage(Diagnostic.Kind.NOTE, " --> create " + classCreator.getProxyClassFullName() + "error");
+                mMessager.printMessage(Diagnostic.Kind.NOTE,
+                        "[createSourceFile] " + classCreator.getProxyClassFullName() + "error");
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        mMessager.printMessage(Diagnostic.Kind.ERROR,
+                                "[createSourceFile] " + classCreator.getProxyClassFullName() + " error");
                     }
                 }
             }
         }
+    }
 
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "process finish...");
-        return true;
+    /**
+     * 通过javapoet生成源码
+     */
+    private void createSourceFileByJavapoet() {
+        for (String key : mProxyMap.keySet()) {
+            ClassCreatorProxy classCreator = mProxyMap.get(key);
+            JavaFile javaFile = JavaFile.builder(classCreator.getPackageName(),
+                    classCreator.generateJavaCodeByJavapoet()).build();
+            try {
+                javaFile.writeTo(processingEnv.getFiler());
+            } catch (IOException e) {
+                e.printStackTrace();
+                mMessager.printMessage(Diagnostic.Kind.ERROR,
+                        "[createSourceFileByJavapoet] process failed: " + e.getMessage());
+            }
+        }
+        mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFileByJavapoet] process finish.");
     }
 }

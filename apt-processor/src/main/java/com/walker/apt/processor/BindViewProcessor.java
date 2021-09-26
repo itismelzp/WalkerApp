@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -23,7 +24,7 @@ import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-@AutoService(Process.class)
+@AutoService(Processor.class)
 public class BindViewProcessor extends AbstractProcessor {
 
     private Messager mMessager;
@@ -77,7 +78,7 @@ public class BindViewProcessor extends AbstractProcessor {
             mMessager.printMessage(Diagnostic.Kind.NOTE, " --> create " + classCreator.getProxyClassFullName());
             Writer writer = null;
             try {
-                JavaFileObject jfo = processingEnv.getFiler().createClassFile(classCreator.getProxyClassFullName(), classCreator.getTypeElement());
+                JavaFileObject jfo = processingEnv.getFiler().createSourceFile(classCreator.getProxyClassFullName(), classCreator.getTypeElement());
                 writer = jfo.openWriter();
                 writer.write(classCreator.generateJavaCode());
                 writer.flush();

@@ -26,7 +26,7 @@ public class ClassCreatorProxy {
         String packageName = packageElement.getQualifiedName().toString();
         String className = mTypeElement.getSimpleName().toString();
         this.mPackageName = packageName;
-        this.mBindingClassName = className + "_ViewBinding";
+        this.mBindingClassName = className + AnnotationUtils.classSuffix;
     }
 
     public void putElement(int id, VariableElement element) {
@@ -35,27 +35,26 @@ public class ClassCreatorProxy {
 
     public String generateJavaCode() {
         StringBuilder builder = new StringBuilder();
-        builder.append("package").append(mPackageName).append(";\n\n");
+        builder.append("package ").append(mPackageName).append(";\n\n");
         builder.append("import com.walker.apt.library.*;\n\n");
         builder.append("public class ").append(mBindingClassName);
         builder.append(" {\n");
 
         generateMethods(builder);
-        builder.append('\n');
         builder.append("}\n");
         return builder.toString();
     }
 
     private void generateMethods(StringBuilder builder) {
-        builder.append(("public void bind(" + mTypeElement.getQualifiedName() + " host ) {\n"));
+        builder.append("public void bind(" + mTypeElement.getQualifiedName() + " host) {\n");
         for (int id : mVariableElementMap.keySet()) {
             VariableElement element = mVariableElementMap.get(id);
             String name = element.getSimpleName().toString();
             String type = element.asType().toString();
-            builder.append("host." + name).append(" = ");
-            builder.append("(" + type + ")(((android.app.Activity) host).findViewById(" + id+"));\n");
+            builder.append("        host." + name).append(" = ");
+            builder.append("(" + type + ")(((android.app.Activity) host).findViewById(" + id + "));\n");
         }
-        builder.append("  }\n");
+        builder.append("    }\n");
     }
 
     public String getProxyClassFullName() {

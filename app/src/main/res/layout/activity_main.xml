@@ -14,121 +14,155 @@
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_50_percent_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
     <Button
         android:id="@+id/btn_custom_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="custom view"
-        app:layout_constraintTop_toBottomOf="@+id/cfpv" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_custom_drawable"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="custom shader"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@id/btn_custom_view" />
 
     <Button
         android:id="@+id/btn_custom_sloop_menu"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="sloop custom view learning"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@id/btn_custom_drawable" />
 
     <Button
         android:id="@+id/btn_custom_matrix_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="custom matrix view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@id/btn_custom_sloop_menu" />
 
     <Button
         android:id="@+id/btn_aige_custom_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="aige custom view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@id/btn_custom_matrix_view" />
 
     <Button
         android:id="@+id/btn_list_view_demo"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="btn list view demo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@id/btn_aige_custom_view" />
 
     <Button
         android:id="@+id/test_other_process"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="test_other_process"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@id/btn_list_view_demo" />
 
     <Button
         android:id="@+id/btn_test_recycle_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="test recycleview"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/test_other_process" />
 
     <ImageView
         android:id="@+id/heif_img"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_test_recycle_view" />
 
     <Button
         android:id="@+id/shape_bg"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="shape background"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
+
         app:layout_constraintTop_toBottomOf="@+id/btn_test_recycle_view" />
 
     <Button
         android:id="@+id/wink_pg"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="wink page"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@+id/shape_bg" />
 
     <Button
         android:id="@+id/btn_storage"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="storage page"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@+id/wink_pg" />
 
     <Button
         android:id="@+id/test_android_11"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="测试android111"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@id/btn_storage" />
 
     <Button
         android:id="@+id/view_dispatch_demo"
         android:layout_width="0dp"
-        android:text="view 事件分发"
         android:layout_height="wrap_content"
+        android:text="view 事件分发"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintTop_toBottomOf="@+id/test_android_11" />
+
+    <Button
+        android:id="@+id/test_apt_demo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="test apt demo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/view_dispatch_demo" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

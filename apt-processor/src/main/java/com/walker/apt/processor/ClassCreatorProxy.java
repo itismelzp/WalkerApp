@@ -1,5 +1,7 @@
 package com.walker.apt.processor;
 
+import com.walker.apt.annotation.AnnotationUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +14,7 @@ import javax.lang.model.util.Elements;
  * Created by walkerzpli on 2021/9/22.
  */
 public class ClassCreatorProxy {
+
     private String mBindingClassName;
     private String mPackageName;
     private TypeElement mTypeElement;
@@ -33,7 +36,7 @@ public class ClassCreatorProxy {
     public String generateJavaCode() {
         StringBuilder builder = new StringBuilder();
         builder.append("package").append(mPackageName).append(";\n\n");
-        builder.append("import com.example.gavin.apt_library.*;\n\n");
+        builder.append("import com.walker.apt.library.*;\n\n");
         builder.append("public class ").append(mBindingClassName);
         builder.append(" {\n");
 

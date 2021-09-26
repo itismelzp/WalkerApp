@@ -73,16 +73,16 @@ public class BindViewProcessor extends AbstractProcessor {
 
         // 通过遍历mProxyMap，创建java文件
         for (String key : mProxyMap.keySet()) {
-            ClassCreatorProxy proxyInfo = mProxyMap.get(key);
-            mMessager.printMessage(Diagnostic.Kind.NOTE, " --> create " + proxyInfo.getProxyClassFullName());
+            ClassCreatorProxy classCreator = mProxyMap.get(key);
+            mMessager.printMessage(Diagnostic.Kind.NOTE, " --> create " + classCreator.getProxyClassFullName());
             Writer writer = null;
             try {
-                JavaFileObject jfo = processingEnv.getFiler().createClassFile(proxyInfo.getProxyClassFullName(), proxyInfo.getTypeElement());
+                JavaFileObject jfo = processingEnv.getFiler().createClassFile(classCreator.getProxyClassFullName(), classCreator.getTypeElement());
                 writer = jfo.openWriter();
-                writer.write(proxyInfo.generateJavaCode());
+                writer.write(classCreator.generateJavaCode());
                 writer.flush();
             } catch (IOException e) {
-                mMessager.printMessage(Diagnostic.Kind.NOTE, " --> create " + proxyInfo.getProxyClassFullName() + "error");
+                mMessager.printMessage(Diagnostic.Kind.NOTE, " --> create " + classCreator.getProxyClassFullName() + "error");
             } finally {
                 if (writer != null) {
                     try {

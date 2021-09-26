@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.demo.apt.AptDemoActivity;
 import com.demo.customview.activity.CustomMatrixActivity;
 import com.demo.customview.activity.CustomShaderActivity;
 import com.demo.customview.activity.ListViewDemoActivity;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         initButton(R.id.wink_pg, WinkActivity.class);
         initButton(R.id.btn_storage, RoomActivity.class);
         initButton(R.id.view_dispatch_demo, ViewEventDispatchDemoActivity.class);
+        initButton(R.id.test_apt_demo, AptDemoActivity.class);
 
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().getName());
 

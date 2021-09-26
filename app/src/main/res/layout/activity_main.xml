@@ -98,7 +98,7 @@
         android:text="test recycleview"
         app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_other_process" />
+        app:layout_constraintTop_toBottomOf="@id/test_other_process" />
 
     <ImageView
         android:id="@+id/heif_img"
@@ -106,7 +106,7 @@
         android:layout_height="100dp"
         app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_test_recycle_view" />
+        app:layout_constraintTop_toBottomOf="@id/btn_test_recycle_view" />
 
     <Button
         android:id="@+id/shape_bg"
@@ -115,8 +115,7 @@
         android:text="shape background"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
-
-        app:layout_constraintTop_toBottomOf="@+id/btn_test_recycle_view" />
+        app:layout_constraintTop_toBottomOf="@id/btn_test_recycle_view" />
 
     <Button
         android:id="@+id/wink_pg"
@@ -125,7 +124,7 @@
         android:text="wink page"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/shape_bg" />
+        app:layout_constraintTop_toBottomOf="@id/shape_bg" />
 
     <Button
         android:id="@+id/btn_storage"
@@ -134,7 +133,7 @@
         android:text="storage page"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/wink_pg" />
+        app:layout_constraintTop_toBottomOf="@id/wink_pg" />
 
     <Button
         android:id="@+id/test_android_11"
@@ -153,7 +152,7 @@
         android:text="view 事件分发"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/test_android_11" />
+        app:layout_constraintTop_toBottomOf="@id/test_android_11" />
 
     <Button
         android:id="@+id/test_apt_demo"
@@ -162,7 +161,7 @@
         android:text="test apt demo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/gl_50_percent_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/view_dispatch_demo" />
+        app:layout_constraintTop_toBottomOf="@id/view_dispatch_demo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

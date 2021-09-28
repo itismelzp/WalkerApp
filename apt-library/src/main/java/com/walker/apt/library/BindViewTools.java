@@ -2,7 +2,7 @@ package com.walker.apt.library;
 
 import android.app.Activity;
 
-import com.walker.apt.annotation.AnnotationUtils;
+import com.walker.apt.utils.AnnotationUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

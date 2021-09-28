@@ -26,6 +26,8 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 @AutoService(Processor.class)
+//@SupportedSourceVersion(SourceVersion.RELEASE_8)
+//@SupportedAnnotationTypes({"com.walker.apt.annotation.BindView"})
 public class BindViewProcessor extends AbstractProcessor {
 
     private Messager mMessager;
@@ -57,7 +59,7 @@ public class BindViewProcessor extends AbstractProcessor {
         mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] start.");
         mProxyMap.clear();
 
-        // 得到所有的注解
+        // 得到所有被BindView注解标注的元素（这里是属性元素）
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(BindView.class);
         for (Element element : elements) {
             VariableElement variableElement = (VariableElement) element;

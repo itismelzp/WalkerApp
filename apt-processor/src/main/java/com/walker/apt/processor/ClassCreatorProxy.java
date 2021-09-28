@@ -3,7 +3,7 @@ package com.walker.apt.processor;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import com.walker.apt.annotation.AnnotationUtils;
+import com.walker.apt.utils.AnnotationUtils;
 
 import java.util.HashMap;
 import java.util.Locale;

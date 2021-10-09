@@ -1,15 +1,7 @@
 package com.demo;
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ProviderInfo;
-import android.net.Uri;
-import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -30,10 +22,6 @@ import com.demo.widget.activity.ScaleActivity;
 import com.demo.widget.activity.ShapeBgActivity;
 import com.demo.wink.WinkActivity;
 
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         initButton(R.id.btn_custom_view, CustomViewActivity.class);
         initButton(R.id.btn_custom_drawable, CustomShaderActivity.class);
@@ -63,61 +53,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void startTMGame() {
-
-        try {
-            getAppInfo(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Class<?> clazz = Class.forName("com.demo.customview.activity");
-            Method methodMain = clazz.getMethod("startTMGame", String[].class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        String customPkgName = System.getenv("CUSTOM_PACKAGE_NAME");
-        Log.d(TAG, "getenv: " + customPkgName);
-        Set<ProviderInfo> sets = new HashSet<>();
-        List<ProviderInfo> providerInfos = getPackageManager().queryContentProviders(null, 0,0);
-        for (ProviderInfo providerInfo : providerInfos) {
-            Log.d(TAG, "providerInfo.authority: " + providerInfo.authority);
-            if (!TextUtils.isEmpty(providerInfo.authority)) {
-                if (providerInfo.authority.contains("com.tencent.tmgp.sgame")) {
-                    String type = getContentResolver().getType(Uri.parse(providerInfo.authority));
-                    Log.d(TAG, "getContentResolver.type: " + type);
-                }
-            }
-        }
-    }
-
-    private void getAppInfo(Context context) throws Exception{
-        PackageManager packageManager = context.getPackageManager();
-        //获取所有安装的app
-        List<PackageInfo> installedPackages = packageManager.getInstalledPackages(0);
-        for(PackageInfo info : installedPackages){
-            String packageName = info.packageName;//app包名
-            ApplicationInfo ai = packageManager.getApplicationInfo(packageName, 0);
-            String appName = (String) packageManager.getApplicationLabel(ai);//获取应用名称
-            Log.d(TAG + "getAppInfo", "packageName: " + packageName + ", appName: " + appName);
-        }
-    }
-
-    private void initButton(int resId, final Class<?> clz) {
+    private void initButton(int resId, final Class<?> clzz) {
 
         findViewById(resId).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(clz);
+                startActivity(clzz);
             }
         });
 
     }
 
-    private void startActivity(Class<?> clz) {
-        Intent intent = new Intent(MainActivity.this, clz);
+    private void startActivity(Class<?> clzz) {
+        Intent intent = new Intent(MainActivity.this, clzz);
         intent.putExtra("TAG", "MainActivity");
         startActivity(intent);
     }

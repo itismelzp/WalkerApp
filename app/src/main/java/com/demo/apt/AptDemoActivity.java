@@ -18,6 +18,9 @@ public class AptDemoActivity extends AppCompatActivity {
     @BindView(R.id.btn_apt_test)
     Button mButton;
 
+    @BindView(R.id.btn_apt_test_2)
+    Button mButton2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +31,11 @@ public class AptDemoActivity extends AppCompatActivity {
         mButton.setOnClickListener(view ->
                 Toast.makeText(AptDemoActivity.this, "bind view success..", Toast.LENGTH_SHORT).show()
         );
+
+        mButton2.setOnClickListener(view ->
+                Toast.makeText(AptDemoActivity.this, "bind mButton2 success..", Toast.LENGTH_SHORT).show()
+        );
+
 
     }
 }

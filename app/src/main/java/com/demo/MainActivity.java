@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.demo.apt.AptDemoActivity;
 import com.demo.customview.activity.CustomMatrixActivity;
@@ -21,11 +22,52 @@ import com.demo.storage.RoomActivity;
 import com.demo.widget.activity.ScaleActivity;
 import com.demo.widget.activity.ShapeBgActivity;
 import com.demo.wink.WinkActivity;
+import com.walker.apt.annotation.BindButton;
+import com.walker.apt.library.BindButtonTools;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+
+    @BindButton(resId = R.id.btn_custom_view, clazz = CustomViewActivity.class)
+    private Button customViewBtn;
+
+    @BindButton(resId = R.id.btn_custom_drawable, clazz = CustomShaderActivity.class)
+    private Button customDrawableBtn;
+
+    @BindButton(resId = R.id.btn_custom_sloop_menu, clazz = CustomSloopMenuActivity.class)
+    private Button customSloopMenuBtn;
+
+    @BindButton(resId = R.id.btn_custom_matrix_view, clazz = CustomMatrixActivity.class)
+    private Button customMatrixViewBtn;
+
+    @BindButton(resId = R.id.btn_aige_custom_view, clazz = AigeActivity.class)
+    private Button aigeCustomViewBtn;
+
+    @BindButton(resId = R.id.btn_list_view_demo, clazz = ListViewDemoActivity.class)
+    private Button listViewDemoBtn;
+
+    @BindButton(resId = R.id.test_other_process, clazz = OtherProcessActivity.class)
+    private Button otherProcessTest;
+
+    @BindButton(resId = R.id.btn_test_recycle_view, clazz = ScaleActivity.class)
+    private Button recycleViewTest;
+
+    @BindButton(resId = R.id.shape_bg, clazz = ShapeBgActivity.class)
+    private Button shapeBgBtn;
+
+    @BindButton(resId = R.id.wink_pg, clazz = WinkActivity.class)
+    private Button winkPgBtn;
+
+    @BindButton(resId = R.id.btn_storage, clazz = RoomActivity.class)
+    private Button storageBtn;
+
+    @BindButton(resId = R.id.view_dispatch_demo, clazz = ViewEventDispatchDemoActivity.class)
+    private Button dispatchView;
+
+    @BindButton(resId = R.id.test_apt_demo, clazz = AptDemoActivity.class)
+    private Button testAptDemoBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,41 +75,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-        initButton(R.id.btn_custom_view, CustomViewActivity.class);
-        initButton(R.id.btn_custom_drawable, CustomShaderActivity.class);
-        initButton(R.id.btn_custom_sloop_menu, CustomSloopMenuActivity.class);
-        initButton(R.id.btn_custom_matrix_view, CustomMatrixActivity.class);
-        initButton(R.id.btn_aige_custom_view, AigeActivity.class);
-        initButton(R.id.btn_list_view_demo, ListViewDemoActivity.class);
-        initButton(R.id.test_other_process, OtherProcessActivity.class);
-        initButton(R.id.btn_test_recycle_view, ScaleActivity.class);
-        initButton(R.id.shape_bg, ShapeBgActivity.class);
-        initButton(R.id.wink_pg, WinkActivity.class);
-        initButton(R.id.btn_storage, RoomActivity.class);
-        initButton(R.id.view_dispatch_demo, ViewEventDispatchDemoActivity.class);
-        initButton(R.id.test_apt_demo, AptDemoActivity.class);
+        BindButtonTools.bind(this);
 
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().getName());
 
-    }
-
-    private void initButton(int resId, final Class<?> clzz) {
-
-        findViewById(resId).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(clzz);
-            }
-        });
-
-    }
-
-    private void startActivity(Class<?> clzz) {
-        Intent intent = new Intent(MainActivity.this, clzz);
-        intent.putExtra("TAG", "MainActivity");
-        startActivity(intent);
     }
 
     @Override

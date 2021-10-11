@@ -2,10 +2,10 @@ package com.walker.apt.processor;
 
 public class BindButtonAnnotationInfo {
     public int resId;
-    public Class<?> clazz;
+    public String className;
 
-    public BindButtonAnnotationInfo(int resId, Class<?> clazz) {
+    public BindButtonAnnotationInfo(int resId, String className) {
         this.resId = resId;
-        this.clazz = clazz;
+        this.className = className;
     }
 }

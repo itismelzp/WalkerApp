@@ -50,4 +50,9 @@ public class UserRepository {
     public void delete(User user) {
         WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.deleteById(user));
     }
+
+    public void update(User... users) {
+        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.update(users));
+    }
+
 }

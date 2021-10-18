@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by walkerzpli on 2021/9/22.
  */
-public class ListTypeConverter implements BaseListTypeConverter<String> {
+public class StringListTypeConverter implements IListTypeConverter<String> {
 
     @TypeConverter
     @Override

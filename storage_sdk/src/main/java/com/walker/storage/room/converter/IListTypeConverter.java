@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by walkerzpli on 2021/9/22.
  */
-public interface BaseListTypeConverter<T> {
+public interface IListTypeConverter<T> {
 
     @TypeConverter
     String converter(List<T> list);

@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BindButtonTools.bind(this);
+//        MainActivity$ViewBinding binding = new MainActivity$ViewBinding();
+//        binding.bind(this);
 
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().getName());
 

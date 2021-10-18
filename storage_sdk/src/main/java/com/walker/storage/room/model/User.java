@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.walker.storage.room.converter.DepartmentTypeConvert;
-import com.walker.storage.room.converter.ListTypeConverter;
+import com.walker.storage.room.converter.StringListTypeConverter;
 import com.walker.storage.room.converter.JobMapTypeConverter;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Entity(tableName = "users", indices = {
         @Index(name = "name", value = {"first_name", "last_name"}, unique = true)
 })
-@TypeConverters({DepartmentTypeConvert.class, ListTypeConverter.class, JobMapTypeConverter.class})
+@TypeConverters({DepartmentTypeConvert.class, StringListTypeConverter.class, JobMapTypeConverter.class})
 public class User {
 
     @PrimaryKey(autoGenerate = true)

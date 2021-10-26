@@ -29,6 +29,9 @@ public interface UserDao {
     @Update
     void update(User... users);
 
+    @Query("SELECT * FROM users WHERE id =:id")
+    LiveData<User> getUser(int id);
+
     @Query("SELECT * FROM users")
     LiveData<List<User>> getAll();
 

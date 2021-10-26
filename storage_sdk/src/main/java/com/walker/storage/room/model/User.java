@@ -21,7 +21,7 @@ import java.util.Map;
 @Entity(tableName = "users", indices = {
         @Index(name = "name", value = {"first_name", "last_name"}, unique = true)
 })
-@TypeConverters({DepartmentTypeConvert.class, StringListTypeConverter.class, JobMapTypeConverter.class})
+@TypeConverters({/*DepartmentTypeConvert.class, */StringListTypeConverter.class, JobMapTypeConverter.class})
 public class User {
 
     @PrimaryKey(autoGenerate = true)
@@ -39,6 +39,7 @@ public class User {
     @Embedded
     public Address address;
 
+    @TypeConverters(DepartmentTypeConvert.class)
     public Department department;
 
     public List<String> company;

@@ -31,4 +31,7 @@ public interface WordDao {
     @Query("SELECT * FROM word_table ORDER BY content ASC")
     LiveData<List<Word>> getAlphabetizedWords();
 
+    @Query("SELECT a.* FROM word_table a INNER JOIN (SELECT max(createTime) date FROM word_table) b ON a.createTime = b.date")
+    LiveData<Word> getLastWord();
+
 }

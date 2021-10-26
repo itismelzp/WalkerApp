@@ -1,6 +1,6 @@
 package com.walker.storage.room.repository;
 
-import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
@@ -18,10 +18,14 @@ public class WordRepository {
     private WordDao mWordDao;
     private LiveData<List<Word>> mAllWords;
 
-    public WordRepository(Application application) {
-        WalkerRoomDatabase db = WalkerRoomDatabase.getDatabase(application);
+    public WordRepository(Context context) {
+        WalkerRoomDatabase db = WalkerRoomDatabase.getDatabase(context);
         mWordDao = db.wordDao();
         mAllWords = mWordDao.getAlphabetizedWords();
+    }
+
+    public LiveData<Word> getLastWord() {
+        return mWordDao.getLastWord();
     }
 
     public LiveData<List<Word>> getAllWords() {

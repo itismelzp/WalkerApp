@@ -2,7 +2,10 @@ package com.demo.storage;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,15 +17,18 @@ import android.widget.Toast;
 
 import com.demo.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.walker.storage.room.model.Address;
 import com.walker.storage.room.model.User;
 import com.walker.storage.room.model.Word;
 import com.walker.storage.room.relation.UserAndLibrary;
 import com.walker.storage.room.relation.UserWithMusicLists;
+import com.walker.storage.room.repository.WordRepository;
 import com.walker.storage.room.viewmodel.UserViewModel;
 import com.walker.storage.room.viewmodel.WordViewModel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class RoomActivity extends AppCompatActivity {
@@ -33,6 +39,12 @@ public class RoomActivity extends AppCompatActivity {
 
     private WordViewModel mWordViewModel;
     private UserViewModel mUserViewModel;
+
+    private final Function<User, String> user2StrFun = user -> String.format("%s %s", user.firstName, user.lastName);
+    private final Function<Word, String> word2StrFun = word -> {
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return String.format(Locale.getDefault(), "uer(%s) time(%s)", word.getContent(), ft.format(new Date(word.getCreateTime())));
+    };
 
 
     @Override
@@ -51,7 +63,22 @@ public class RoomActivity extends AppCompatActivity {
 
         // Update the cached copy of the words in the adapter.
 
-        mWordViewModel.getAllWords().observe(this, adapter::submitList);
+        WordRepository mRepository = new WordRepository(this);
+        mRepository.getAllWords().observe(this, new Observer<List<Word>>() {
+            @Override
+            public void onChanged(List<Word> words) {
+                Log.d(TAG, "words: " + words);
+                adapter.submitList(words);
+            }
+        });
+
+//        mWordViewModel.getAllWords().observe(this, new Observer<List<Word>>() {
+//            @Override
+//            public void onChanged(List<Word> words) {
+//                Log.d(TAG, "words: " + words);
+//                adapter.submitList(words);
+//            }
+//        });
 
         mUserViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
@@ -79,6 +106,14 @@ public class RoomActivity extends AppCompatActivity {
             Intent intent = new Intent(RoomActivity.this, NewWordActivity.class);
             startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
         });
+
+        LiveData<Word> wordLiveData = mWordViewModel.getLastWord();
+        LiveData<String> stringLiveData = Transformations.map(wordLiveData, word2StrFun);
+
+        findViewById(R.id.get_user_fab).setOnClickListener(view -> stringLiveData.observe(RoomActivity.this, s -> {
+            Log.d(TAG, s);
+            Toast.makeText(RoomActivity.this, s, Toast.LENGTH_SHORT).show();
+        }));
     }
 
     @Override

@@ -31,6 +31,10 @@ public class UserRepository {
         mAllUsersAndMusicLists = mUserDao.getAllUsersWithMusicLists();
     }
 
+    public LiveData<User> getUser(int id) {
+        return mUserDao.getUser(id);
+    }
+
     public LiveData<List<User>> getAllUsers() {
         return mAllUsers;
     }

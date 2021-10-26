@@ -34,7 +34,7 @@ public class WordListAdapter extends ListAdapter<Word, WordViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull WordViewHolder holder, int position) {
         Word current = getItem(position);
-        holder.bind(current.getContent());
+        holder.bind(current.getContent(), current.getCreateTime());
 
         holder.itemView.setOnClickListener(view -> mWordViewModel.delete(current.getContent()));
     }

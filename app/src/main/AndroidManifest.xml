@@ -19,7 +19,7 @@
         <activity android:name=".widget.activity.RecyclerViewActivity" />
         <activity
             android:name=".customview.activity.OtherProcessActivity"
-            android:process=":qzone" />
+            android:process=":sub" />
         <activity android:name=".customview.aige.activity.AigeActivity" />
         <activity android:name=".customview.sloop.activity.CustomSloopMenuActivity" />
         <activity android:name=".customview.activity.CustomMatrixActivity" />

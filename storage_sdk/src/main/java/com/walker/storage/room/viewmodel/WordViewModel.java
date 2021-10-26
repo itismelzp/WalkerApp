@@ -25,6 +25,10 @@ public class WordViewModel extends AndroidViewModel {
         mAllWords = mRepository.getAllWords();
     }
 
+    public LiveData<Word> getLastWord() {
+        return mRepository.getLastWord();
+    }
+
     public LiveData<List<Word>> getAllWords() {
         return mAllWords;
     }

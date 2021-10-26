@@ -31,6 +31,10 @@ public class UserViewModel extends AndroidViewModel {
         mAllUsersWithMusicLists = mRepository.getAllUsersAndMusicLists();
     }
 
+    public LiveData<User> getUser(int id) {
+        return mRepository.getUser(id);
+    }
+
     public LiveData<List<User>> getAllUsers() {
         return mAllUsers;
     }

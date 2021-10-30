@@ -52,6 +52,7 @@ public abstract class WalkerRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             WalkerRoomDatabase.class, "word_database")
                             .addCallback(sRoomDatabaseCallback) // 数据库创建的时候回调
+                            .enableMultiInstanceInvalidation() // 使多实例失效，跨进程修改适用
                             .build();
                 }
             }
@@ -59,7 +60,7 @@ public abstract class WalkerRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+    private final static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);

@@ -33,10 +33,26 @@ public class WordRepository {
     }
 
     public void insert(Word word) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mWordDao.insert(word));
+        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWordDao.delete(word.getContent());
+            mWordDao.insert(word);
+        });
     }
 
     public void delete(String content) {
         WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mWordDao.delete(content));
     }
+
+    public void delete(String... contents) {
+        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mWordDao.delete(contents));
+    }
+
+    public void delete(List<String> contents) {
+        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mWordDao.delete(contents));
+    }
+
+    public void update(Word word) {
+        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mWordDao.update(word));
+    }
+
 }

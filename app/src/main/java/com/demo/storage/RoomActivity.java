@@ -13,19 +13,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.demo.R;
+import com.demo.customview.activity.OtherProcessActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.walker.storage.room.model.User;
 import com.walker.storage.room.model.Word;
 import com.walker.storage.room.relation.UserAndLibrary;
 import com.walker.storage.room.relation.UserWithMusicLists;
-import com.walker.storage.room.repository.WordRepository;
 import com.walker.storage.room.viewmodel.UserViewModel;
 import com.walker.storage.room.viewmodel.WordViewModel;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,13 +41,21 @@ public class RoomActivity extends AppCompatActivity {
 
     private WordViewModel mWordViewModel;
     private UserViewModel mUserViewModel;
+    private WordListAdapter mAdapter;
 
     private final Function<User, String> user2StrFun = user -> String.format("%s %s", user.firstName, user.lastName);
-    private final Function<Word, String> word2StrFun = word -> {
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        return String.format(Locale.getDefault(), "uer(%s) time(%s)", word.getContent(), ft.format(new Date(word.getCreateTime())));
-    };
+    private final Function<Word, String> word2StrFun = this::word2StrFun;
 
+
+    private String word2StrFun(Word word) {
+        if (word == null) {
+            return "";
+        }
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        return String.format(Locale.getDefault(),
+                "user(%s) time(%s)",
+                word.getContent(), ft.format(new Date(word.getCreateTime())));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,32 +63,39 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        initViewModel();
+        mAdapter = new WordListAdapter(new WordListAdapter.WordDiff(), mWordViewModel);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        initFab();
+    }
 
+    private final Observer observer = new Observer<List<Word>>() {
+        @Override
+        public void onChanged(List<Word> words) {
+            Log.d(TAG, "words: " + words);
+            if (mAdapter != null) {
+                mAdapter.submitList(words);
+            }
+        }
+    };
+
+    private void initViewModel() {
         mWordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        final WordListAdapter adapter = new WordListAdapter(new WordListAdapter.WordDiff(), mWordViewModel);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Update the cached copy of the words in the adapter.
-
-        WordRepository mRepository = new WordRepository(this);
-        mRepository.getAllWords().observe(this, new Observer<List<Word>>() {
-            @Override
-            public void onChanged(List<Word> words) {
-                Log.d(TAG, "words: " + words);
-                adapter.submitList(words);
+        mWordViewModel.getAllWords().observe(this, words -> {
+            Log.d(TAG, "words: " + words);
+            if (mAdapter != null) {
+                mAdapter.submitList(words);
             }
         });
 
-//        mWordViewModel.getAllWords().observe(this, new Observer<List<Word>>() {
-//            @Override
-//            public void onChanged(List<Word> words) {
-//                Log.d(TAG, "words: " + words);
-//                adapter.submitList(words);
-//            }
-//        });
+        mWordViewModel.getAllWordsWrapper().observe(this, wordWrappers -> {
+            Log.d(TAG, "wordWrappers: " + wordWrappers);
+        });
+
+        mWordViewModel.getAllWordWrapperStr().observe(this, list -> Log.d(TAG, "[getAllWordWrapperStr] list: " + list));
 
         mUserViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
@@ -100,8 +117,10 @@ public class RoomActivity extends AppCompatActivity {
                 Log.d(TAG, "userWithMusicLists: " + userWithMusicLists);
             }
         });
+    }
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+    private void initFab() {
+        FloatingActionButton fab = findViewById(R.id.fab_add);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(RoomActivity.this, NewWordActivity.class);
             startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
@@ -109,11 +128,32 @@ public class RoomActivity extends AppCompatActivity {
 
         LiveData<Word> wordLiveData = mWordViewModel.getLastWord();
         LiveData<String> stringLiveData = Transformations.map(wordLiveData, word2StrFun);
+        findViewById(R.id.fab_get_last_user).setOnClickListener(view -> {
+            stringLiveData.observe(RoomActivity.this, s -> {
+                Log.d(TAG, s);
+                Toast.makeText(RoomActivity.this, s, Toast.LENGTH_SHORT).show();
+            });
+        });
 
-        findViewById(R.id.get_user_fab).setOnClickListener(view -> stringLiveData.observe(RoomActivity.this, s -> {
-            Log.d(TAG, s);
-            Toast.makeText(RoomActivity.this, s, Toast.LENGTH_SHORT).show();
-        }));
+        findViewById(R.id.fab_delete_user).setOnClickListener(view -> {
+
+            EditText editText = findViewById(R.id.delete_words);
+            String text = editText.getText().toString();
+            Log.d(TAG, "editText text: " + text);
+            String[] words = text.split(" ");
+            mWordViewModel.delete(Arrays.asList(words));
+        });
+
+        findViewById(R.id.fab_jump_other_process).setOnClickListener(view -> {
+            Intent intent = new Intent(this, OtherProcessActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "[onResume]");
     }
 
     @Override
@@ -123,6 +163,7 @@ public class RoomActivity extends AppCompatActivity {
         if(requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
             word.setCreateTime(System.currentTimeMillis());
+            Log.i(TAG, "[onActivityResult] word: " + word);
             mWordViewModel.insert(word);
         } else {
             Toast.makeText(getApplicationContext(),

@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.walker.storage.room.model.Word;
 
@@ -18,7 +19,7 @@ public interface WordDao {
 
     // allowing the insert of the same word multiple times by passing a
     // conflict resolution strategy
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Word word);
 
 //    @Delete
@@ -27,6 +28,15 @@ public interface WordDao {
 
     @Query("DELETE FROM word_table WHERE content = :arg0")
     void delete(String arg0);
+
+    @Query("DELETE FROM word_table WHERE content IN (:args)")
+    void delete(String... args);
+
+    @Query("DELETE FROM word_table WHERE content IN (:args)")
+    void delete(List<String> args);
+
+    @Update
+    void update(Word word);
 
     @Query("SELECT * FROM word_table ORDER BY content ASC")
     LiveData<List<Word>> getAlphabetizedWords();

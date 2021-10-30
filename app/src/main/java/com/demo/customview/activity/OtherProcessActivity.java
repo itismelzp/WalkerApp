@@ -42,10 +42,10 @@ public class OtherProcessActivity extends AppCompatActivity {
             }
         }
 
+        mWordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
         final WordListAdapter adapter = new WordListAdapter(new WordListAdapter.WordDiff(), mWordViewModel);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(adapter);
-        mWordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
         mWordViewModel.getAllWords().observe(this, new Observer<List<Word>>() {
             @Override
             public void onChanged(List<Word> words) {

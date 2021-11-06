@@ -14,6 +14,7 @@ import com.demo.customview.activity.CustomMatrixActivity;
 import com.demo.customview.activity.CustomShaderActivity;
 import com.demo.customview.activity.ListViewDemoActivity;
 import com.demo.customview.activity.OtherProcessActivity;
+import com.demo.customview.activity.SlideConflictDemoActivity;
 import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.ryg.ViewEventDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
@@ -68,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindButton(resId = R.id.test_apt_demo, clazz = AptDemoActivity.class)
     private Button testAptDemoBtn;
+
+    @BindButton(resId = R.id.slide_conflict_demo, clazz = SlideConflictDemoActivity.class)
+    private Button slideConflictBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".customview.activity.SlideConflictDemoActivity">
+
+    <LinearLayout
+        android:id="@+id/qfs_feed_album_ll"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="50dp"
+        android:background="#992F2F2F"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/qfs_skin_icon_general_collection_primary" />
+
+        <TextView
+            android:id="@+id/qfs_feed_album_tv"
+            android:layout_width="0dp"
+            android:layout_height="17dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="探店好物分享 | 更新至第3集"
+            android:textColor="#FFFFFFFF"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/qvideo_skin_icon_general_arrow_right_light" />
+
+    </LinearLayout>
+
+    <com.demo.customview.slide_conflict.SeekFrameLayout
+        android:id="@+id/seek_container"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <!-- 进度条-->
+        <FrameLayout
+            android:id="@+id/flash_seek_bar_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:background="#ffff0000"
+            android:paddingTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <SeekBar
+                android:id="@+id/flash_show_progress_bar"
+                style="@style/flash_show_player_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center">
+
+                <View
+                    android:id="@+id/flash_show_video_loading_view"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="#4dffffff" />
+            </FrameLayout>
+        </FrameLayout>
+    </com.demo.customview.slide_conflict.SeekFrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

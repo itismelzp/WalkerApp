@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".customview.activity.SlideConflictDemoActivity"></activity>
         <activity android:name=".apt.AptDemoActivity" />
         <activity android:name=".storage.NewWordActivity" />
         <activity android:name=".storage.RoomActivity" />

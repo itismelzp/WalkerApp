@@ -19,7 +19,7 @@ public class MyApplication extends Application {
 
         mContext = getApplicationContext();
         ViewUtils.initContext(mContext);
-        SensorsDataAPI.init(this);
+//        SensorsDataAPI.init(this);
     }
 
     public static Context getInstance() {

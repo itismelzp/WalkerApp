@@ -45,16 +45,13 @@ public class SlideConflictDemoActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 boolean isNeedSlide = false;
 
-
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-
                 String action = "";
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         action = "ACTION_DOWN";
                         isNeedSlide = true;
+                        mLastX = (int) event.getX();
                         break;
                     case MotionEvent.ACTION_MOVE:
 //                        int deltaX = x - mLastX;
@@ -69,24 +66,24 @@ public class SlideConflictDemoActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
 
-                        int deltaX = x - mLastX;
+                        int deltaX = (int) event.getX() - mLastX;
                         if (Math.abs(deltaX) > ViewUtils.dip2px(5)) {
                             isNeedSlide = true;
+                        }else {
+                            isNeedSlide = false;
                         }
-
+                        mLastX = 0;
                         action = "ACTION_UP";
                         break;
                 }
 
+                mSeekFrameLayout.requestDisallowInterceptTouchEvent(true);
                 if (isNeedSlide) {
-                    mSeekFrameLayout.requestDisallowInterceptTouchEvent(true);
                     mSeekBar.onTouchEvent(event);
                 } else {
                     listener.onClick(albumLL);
                 }
 
-                mLastX = x;
-                mLastY = y;
                 Log.d(TAG, "[onInterceptTouchEvent] event.getAction(): " + action + ", isNeedSlide: " + isNeedSlide);
                 return true;
             }

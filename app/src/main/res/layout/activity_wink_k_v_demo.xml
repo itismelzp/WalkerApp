@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".storage.WinkKVDemoActivity">
+
+
+    <EditText
+        android:id="@+id/wink_kv_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="type to key and value split by space"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/wink_kv_save_value_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="save value"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wink_kv_et" />
+
+    <Button
+        android:id="@+id/wink_kv_shwo_value_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="show value"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wink_kv_save_value_btn" />
+
+    <TextView
+        android:id="@+id/wink_kv_show_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="#FFFF0000"
+        app:layout_constraintTop_toBottomOf="@id/wink_kv_shwo_value_btn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

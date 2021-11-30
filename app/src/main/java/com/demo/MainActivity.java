@@ -20,6 +20,7 @@ import com.demo.customview.ryg.ViewEventDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
 import com.demo.storage.RoomActivity;
+import com.demo.storage.WinkKVDemoActivity;
 import com.demo.widget.activity.ScaleActivity;
 import com.demo.widget.activity.ShapeBgActivity;
 import com.demo.wink.WinkActivity;
@@ -72,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
     @BindButton(resId = R.id.slide_conflict_demo, clazz = SlideConflictDemoActivity.class)
     private Button slideConflictBtn;
+
+
+    @BindButton(resId = R.id.wink_kv_demo, clazz = WinkKVDemoActivity.class)
+    private Button winkKvBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -168,10 +168,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="test apt demo"
+        app:layout_constraintBottom_toTopOf="@id/wink_kv_demo"
+        app:layout_constraintLeft_toRightOf="@id/gl_50_percent_vertical"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/test_apt_demo"
+        />
+
+
+    <Button
+        android:id="@+id/wink_kv_demo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="wink kv demo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/gl_50_percent_vertical"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/slide_conflict_demo" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

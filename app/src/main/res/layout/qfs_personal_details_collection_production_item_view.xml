@@ -54,7 +54,6 @@
         android:layout_height="14dp"
         android:layout_marginRight="117dp"
         android:layout_marginBottom="5dp"
-        android:src="@drawable/qvideo_icon_general_feed_like_primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -64,7 +63,6 @@
         android:layout_height="14dp"
         android:layout_marginRight="54dp"
         android:layout_marginBottom="5dp"
-        android:src="@drawable/qvideo_icon_nav_rocket"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

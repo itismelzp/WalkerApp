@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.demo.customview.utils.ViewUtils;
+import com.tencent.mmkv.MMKV;
 import com.walker.analytics.sdk.SensorsDataAPI;
 
 /**
@@ -20,6 +21,7 @@ public class MyApplication extends Application {
         mContext = getApplicationContext();
         ViewUtils.initContext(mContext);
 //        SensorsDataAPI.init(this);
+        MMKV.initialize(this);
     }
 
     public static Context getInstance() {

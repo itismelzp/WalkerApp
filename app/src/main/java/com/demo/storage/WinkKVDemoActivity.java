@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.demo.R;
+import com.tencent.mmkv.MMKV;
 import com.walker.storage.winkkv.WinkKV;
 
 public class WinkKVDemoActivity extends AppCompatActivity {
@@ -34,17 +35,16 @@ public class WinkKVDemoActivity extends AppCompatActivity {
 
         String NAME = "common_store";
         String path = getFilesDir().getAbsolutePath() + "/wink_kv";
-        WinkKV kv = new WinkKV.Builder(path, NAME).build();
+        WinkKV winkKV = new WinkKV.Builder(path, NAME).build();
+        MMKV mmKV = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!kv.getBoolean("flag")) {
-                    kv.putBoolean("flag", true);
-                }
-
                 if (!TextUtils.isEmpty(inputEV.getText())) {
-                    kv.putString("key", inputEV.getText().toString());
+                    winkKV.putString("key", inputEV.getText().toString());
+                    mmKV.encode("mmkv_key", inputEV.getText().toString());
                 }
             }
         });
@@ -52,7 +52,7 @@ public class WinkKVDemoActivity extends AppCompatActivity {
         showBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showTV.setText(kv.getString("key"));
+                showTV.setText("winkKV: " + winkKV.getString("key") + "; mmKV: " + mmKV.decodeString("mmkv_key"));
             }
         });
 

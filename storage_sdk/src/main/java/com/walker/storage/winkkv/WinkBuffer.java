@@ -77,7 +77,7 @@ public class WinkBuffer {
         return x;
     }
 
-    public int putVarint32(int i, int v) {
+    public int putVariant32(int i, int v) {
         while ((v & 0xffffff80) != 0) {
             hb[i++] = (byte) ((v & 0x7f) | 0x80);
             v >>>= 7;
@@ -86,11 +86,11 @@ public class WinkBuffer {
         return i;
     }
 
-    public void putVarint32(int v) {
-        position = putVarint32(position, v);
+    public void putVariant32(int v) {
+        position = putVariant32(position, v);
     }
 
-    public static int getVarint32Size(int v) {
+    public static int getVariant32Size(int v) {
         if ((v >> 7) == 0) {
             return 1;
         } else if ((v >> 14) == 0) {

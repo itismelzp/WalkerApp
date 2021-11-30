@@ -6,21 +6,24 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * WinkKV的配置类，如：配置日志工具、线程池
+ * <p>
  * Created by walkerzpli on 2021/10/15.
  */
 public final class WinkKVConfig {
-    static WinkKV.Logger sLogger;
+
+    static WinkKVLog mLogger;
     static volatile Executor sExecutor;
 
     private WinkKVConfig() {
     }
 
-    public static void setLogger(WinkKV.Logger logger) {
-        sLogger = logger;
+    public static void initLogger(WinkKVLog logger) {
+        mLogger = logger;
     }
 
     /**
-     * It's highly recommended to set your own Executor for reusing threads in common thread pool.
+     * 推荐使用公共的线程池
      *
      * @param executor The executor for loading or writing.
      */

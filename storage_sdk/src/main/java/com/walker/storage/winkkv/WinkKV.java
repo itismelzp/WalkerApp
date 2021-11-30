@@ -20,6 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @SuppressWarnings("rawtypes")
 public class WinkKV {
+
+    private static final String TAG = "WinkKV";
+
     private static final String BOTH_FILES_ERROR = "both files error";
     private static final String PARSE_DATA_FAILED = "parse dara failed";
     private static final String OPEN_FILE_FAILED = "open file failed";
@@ -49,7 +52,7 @@ public class WinkKV {
     private final String path;
     private final String name;
     private final Map<String, Encoder> encoderMap;
-    private final Logger logger = WinkKVConfig.sLogger;
+    private final WinkKVLog logger = WinkKVConfig.mLogger;
 
     private FileChannel aChannel;
     private FileChannel bChannel;
@@ -362,7 +365,7 @@ public class WinkKV {
             while (buffer.position < dataEnd) {
                 int start = buffer.position;
                 byte info = buffer.get();
-                byte type = (byte) (info & DataType.TYPE_MASK);
+                byte type = (byte) (info & MaskType.MASK_TYPE_DATA_TYPE);
                 if (type < DataType.BOOLEAN || type > DataType.OBJECT) {
                     throw new Exception(PARSE_DATA_FAILED);
                 }
@@ -396,7 +399,7 @@ public class WinkKV {
                     }
                 } else {
                     int size = buffer.getShort() & 0xFFFF;
-                    boolean external = (info & DataType.EXTERNAL_MASK) != 0;
+                    boolean external = (info & MaskType.MASK_TYPE_EXTERNAL) != 0;
                     checkValueSize(size, external);
                     switch (type) {
                         case DataType.STRING:
@@ -438,7 +441,7 @@ public class WinkKV {
                 }
             }
         } catch (Exception e) {
-            warning(e);
+            error(e);
             return -1;
         }
         if (buffer.position != dataEnd) {
@@ -771,7 +774,7 @@ public class WinkKV {
                 remove(type, c.start, c.offset + c.valueSize);
                 oldFileName = c.external ? (String) c.value : null;
             }
-            byte newByte = (byte) (type | DataType.DELETE_MASK);
+            byte newByte = (byte) (type | MaskType.MASK_TYPE_DELETE);
             if (writingMode == NON_BLOCKING) {
                 aBuffer.putLong(4, checksum);
                 aBuffer.put(removeStart, newByte);
@@ -1352,7 +1355,7 @@ public class WinkKV {
 
     private int wrapArray(String key, byte[] value, byte type, boolean external) {
         if (external) {
-            type |= DataType.EXTERNAL_MASK;
+            type |= MaskType.MASK_TYPE_EXTERNAL;
         }
         wrapHeader(key, type, 2 + value.length);
         winkBuffer.putShort((short) value.length);
@@ -1363,7 +1366,7 @@ public class WinkKV {
 
     private void remove(byte type, int start, int end) {
         countInvalid(start, end);
-        byte newByte = (byte) (type | DataType.DELETE_MASK);
+        byte newByte = (byte) (type | MaskType.MASK_TYPE_DELETE);
         byte oldByte = winkBuffer.hb[start];
         int shift = (start & 7) << 3;
         checksum ^= ((long) (newByte ^ oldByte) & 0xFF) << shift;
@@ -1543,36 +1546,19 @@ public class WinkKV {
     }
 
     private void error(String message) {
-        if (logger != null) {
-            logger.e(name, new Exception(message));
-        }
+        WinkKVLog.e(TAG, name, new Throwable(message));
     }
 
-    private void error(Exception e) {
-        if (logger != null) {
-            logger.e(name, e);
-        }
+    private void error(Throwable e) {
+        WinkKVLog.e(TAG, name, e);
     }
 
     private void warning(Exception e) {
-        if (logger != null) {
-            logger.w(name, e);
-        }
+        WinkKVLog.w(TAG, name, e);
     }
 
     private void info(String message) {
-        if (logger != null) {
-            logger.i(name, message);
-        }
-    }
-
-    // All params of Logger && Encoder are not null.
-    public interface Logger {
-        void i(String name, String message);
-
-        void w(String name, Exception e);
-
-        void e(String name, Exception e);
+        WinkKVLog.i(TAG, message);
     }
 
     public interface Encoder<T> {

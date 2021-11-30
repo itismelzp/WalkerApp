@@ -4,9 +4,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
+ * 编解码类
+ * <p>
  * Created by walkerzpli on 2021/10/15.
  */
 class StringSetEncoder implements WinkKV.Encoder<Set<String>> {
+
     static final StringSetEncoder INSTANCE = new StringSetEncoder();
 
     private StringSetEncoder() {
@@ -14,7 +17,7 @@ class StringSetEncoder implements WinkKV.Encoder<Set<String>> {
 
     @Override
     public String tag() {
-        return "StringSet";
+        return "StringSetEncoder";
     }
 
     @Override
@@ -35,14 +38,14 @@ class StringSetEncoder implements WinkKV.Encoder<Set<String>> {
                 int strSize = WinkBuffer.getStringSize(str);
                 strArray[index] = str;
                 sizeArray[index] = strSize;
-                count += WinkBuffer.getVarint32Size(strSize) + strSize;
+                count += WinkBuffer.getVariant32Size(strSize) + strSize;
             }
             index++;
         }
         WinkBuffer buffer = new WinkBuffer(count);
         for (int i = 0; i < n; i++) {
             int size = sizeArray[i];
-            buffer.putVarint32(size);
+            buffer.putVariant32(size);
             if (size >= 0) {
                 buffer.putString(strArray[i]);
             }

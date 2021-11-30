@@ -1,17 +1,17 @@
 package com.walker.storage.winkkv;
 
 /**
- * struct of primary type (boolean/int/float/long/double):
+ * 基本类型数据组装结构 (boolean/int/float/long/double):
  * [type|keyLen|keyData|value]
  *
  * <p>
- * struct of variable type (string/array/object):
+ * 类类型的数据组装结构 (string/array/object):
  * [type|keyLen|keyData|valueLen|value]
  *
  * <p>
- * type: 1 byte,
- * keyLen: 1 byte,
- * valueLen: 2 bytes.
+ * 类型长度: 1 byte
+ * 键长度: 1 byte
+ * 值长度: 2 bytes
  * <p>
  * Created by walkerzpli on 2021/10/15.
  */

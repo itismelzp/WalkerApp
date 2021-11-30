@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/qfs_album_item_container"
+    android:layout_width="match_parent"
+    android:layout_height="74dp"
+    android:background="#FF1A1A1A">
+
+    <com.demo.customview.view.RoundCornerImageView
+        android:id="@+id/qfs_album_item_right_cover"
+        android:layout_width="56dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="17dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/zhaoyun"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/qfs_album_item_title_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="16dp"
+        android:ellipsize="end"
+        android:gravity="left|center_vertical"
+        android:maxLines="2"
+        android:textColor="#8CFFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/qfs_album_item_right_cover"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="wrap"
+        tools:text="第一集 | 海岛和鱼相爱，只是一场意外，当初彼此不够成熟坦白 #周杰伦" />
+
+    <TextView
+        android:id="@+id/qfs_album_item_duration_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:maxLength="5"
+        android:textColor="#8CFFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/qfs_album_item_title_tv"
+        tools:text="00:15" />
+
+    <ImageView
+        android:id="@+id/qfs_album_item_like_iv"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginRight="117dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/qvideo_icon_general_feed_like_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/qfs_album_item_push_iv"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginRight="54dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/qvideo_icon_nav_rocket"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/qfs_album_item_like_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:maxLength="5"
+        android:textColor="#8CFFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/qfs_album_item_like_iv"
+        app:layout_constraintLeft_toRightOf="@id/qfs_album_item_like_iv"
+        app:layout_constraintTop_toTopOf="@id/qfs_album_item_like_iv"
+        tools:text="12.3W" />
+
+    <TextView
+        android:id="@+id/qfs_album_item_push_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:maxLength="5"
+        android:textColor="#8CFFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/qfs_album_item_push_iv"
+        app:layout_constraintLeft_toRightOf="@id/qfs_album_item_push_iv"
+        app:layout_constraintTop_toTopOf="@id/qfs_album_item_push_iv"
+        tools:text="12.3W" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.demo.animator.AnimatorActivity;
 import com.demo.apt.AptDemoActivity;
 import com.demo.customview.activity.CustomMatrixActivity;
 import com.demo.customview.activity.CustomShaderActivity;
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindButton(resId = R.id.wink_kv_demo, clazz = WinkKVDemoActivity.class)
     private Button winkKvBtn;
+
+    @BindButton(resId = R.id.animator_test, clazz = AnimatorActivity.class)
+    private Button animatorTestBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

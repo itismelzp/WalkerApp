@@ -189,10 +189,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="test apt demo"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/animator_test"
         app:layout_constraintLeft_toRightOf="@id/gl_50_percent_vertical"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/wink_kv_demo" />
+
+    <Button
+        android:id="@+id/animator_test"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="动画demo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/gl_50_percent_vertical"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_demo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

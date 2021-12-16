@@ -20,4 +20,6 @@
 
     <color name="buttonLabel">#FFFFFF</color>
 
+    <color name="skin_color_btn_primary_normal">#FF0099FF</color>
+
 </resources>

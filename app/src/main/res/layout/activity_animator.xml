@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".animator.AnimatorActivity">
+
+
+    <TextView
+        android:id="@+id/qfs_tag_challenge_float_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/qcircle_tag_challenge_float_title_bg_shape"
+        android:ellipsize="end"
+        android:maxEms="15"
+        android:maxLines="1"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="4dp"
+        android:text="立下你的新年Flag"
+        android:textColor="#FFFFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="立下你的新年Flag" />
+
+    <LinearLayout
+        android:id="@+id/qfs_tag_challenge_float_desc_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/qcircle_tag_challenge_float_title_bg_shape"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/qfs_tag_challenge_float_title_tv">
+
+        <LinearLayout
+            android:id="@+id/qfs_tag_challenge_float_rank_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/qcircle_tag_challenge_float_desc_bg_shape"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/qfs_tag_challenge_float_rank_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical"
+                android:textColor="#FFFFFFFF"
+                android:text="TOP 1"
+                tools:text="TOP 1" />
+
+            <View
+                android:id="@+id/qfs_tag_challenge_float_desc_separate"
+                android:layout_width="1dp"
+                android:layout_height="8dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:background="#66FFFFFF" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/qfs_tag_challenge_float_desc_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center_vertical"
+            android:text="342w人看过"
+            android:textColor="#FFFFFFFF"
+            android:textSize="12sp"
+            tools:text="342w人看过" />
+
+    </LinearLayout>
+
+    <TextSwitcher
+        android:id="@+id/textswitcher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

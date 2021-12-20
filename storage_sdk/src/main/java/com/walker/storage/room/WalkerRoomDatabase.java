@@ -21,8 +21,10 @@ import com.walker.storage.room.model.MusicList;
 import com.walker.storage.room.model.User;
 import com.walker.storage.room.model.Word;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -126,6 +128,44 @@ public abstract class WalkerRoomDatabase extends RoomDatabase {
         user2.address = address2;
 
         userDao.insertAll(user1, user2);
+
+        // init users
+        User user3 = new User();
+        user3.firstName = "jack";
+        user3.lastName = "lee";
+        Address address3 = new Address("424500");
+        address3.street = "粤海街道";
+        address3.state = "广东省";
+        address3.city = "深圳市";
+        user3.address = address3;
+        Department department3 = new Department();
+        department3.id = 20001;
+        department3.name = "pony";
+        user3.department = department3;
+        user3.company = Arrays.asList("baidu", "tencent");
+        Map<Integer, Job> map3 = new HashMap<>();
+        Job job31 = new Job("百度", 1.5);
+        job31.address = address3;
+        map3.put(1, job31);
+        Job job32= new Job("腾讯", 2);
+        job32.address = address3;
+        map3.put(2, job32);
+        user3.jobs = map3;
+
+        User user4 = new User();
+        user4.firstName = "jack";
+        user4.lastName = "wan";
+        Address address4 = new Address("424501");
+        address4.street = "岳麓街道";
+        address4.state = "湖南省";
+        address4.city = "长沙市";
+        user4.address = address4;
+
+
+        List<User> users = new ArrayList<>();
+        users.add(user3);
+        users.add(user4);
+        userDao.insertAll(users);
 
         // init library
         Library library1 = new Library();

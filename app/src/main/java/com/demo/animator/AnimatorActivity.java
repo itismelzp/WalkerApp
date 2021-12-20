@@ -2,12 +2,12 @@ package com.demo.animator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -18,6 +18,8 @@ import android.widget.ViewSwitcher;
 import com.demo.R;
 
 public class AnimatorActivity extends AppCompatActivity {
+
+    private static final String TAG = "AnimatorActivity";
 
     private TextSwitcher txtSwitcher;
 
@@ -41,20 +43,24 @@ public class AnimatorActivity extends AppCompatActivity {
     private void initFloatTitleUI() {
         LinearLayout floatRankLL = findViewById(R.id.qfs_tag_challenge_float_rank_bg);
 
-        ValueAnimator animator = ValueAnimator.ofInt(0, 100);
+        ValueAnimator animator = ValueAnimator.ofInt(100, 0);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int currentValue = (int) animation.getAnimatedValue();
-                // 给报警点设置0至100的透明度
+                Log.d(TAG, "currentValue: " + currentValue);
+                if (currentValue < 20) {
+                    Drawable drawable = floatRankLL.getResources()
+                            .getDrawable(R.drawable.qcircle_tag_challenge_float_desc_bg_shape,
+                                    null);
+                    int alpha = 255 * currentValue / 20;
+                    Log.d(TAG, "alpha: " + alpha);
+                    drawable.setAlpha(alpha);
+                    floatRankLL.setBackground(drawable);
+                }
             }
         });
-        // 单次动画时长1.5s
-        animator.setDuration(1500);
-        // 无限循环播放动画
-        animator.setRepeatCount(ValueAnimator.INFINITE);
-        // 循环时倒序播放
-        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.setDuration(1000L);
         animator.start();
     }
 

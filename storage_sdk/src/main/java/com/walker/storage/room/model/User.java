@@ -46,6 +46,12 @@ public class User {
 
     public Map<Integer, Job> jobs;
 
+    @ColumnInfo(name = "create_time")
+    public int createTime;
+
+    @ColumnInfo(name = "test")
+    public String test;
+
     @Override
     public String toString() {
         return "User{" +

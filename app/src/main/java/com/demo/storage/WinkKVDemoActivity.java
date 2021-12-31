@@ -21,6 +21,8 @@ public class WinkKVDemoActivity extends AppCompatActivity {
     private Button showBtn;
     private TextView showTV;
 
+    private int cnt = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,16 +45,20 @@ public class WinkKVDemoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(inputEV.getText())) {
-                    winkKV.putString("key", inputEV.getText().toString());
-                    mmKV.encode("mmkv_key", inputEV.getText().toString());
+                    winkKV.putString("str_key", inputEV.getText().toString());
+                    mmKV.encode("str_key", inputEV.getText().toString());
                 }
+                cnt++;
+                winkKV.putInt("int_key", cnt);
+                mmKV.encode("int_key", cnt);
             }
         });
 
         showBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showTV.setText("winkKV: " + winkKV.getString("key") + "; mmKV: " + mmKV.decodeString("mmkv_key"));
+                String text = "winkKV: " + winkKV.getString("key") + "; mmKV: " + mmKV.decodeString("mmkv_key");
+                showTV.setText(text + "，winkKV.getAll：" + winkKV.getAll().toString());
             }
         });
 

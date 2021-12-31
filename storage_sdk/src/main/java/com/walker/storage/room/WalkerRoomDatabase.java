@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.walker.storage.room.dao.LibraryDao;
@@ -33,7 +34,7 @@ import java.util.concurrent.Executors;
  * Created by walkerzpli on 2021/8/5.
  */
 
-@Database(entities = {Word.class, User.class, Library.class, MusicList.class}, version = 1, exportSchema = false)
+@Database(entities = {Word.class, User.class, Library.class, MusicList.class}, version = 3, exportSchema = false)
 public abstract class WalkerRoomDatabase extends RoomDatabase {
 
     private static final String TAG = "WordRoomDatabase";
@@ -54,7 +55,9 @@ public abstract class WalkerRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             WalkerRoomDatabase.class, "word_database")
                             .addCallback(sRoomDatabaseCallback) // 数据库创建的时候回调
+                            .fallbackToDestructiveMigration()
                             .enableMultiInstanceInvalidation() // 使多实例失效，跨进程修改适用
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                             .build();
                 }
             }
@@ -192,5 +195,21 @@ public abstract class WalkerRoomDatabase extends RoomDatabase {
         musicListDao.insert(musicList1, musicList2);
 
     }
+
+    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // 执行升级相关操作
+            database.execSQL("ALTER TABLE Users ADD COLUMN create_time INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // 执行升级相关操作
+            database.execSQL("ALTER TABLE Users ADD COLUMN test TEXT");
+        }
+    };
 
 }

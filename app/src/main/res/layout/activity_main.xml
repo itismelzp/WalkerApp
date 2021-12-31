@@ -199,10 +199,19 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="动画demo"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rxjava_test"
         app:layout_constraintLeft_toRightOf="@id/gl_50_percent_vertical"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recycler_demo" />
 
+    <Button
+        android:id="@+id/rxjava_test"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="rxjava demo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/gl_50_percent_vertical"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/animator_test" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

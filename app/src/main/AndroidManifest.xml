@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".animator.AnimatorActivity"></activity>
+        <activity android:name=".rxjava.RxJavaActivity" />
+        <activity android:name=".animator.AnimatorActivity" />
         <activity android:name=".customview.activity.SlideConflictDemoActivity" />
         <activity android:name=".RecyckerDemoActivity" />
         <activity android:name=".storage.WinkKVDemoActivity" />

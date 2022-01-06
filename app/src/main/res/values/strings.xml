@@ -11,7 +11,10 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <string name="get_last_data">get last data</string>
+    <string name="delete_word">delete word</string>
     <string name="add_word">add word</string>
+    <string name="other_process">other process</string>
 
     <string name="hint_word">Word...</string>
     <string name="button_save">Save</string>

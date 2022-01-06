@@ -20,20 +20,21 @@
 
     <EditText
         android:id="@+id/delete_words"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="type the words you want to delete"
         app:layout_constraintBottom_toTopOf="@id/fab_delete_user"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:hint="type the words you want to delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_get_last_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:contentDescription="@string/add_word"
+        android:contentDescription="@string/get_last_data"
         android:src="@drawable/ic_baseline_add_24"
+        android:tooltipText="@string/get_last_data"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -42,22 +43,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:contentDescription="@string/add_word"
+        android:contentDescription="@string/delete_word"
         android:src="@drawable/ic_baseline_add_24"
+        android:tooltipText="@string/delete_word"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/fab_get_last_user"
-        app:layout_constraintRight_toLeftOf="@id/fab_jump_other_process"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintRight_toLeftOf="@id/fab_jump_other_process" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_jump_other_process"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:contentDescription="@string/add_word"
+        android:contentDescription="@string/other_process"
         android:src="@drawable/ic_baseline_add_24"
+        android:tooltipText="@string/other_process"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/fab_delete_user"
-        app:layout_constraintRight_toLeftOf="@id/fab_add"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintRight_toLeftOf="@id/fab_add" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
@@ -66,6 +69,7 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/add_word"
         android:src="@drawable/ic_baseline_add_24"
+        android:tooltipText="@string/add_word"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

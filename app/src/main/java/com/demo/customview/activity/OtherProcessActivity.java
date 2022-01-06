@@ -12,10 +12,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.demo.R;
 import com.demo.storage.WordListAdapter;
+import com.demo.storage.utils.MMKVUtil;
+import com.demo.storage.utils.WinkKVUtil;
 import com.tencent.mmkv.MMKV;
 import com.walker.storage.room.model.Word;
 import com.walker.storage.room.viewmodel.WordViewModel;
@@ -33,6 +36,9 @@ public class OtherProcessActivity extends AppCompatActivity {
 
     private Button kvTestBtn;
     private TextView kvTestTV;
+    private EditText insertET;
+    private Button insertValueBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,12 @@ public class OtherProcessActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.word_list);
         kvTestBtn = findViewById(R.id.kv_show_btn);
         kvTestTV = findViewById(R.id.kv_test_tv);
+        insertET = findViewById(R.id.input_value);
+        insertValueBtn = findViewById(R.id.insert_value);
+
+
+        WinkKV winkKV = WinkKVUtil.getWinkKV(this);
+        MMKV mmKV = MMKVUtil.getMultiProcessMMKV();
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -64,15 +76,21 @@ public class OtherProcessActivity extends AppCompatActivity {
         });
 
 
-        String NAME = "common_store";
-        String path = getFilesDir().getAbsolutePath() + "/wink_kv";
-        WinkKV winkKV = new WinkKV.Builder(path, NAME).build();
-        MMKV mmKV = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
-
         kvTestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                kvTestTV.setText("winkKV: " + winkKV.getString("key") + "; mmKV: " + mmKV.decodeString("mmkv_key"));
+                kvTestTV.setText("winkKV: " + winkKV.getString("str_key") + "; mmKV: " + mmKV.decodeString("str_key"));
+//                kvTestTV.setText("winkKV: " + winkKV.getString("key") + "; mmKV: " + mmKV.decodeString("mmkv_key"));
+            }
+        });
+
+        insertValueBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!TextUtils.isEmpty(insertET.getText().toString())) {
+                    winkKV.putString("str_key", insertET.getText().toString());
+                    mmKV.encode("str_key", insertET.getText().toString());
+                }
             }
         });
 

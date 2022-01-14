@@ -1,4 +1,4 @@
-package com.walker.apt.processor;
+package com.walker.apt.proxy;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;

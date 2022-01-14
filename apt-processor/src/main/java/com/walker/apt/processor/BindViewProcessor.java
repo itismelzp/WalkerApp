@@ -3,6 +3,7 @@ package com.walker.apt.processor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 import com.walker.apt.annotation.BindView;
+import com.walker.apt.proxy.ClassCreatorProxy;
 
 import java.io.IOException;
 import java.io.Writer;

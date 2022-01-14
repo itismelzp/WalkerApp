@@ -1,8 +1,9 @@
-package com.walker.apt.processor;
+package com.walker.apt.proxy;
 
 
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import com.walker.apt.bean.BindButtonAnnotationInfo;
 import com.walker.apt.utils.AnnotationUtils;
 
 import java.lang.annotation.Annotation;

@@ -3,6 +3,8 @@ package com.walker.apt.processor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 import com.walker.apt.annotation.BindButton;
+import com.walker.apt.bean.BindButtonAnnotationInfo;
+import com.walker.apt.proxy.BindButtonClassCreatorProxy;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -51,16 +53,19 @@ public class BindButtonProcessor extends AbstractProcessor {
         return supportTypes;
     }
 
+    /**
+     * 各种Element对齐的类型：
+     * <p>
+     * ExecutableElement --> Method
+     * <p>
+     * VariableElement --> Field
+     * <p>
+     * TypeElement --> Class
+     * <p>
+     * PackageElement --> Package
+     */
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-
-        /**
-         * 各种Element对齐的类型：
-         * ExecutableElement --> Method
-         * VariableElement --> Field
-         * TypeElement --> Class
-         * PackageElement --> Package
-         */
         mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] start.");
         mProxyMap.clear();
 

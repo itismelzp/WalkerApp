@@ -1,5 +1,7 @@
 package com.walker.storage.winkkv;
 
+import com.walker.storage.winkkv.type.DataType;
+
 /**
  * 基本类型数据组装结构 (boolean/int/float/long/double):
  * [type|keyLen|keyData|value]

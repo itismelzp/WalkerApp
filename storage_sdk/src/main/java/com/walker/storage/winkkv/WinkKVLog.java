@@ -7,10 +7,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class WinkKVLog {
 
-    private static volatile WinkDbLogInterface sLogInf;
+    private static volatile ILog sLogInf;
     private static final AtomicBoolean INIT = new AtomicBoolean(false);
 
-    public static void init(WinkDbLogInterface logInf) {
+    public static void init(ILog logInf) {
         if (logInf == null || !INIT.compareAndSet(false, true)) {
             return;
         }
@@ -62,7 +62,7 @@ public class WinkKVLog {
     /**
      * 外部设置的日志api
      */
-    public interface WinkDbLogInterface {
+    public interface ILog {
 
         void v(String tag, String msg);
 

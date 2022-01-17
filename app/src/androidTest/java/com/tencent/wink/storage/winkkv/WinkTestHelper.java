@@ -1,11 +1,11 @@
-package winkkv;
+package com.tencent.wink.storage.winkkv;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.wink.storage.MyApplication;
-import com.tencent.wink.storage.winkkv.log.WinkKVLog;
+import com.demo.MyApplication;
+import com.walker.storage.winkkv.WinkKVLog;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

@@ -1,8 +1,16 @@
 package com.walker.storage.winkkv;
 
+import androidx.annotation.NonNull;
+
+
+import com.walker.storage.winkkv.type.DataType;
+import com.walker.storage.winkkv.type.MaskType;
+import com.walker.storage.winkkv.type.WritingModeType;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Field;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -16,6 +24,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * WinkKV外部接口
+ * <p>
  * Created by walkerzpli on 2021/10/15.
  */
 @SuppressWarnings("rawtypes")
@@ -24,7 +34,7 @@ public class WinkKV {
     private static final String TAG = "WinkKV";
 
     private static final String BOTH_FILES_ERROR = "both files error";
-    private static final String PARSE_DATA_FAILED = "parse dara failed";
+    private static final String PARSE_DATA_FAILED = "parse data failed";
     private static final String OPEN_FILE_FAILED = "open file failed";
     private static final String MAP_FAILED = "map failed";
 
@@ -75,18 +85,15 @@ public class WinkKV {
     private int invalidBytes;
     private final ArrayList<Segment> invalids = new ArrayList<>();
 
-    // The default writing mode is non-blocking (write partial data with mmap).
-    // If mmap API throw IOException, degrade to blocking mode (write all data to disk with blocking I/O).
-    // User could assign to using blocking mode by WinkKV.Builder
-    static final int NON_BLOCKING = 0;
-    static final int ASYNC_BLOCKING = 1;
-    static final int SYNC_BLOCKING = 2;
+    // 1）默认写入模式为mmap；
+    // 2）如果mmap api异常，则降级为常规的blocking I/O；
+    // 3）WinkKV.Builder可以指定写入模式。
     private int writingMode;
 
     // Only take effect when mode is not NON_BLOCKING
     private boolean autoCommit = true;
 
-    WinkKV(final String path, final String name, Encoder[] encoders, int writingMode) {
+    public WinkKV(final String path, final String name, Encoder[] encoders, @WritingModeType int writingMode) {
         this.path = path;
         this.name = name;
         this.writingMode = writingMode;
@@ -126,7 +133,7 @@ public class WinkKV {
         }
         long start = System.nanoTime();
         boolean hadWriteToABFile = loadFromCFile();
-        if (!hadWriteToABFile && writingMode == NON_BLOCKING) {
+        if (!hadWriteToABFile && writingMode == WritingModeType.NON_BLOCKING) {
             loadFromABFile();
         }
         if (logger != null) {
@@ -246,25 +253,25 @@ public class WinkKV {
                 Util.readBytes(srcFile, bytes, fileSize);
                 winkBuffer = new WinkBuffer(bytes);
                 WinkBuffer buffer = winkBuffer;
-                int dataSize = buffer.getInt();
-                long sum = buffer.getLong();
+                int dataSize = buffer.getInt(); // data_len
+                long sum = buffer.getLong(); // checksum
                 dataEnd = DATA_START + dataSize;
                 if (dataSize >= 0 && (dataSize <= fileSize - DATA_START)
                         && sum == buffer.getChecksum(DATA_START, dataSize)
                         && parseData() == 0) {
                     checksum = sum;
-                    if (writingMode == NON_BLOCKING) {
+                    if (writingMode == WritingModeType.NON_BLOCKING) {
                         if (writeToABFile(buffer)) {
                             info("recover from c file");
                             hadWriteToABFile = true;
                         } else {
-                            writingMode = ASYNC_BLOCKING;
+                            writingMode = WritingModeType.ASYNC_BLOCKING;
                         }
                     }
                 } else {
                     clearData();
                 }
-                if (writingMode == NON_BLOCKING) {
+                if (writingMode == WritingModeType.NON_BLOCKING) {
                     deleteCFiles();
                 }
             }
@@ -314,7 +321,7 @@ public class WinkKV {
     }
 
     private void degrade() {
-        writingMode = ASYNC_BLOCKING;
+        writingMode = WritingModeType.ASYNC_BLOCKING;
         aChannel = null;
         bChannel = null;
         aBuffer = null;
@@ -364,13 +371,13 @@ public class WinkKV {
         try {
             while (buffer.position < dataEnd) {
                 int start = buffer.position;
-                byte info = buffer.get();
-                byte type = (byte) (info & MaskType.MASK_TYPE_DATA_TYPE);
+                byte typeInfo = buffer.get(); // see @MaskType
+                byte type = (byte) (typeInfo & MaskType.MASK_TYPE_DATA_TYPE);
                 if (type < DataType.BOOLEAN || type > DataType.OBJECT) {
                     throw new Exception(PARSE_DATA_FAILED);
                 }
                 int keySize = buffer.get() & 0xFF;
-                if (info < 0) {
+                if (typeInfo < 0) {
                     buffer.position += keySize;
                     int valueSize = (type <= DataType.DOUBLE) ? TYPE_SIZE[type] : buffer.getShort() & 0xFFFF;
                     winkBuffer.position += valueSize;
@@ -398,27 +405,27 @@ public class WinkKV {
                             break;
                     }
                 } else {
-                    int size = buffer.getShort() & 0xFFFF;
-                    boolean external = (info & MaskType.MASK_TYPE_EXTERNAL) != 0;
-                    checkValueSize(size, external);
+                    int valueSize = buffer.getShort() & 0xFFFF;
+                    boolean external = (typeInfo & MaskType.MASK_TYPE_EXTERNAL) != 0;
+                    checkValueSize(valueSize, external);
                     switch (type) {
                         case DataType.STRING:
-                            String str = buffer.getString(size);
-                            data.put(key, new Container.StringContainer(start, pos + 2, str, size, external));
+                            String str = buffer.getString(valueSize);
+                            data.put(key, new Container.StringContainer(start, pos + 2, str, valueSize, external));
                             break;
                         case DataType.ARRAY:
-                            Object value = external ? buffer.getString(size) : buffer.getBytes(size);
-                            data.put(key, new Container.ArrayContainer(start, pos + 2, value, size, external));
+                            Object value = external ? buffer.getString(valueSize) : buffer.getBytes(valueSize);
+                            data.put(key, new Container.ArrayContainer(start, pos + 2, value, valueSize, external));
                             break;
                         default:
                             if (external) {
-                                String fileName = buffer.getString(size);
-                                data.put(key, new Container.ObjectContainer(start, pos + 2, fileName, size, true));
+                                String fileName = buffer.getString(valueSize);
+                                data.put(key, new Container.ObjectContainer(start, pos + 2, fileName, valueSize, true));
                             } else {
                                 int tagSize = buffer.get() & 0xFF;
                                 String tag = buffer.getString(tagSize);
                                 Encoder encoder = encoderMap.get(tag);
-                                int objectSize = size - (tagSize + 1);
+                                int objectSize = valueSize - (tagSize + 1);
                                 if (objectSize < 0) {
                                     throw new Exception(PARSE_DATA_FAILED);
                                 }
@@ -426,7 +433,7 @@ public class WinkKV {
                                     try {
                                         Object obj = encoder.decode(buffer.hb, buffer.position, objectSize);
                                         if (obj != null) {
-                                            data.put(key, new Container.ObjectContainer(start, pos + 2, obj, size, false));
+                                            data.put(key, new Container.ObjectContainer(start, pos + 2, obj, valueSize, false));
                                         }
                                     } catch (Exception e) {
                                         error(e);
@@ -451,60 +458,132 @@ public class WinkKV {
         return 0;
     }
 
+    /**
+     * 是否包括key
+     *
+     * @param key 键
+     * @return 是否包括
+     */
     public synchronized boolean contains(String key) {
         return data.containsKey(key);
     }
 
+    /**
+     * 根据key，获取boolean型数据，默认返回false
+     * @param key 键
+     * @return 返回boolean值
+     */
     public synchronized boolean getBoolean(String key) {
         return getBoolean(key, false);
     }
 
+    /**
+     * 根据key，获取boolean型数据
+     * @param key 键
+     * @param defValue 默认返回值
+     * @return 返回boolean值
+     */
     public synchronized boolean getBoolean(String key, boolean defValue) {
         Container.BooleanContainer c = (Container.BooleanContainer) data.get(key);
         return c == null ? defValue : c.value;
     }
 
+    /**
+     * 根据key，获取int型数据，默认返回0
+     * @param key 键
+     * @return 返回int值
+     */
     public int getInt(String key) {
         return getInt(key, 0);
     }
 
+    /**
+     * 根据key，获取int型数据
+     * @param key 键
+     * @param defValue 默认返回值
+     * @return 返回int值
+     */
     public synchronized int getInt(String key, int defValue) {
         Container.IntContainer c = (Container.IntContainer) data.get(key);
         return c == null ? defValue : c.value;
     }
 
+    /**
+     * 根据key，获取float型数据，默认返回0f
+     * @param key 键
+     * @return 返回float值
+     */
     public float getFloat(String key) {
         return getFloat(key, 0f);
     }
 
+    /**
+     * 根据key，获取float型数据
+     * @param key 键
+     * @param defValue 默认返回值
+     * @return 返回float值
+     */
     public synchronized float getFloat(String key, float defValue) {
         Container.FloatContainer c = (Container.FloatContainer) data.get(key);
         return c == null ? defValue : c.value;
     }
 
+    /**
+     * 根据key，获取long型数据，默认返回0L
+     * @param key 键
+     * @return 返回long值
+     */
     public synchronized long getLong(String key) {
         Container.LongContainer c = (Container.LongContainer) data.get(key);
         return c == null ? 0L : c.value;
     }
 
+    /**
+     * 根据key，获取long型数据
+     * @param key 键
+     * @param defValue 默认返回值
+     * @return 返回long值
+     */
     public synchronized long getLong(String key, long defValue) {
         Container.LongContainer c = (Container.LongContainer) data.get(key);
         return c == null ? defValue : c.value;
     }
 
+    /**
+     * 根据key，获取double型数据，默认返回0D
+     * @param key 键
+     * @return 返回double值
+     */
     public double getDouble(String key) {
         return getDouble(key, 0D);
     }
 
+    /**
+     * 根据key，获取double型数据
+     * @param key 键
+     * @param defValue 默认返回值
+     * @return 返回double值
+     */
     public synchronized double getDouble(String key, double defValue) {
         Container.DoubleContainer c = (Container.DoubleContainer) data.get(key);
         return c == null ? defValue : c.value;
     }
 
+    /**
+     * 根据key，获取string型数据，默认返回""
+     * @param key 键
+     * @return 返回string值
+     */
     public String getString(String key) {
         return getString(key, "");
     }
 
+    /**
+     * 根据key，获取string型数据
+     * @param key 键
+     * @param defValue 默认返回值
+     * @return 返回string值
+     */
     public synchronized String getString(String key, String defValue) {
         Container.StringContainer c = (Container.StringContainer) data.get(key);
         if (c != null) {
@@ -527,10 +606,21 @@ public class WinkKV {
         return "";
     }
 
+    /**
+     * 根据key，获取二进制数据
+     * @param key 键
+     * @return 返回二进制值，默认返回空byte数组
+     */
     public byte[] getArray(String key) {
         return getArray(key, EMPTY_ARRAY);
     }
 
+    /**
+     * 根据key，获取二进制数据
+     * @param key 键
+     * @param defValue 默认返回值
+     * @return 返回二进制值
+     */
     public synchronized byte[] getArray(String key, byte[] defValue) {
         Container.ArrayContainer c = (Container.ArrayContainer) data.get(key);
         if (c != null) {
@@ -550,6 +640,12 @@ public class WinkKV {
         return EMPTY_ARRAY;
     }
 
+    /**
+     * 根据key，获取对象类型数据
+     * @param key 键
+     * @param <T> 对象类型
+     * @return 返回对象值
+     */
     @SuppressWarnings("unchecked")
     public synchronized <T> T getObject(String key) {
         Container.ObjectContainer c = (Container.ObjectContainer) data.get(key);
@@ -582,10 +678,22 @@ public class WinkKV {
         return null;
     }
 
+    /**
+     * 根据key，获取Set<String>类型数据
+     *
+     * @param key 键
+     * @return 返回Set<String>值
+     */
     public synchronized Set<String> getStringSet(String key) {
         return getObject(key);
     }
 
+    /**
+     * 保存boolean型数据
+     *
+     * @param key 键
+     * @param value 值
+     */
     public synchronized void putBoolean(String key, boolean value) {
         checkKey(key);
         Container.BooleanContainer c = (Container.BooleanContainer) data.get(key);
@@ -603,6 +711,12 @@ public class WinkKV {
         }
     }
 
+    /**
+     * 保存int型数据
+     *
+     * @param key 键
+     * @param value 值
+     */
     public synchronized void putInt(String key, int value) {
         checkKey(key);
         Container.IntContainer c = (Container.IntContainer) data.get(key);
@@ -621,6 +735,12 @@ public class WinkKV {
         }
     }
 
+    /**
+     * 保存float型数据
+     *
+     * @param key 键
+     * @param value 值
+     */
     public synchronized void putFloat(String key, float value) {
         checkKey(key);
         Container.FloatContainer c = (Container.FloatContainer) data.get(key);
@@ -640,6 +760,12 @@ public class WinkKV {
         }
     }
 
+    /**
+     * 保存long型数据
+     *
+     * @param key 键
+     * @param value 值
+     */
     public synchronized void putLong(String key, long value) {
         checkKey(key);
         Container.LongContainer c = (Container.LongContainer) data.get(key);
@@ -658,6 +784,12 @@ public class WinkKV {
         }
     }
 
+    /**
+     * 保存double数据
+     *
+     * @param key 键
+     * @param value 值
+     */
     public synchronized void putDouble(String key, double value) {
         checkKey(key);
         Container.DoubleContainer c = (Container.DoubleContainer) data.get(key);
@@ -677,6 +809,12 @@ public class WinkKV {
         }
     }
 
+    /**
+     * 保存string数据
+     *
+     * @param key 键
+     * @param value 值
+     */
     public synchronized void putString(String key, String value) {
         checkKey(key);
         if (value == null) {
@@ -694,6 +832,12 @@ public class WinkKV {
         }
     }
 
+    /**
+     * 保存二进制数据
+     *
+     * @param key 键
+     * @param value 二进制数据
+     */
     public synchronized void putArray(String key, byte[] value) {
         checkKey(key);
         if (value == null) {
@@ -702,6 +846,34 @@ public class WinkKV {
             Container.ArrayContainer c = (Container.ArrayContainer) data.get(key);
             addOrUpdate(key, value, value, c, DataType.ARRAY);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Encoder<T> getEncoder(T value) {
+        Encoder<T> INSTANCE = null;
+        if (value == null) {
+            return null;
+        }
+        try {
+            String canonicalName = value.getClass().getCanonicalName() + "Encoder";
+            Class<?> clazz = Class.forName(canonicalName);
+            Field creator = clazz.getDeclaredField("INSTANCE");
+            creator.setAccessible(true);
+            INSTANCE = (Encoder<T>) creator.get(value);
+        } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
+            WinkKVLog.e(TAG, "getEncoder error: ", e);
+        }
+        return INSTANCE;
+    }
+
+    /**
+     * @param key     The name of the data to modify
+     * @param value   The new value
+     * @param <T>     Type of value
+     */
+    public synchronized <T> void putObject(String key, T value) {
+        checkKey(key);
+        putObject(key, value, getEncoder(value));
     }
 
     /**
@@ -751,6 +923,11 @@ public class WinkKV {
         addOrUpdate(key, value, bytes, c, DataType.OBJECT);
     }
 
+    /**
+     * 保存Set<String>数据
+     * @param key 键
+     * @param set 值
+     */
     public synchronized void putStringSet(String key, Set<String> set) {
         if (set == null) {
             remove(key);
@@ -759,6 +936,11 @@ public class WinkKV {
         }
     }
 
+    /**
+     * 根据key，删除数据。并且可能要自动触发GC
+     *
+     * @param key 键
+     */
     public synchronized void remove(String key) {
         Container.BaseContainer container = data.get(key);
         if (container != null) {
@@ -775,7 +957,7 @@ public class WinkKV {
                 oldFileName = c.external ? (String) c.value : null;
             }
             byte newByte = (byte) (type | MaskType.MASK_TYPE_DELETE);
-            if (writingMode == NON_BLOCKING) {
+            if (writingMode == WritingModeType.NON_BLOCKING) {
                 aBuffer.putLong(4, checksum);
                 aBuffer.put(removeStart, newByte);
                 bBuffer.putLong(4, checksum);
@@ -792,6 +974,9 @@ public class WinkKV {
         }
     }
 
+    /**
+     * 清除所有数据
+     */
     public synchronized void clear() {
         try {
             resetData();
@@ -799,11 +984,16 @@ public class WinkKV {
             error(e);
             toResetBlockMode();
         }
-        if (writingMode != NON_BLOCKING) {
+        if (writingMode != WritingModeType.NON_BLOCKING) {
             deleteCFiles();
         }
     }
 
+    /**
+     * 获取所有数据
+     *
+     * @return 返回包括所有数据的map
+     */
     public synchronized Map<String, Object> getAll() {
         int size = data.size();
         if (size == 0) {
@@ -848,6 +1038,11 @@ public class WinkKV {
         return result;
     }
 
+    /**
+     * 保存所有数据
+     *
+     * @param values 需保存的数据
+     */
     public void putAll(Map<String, Object> values) {
         putAll(values, null);
     }
@@ -907,7 +1102,7 @@ public class WinkKV {
      * and you worry about system crash or power off would happen before data sync to disk.
      */
     public synchronized void force() {
-        if (writingMode == NON_BLOCKING) {
+        if (writingMode == WritingModeType.NON_BLOCKING) {
             aBuffer.force();
             bBuffer.force();
         }
@@ -929,15 +1124,15 @@ public class WinkKV {
     }
 
     private void checkIfCommit() {
-        if (writingMode != NON_BLOCKING && autoCommit) {
+        if (writingMode != WritingModeType.NON_BLOCKING && autoCommit) {
             commitToCFile();
         }
     }
 
     private boolean commitToCFile() {
-        if (writingMode == ASYNC_BLOCKING) {
+        if (writingMode == WritingModeType.ASYNC_BLOCKING) {
             WinkKVConfig.getExecutor().execute(this::writeToCFile);
-        } else if (writingMode == SYNC_BLOCKING) {
+        } else if (writingMode == WritingModeType.SYNC_BLOCKING) {
             return writeToCFile();
         }
         return true;
@@ -979,7 +1174,7 @@ public class WinkKV {
         if (winkBuffer == null || winkBuffer.hb.length != PAGE_SIZE) {
             winkBuffer = new WinkBuffer(PAGE_SIZE);
         }
-        if (writingMode == NON_BLOCKING) {
+        if (writingMode == WritingModeType.NON_BLOCKING) {
             resetBuffer(aBuffer);
             resetBuffer(bBuffer);
         }
@@ -1038,7 +1233,7 @@ public class WinkKV {
 
     private void updateChange() {
         checksum ^= winkBuffer.getChecksum(updateStart, updateSize);
-        if (writingMode == NON_BLOCKING) {
+        if (writingMode == WritingModeType.NON_BLOCKING) {
             // When size of changed data is more than 8 bytes,
             // checksum might fail to check the integrity in small probability.
             // So we make the dataLen to be negative,
@@ -1096,7 +1291,7 @@ public class WinkKV {
                 byte[] bytes = new byte[newCapacity];
                 System.arraycopy(winkBuffer.hb, 0, bytes, 0, dataEnd);
                 winkBuffer.hb = bytes;
-                if (writingMode == NON_BLOCKING) {
+                if (writingMode == WritingModeType.NON_BLOCKING) {
                     try {
                         aBuffer = aChannel.map(FileChannel.MapMode.READ_WRITE, 0, newCapacity);
                         aBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -1120,7 +1315,7 @@ public class WinkKV {
 
     private void updateBoolean(byte value, int offset) {
         checksum ^= shiftCheckSum(1L, offset);
-        if (writingMode == NON_BLOCKING) {
+        if (writingMode == WritingModeType.NON_BLOCKING) {
             aBuffer.putLong(4, checksum);
             aBuffer.put(offset, value);
             bBuffer.putLong(4, checksum);
@@ -1133,7 +1328,7 @@ public class WinkKV {
 
     private void updateInt32(int value, long sum, int offset) {
         checksum ^= shiftCheckSum(sum, offset);
-        if (writingMode == NON_BLOCKING) {
+        if (writingMode == WritingModeType.NON_BLOCKING) {
             aBuffer.putLong(4, checksum);
             aBuffer.putInt(offset, value);
             bBuffer.putLong(4, checksum);
@@ -1146,7 +1341,7 @@ public class WinkKV {
 
     private void updateInt64(long value, long sum, int offset) {
         checksum ^= shiftCheckSum(sum, offset);
-        if (writingMode == NON_BLOCKING) {
+        if (writingMode == WritingModeType.NON_BLOCKING) {
             aBuffer.putLong(4, checksum);
             aBuffer.putLong(offset, value);
             bBuffer.putLong(4, checksum);
@@ -1163,7 +1358,7 @@ public class WinkKV {
         winkBuffer.position = offset;
         winkBuffer.putBytes(bytes);
         checksum ^= winkBuffer.getChecksum(offset, size);
-        if (writingMode == NON_BLOCKING) {
+        if (writingMode == WritingModeType.NON_BLOCKING) {
             aBuffer.putInt(0, -1);
             aBuffer.putLong(4, checksum);
             aBuffer.position(offset);
@@ -1440,7 +1635,7 @@ public class WinkKV {
         }
         dataEnd = newDataEnd;
 
-        if (writingMode == NON_BLOCKING) {
+        if (writingMode == WritingModeType.NON_BLOCKING) {
             aBuffer.putInt(0, -1);
             aBuffer.putLong(4, checksum);
             aBuffer.position(gcStart);
@@ -1486,7 +1681,7 @@ public class WinkKV {
         byte[] bytes = new byte[newCapacity];
         System.arraycopy(winkBuffer.hb, 0, bytes, 0, dataEnd);
         winkBuffer.hb = bytes;
-        if (writingMode == NON_BLOCKING) {
+        if (writingMode == WritingModeType.NON_BLOCKING) {
             try {
                 aChannel.truncate(newCapacity);
                 aBuffer = aChannel.map(FileChannel.MapMode.READ_WRITE, 0, newCapacity);
@@ -1575,7 +1770,7 @@ public class WinkKV {
         private final String path;
         private final String name;
         private Encoder[] encoders;
-        private int writingMode = NON_BLOCKING;
+        private int writingMode = WritingModeType.NON_BLOCKING;
 
         public Builder(String path, String name) {
             if (path == null || path.isEmpty()) {
@@ -1615,7 +1810,7 @@ public class WinkKV {
          * @return the builder
          */
         public Builder blocking() {
-            writingMode = SYNC_BLOCKING;
+            writingMode = WritingModeType.SYNC_BLOCKING;
             return this;
         }
 
@@ -1625,7 +1820,7 @@ public class WinkKV {
          * @return the builder
          */
         public Builder asyncBlocking() {
-            writingMode = ASYNC_BLOCKING;
+            writingMode = WritingModeType.ASYNC_BLOCKING;
             return this;
         }
 
@@ -1645,6 +1840,7 @@ public class WinkKV {
         }
     }
 
+    @NonNull
     @Override
     public synchronized String toString() {
         return "WinkKV: path:" + path + " name:" + name;

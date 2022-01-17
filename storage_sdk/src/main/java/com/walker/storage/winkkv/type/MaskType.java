@@ -1,4 +1,4 @@
-package com.walker.storage.winkkv;
+package com.walker.storage.winkkv.type;
 
 /**
  * 掩码类型

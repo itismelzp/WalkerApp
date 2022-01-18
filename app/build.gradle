@@ -55,8 +55,8 @@ protobuf {
 }
 
 dependencies {
-    implementation project(':track_sdk')
-    implementation project(':storage_sdk')
+    implementation project(':track-sdk')
+    implementation project(':storage-sdk')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

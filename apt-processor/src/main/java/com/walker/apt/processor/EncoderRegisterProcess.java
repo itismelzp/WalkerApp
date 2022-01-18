@@ -1,35 +1,27 @@
 package com.walker.apt.processor;
 
-import com.google.auto.service.AutoService;
-import com.walker.apt.annotation.PackClass;
+import com.walker.apt.proxy.EncoderRegisterCreatorProxy;
 import com.walker.apt.proxy.PackClassCreatorProxy;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 /**
- * Created by walkerzpli on 2022/1/14.
+ * Created by walkerzpli on 2022/1/18.
  */
-@AutoService(Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class PackClassProcessor extends AbstractProcessor {
+public class EncoderRegisterProcess extends AbstractProcessor {
 
     private Messager mMessager;
     private Elements mElementUtils;
@@ -44,35 +36,8 @@ public class PackClassProcessor extends AbstractProcessor {
     }
 
     @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        Set<String> supportTypes = new LinkedHashSet<>();
-        supportTypes.add(PackClass.class.getCanonicalName());
-        return supportTypes;
-    }
-
-    @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] start.");
-        mProxyMap.clear();
-
-        // 拿到所有被BindButton注解标的元素（这里是属性元素）
-        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(PackClass.class);
-
-        for (Element element : elements) {
-            if (element instanceof TypeElement) {
-                TypeElement classElement = (TypeElement) element;
-                String fullClassName = classElement.getQualifiedName().toString();
-                mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] fullClassName: " + fullClassName);
-                PackClassCreatorProxy proxy = mProxyMap.get(fullClassName);
-                if (proxy == null) {
-                    proxy = new PackClassCreatorProxy(mElementUtils, classElement);
-                    mProxyMap.put(fullClassName, proxy);
-                }
-            }
-        }
         createSourceFile();
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] finish.");
         return true;
     }
 
@@ -81,8 +46,7 @@ public class PackClassProcessor extends AbstractProcessor {
      */
     private void createSourceFile() {
         // 通过遍历mProxyMap，创建java文件
-        for (String key : mProxyMap.keySet()) {
-            PackClassCreatorProxy classCreator = mProxyMap.get(key);
+            EncoderRegisterCreatorProxy classCreator = new EncoderRegisterCreatorProxy("com.demo.storage", "EncoderUtil");
             mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
             Writer writer = null;
             try {
@@ -105,6 +69,6 @@ public class PackClassProcessor extends AbstractProcessor {
                     }
                 }
             }
-        }
     }
+
 }

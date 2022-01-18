@@ -3,6 +3,7 @@ package com.walker.storage.winkkv;
 import androidx.annotation.NonNull;
 
 
+import com.walker.storage.winkkv.log.WinkKVLog;
 import com.walker.storage.winkkv.type.DataType;
 import com.walker.storage.winkkv.type.MaskType;
 import com.walker.storage.winkkv.type.WritingModeType;
@@ -855,7 +856,7 @@ public class WinkKV {
             return null;
         }
         try {
-            String canonicalName = value.getClass().getCanonicalName() + "Encoder";
+            String canonicalName = value.getClass().getCanonicalName() + "$Encoder";
             Class<?> clazz = Class.forName(canonicalName);
             Field creator = clazz.getDeclaredField("INSTANCE");
             creator.setAccessible(true);
@@ -889,11 +890,13 @@ public class WinkKV {
             throw new IllegalArgumentException("Encoder is null");
         }
         String tag = encoder.tag();
+        WinkKVLog.i(TAG, "[putObject] encoder.tag: " + tag);
         if (tag == null || tag.isEmpty() || tag.length() > 50) {
             throw new IllegalArgumentException("Invalid encoder tag:" + tag);
         }
         if (!encoderMap.containsKey(tag)) {
-            throw new IllegalArgumentException("Encoder hasn't been registered");
+            encoderMap.put(tag, encoder);
+//            throw new IllegalArgumentException("Encoder hasn't been registered");
         }
 
         if (value == null) {
@@ -1831,6 +1834,9 @@ public class WinkKV {
                 synchronized (Builder.class) {
                     kv = INSTANCE_MAP.get(key);
                     if (kv == null) {
+                        if (encoders == null) {
+                            encoders = getEncoders();
+                        }
                         kv = new WinkKV(path, name, encoders, writingMode);
                         INSTANCE_MAP.put(key, kv);
                     }
@@ -1838,6 +1844,11 @@ public class WinkKV {
             }
             return kv;
         }
+
+        private Encoder[] getEncoders() {
+            return new Encoder[]{};
+        }
+
     }
 
     @NonNull

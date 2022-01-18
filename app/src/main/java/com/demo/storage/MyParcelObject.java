@@ -3,6 +3,8 @@ package com.demo.storage;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.walker.apt.annotation.PackClass;
+
 import java.util.Objects;
 
 /**
@@ -10,6 +12,8 @@ import java.util.Objects;
  * <p>
  * Created by walkerzpli on 2022/1/17.
  */
+
+@PackClass
 public class MyParcelObject implements Parcelable {
 
     private int a;

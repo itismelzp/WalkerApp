@@ -3,9 +3,9 @@ package com.tencent.wink.storage.winkkv;
 import com.demo.storage.MyObject;
 import com.demo.storage.MyObjectEncoder;
 import com.demo.storage.MyParcelObject;
-import com.demo.storage.MyParcelObjectEncoder;
+import com.demo.storage.MyParcelObject$Encoder;
 import com.walker.storage.winkkv.WinkKV;
-import com.walker.storage.winkkv.WinkKVLog;
+import com.walker.storage.winkkv.log.WinkKVLog;
 import com.walker.storage.winkkv.type.WritingModeType;
 
 import org.junit.Assert;
@@ -38,7 +38,7 @@ public class WinkKVTest {
     @Test
     public void testPutAndGet() {
 
-        WinkKV.Encoder<?>[] encoders = new WinkKV.Encoder[]{MyObjectEncoder.INSTANCE, MyParcelObjectEncoder.INSTANCE};
+        WinkKV.Encoder<?>[] encoders = new WinkKV.Encoder[]{MyObjectEncoder.INSTANCE, MyParcelObject$Encoder.INSTANCE};
         String name = "test_put_and_get";
         WinkKV kv1 = new WinkKV.Builder(WinkTestHelper.DIR, name).encoder(encoders).build();
         kv1.clear();

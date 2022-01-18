@@ -1,4 +1,4 @@
-package winkkv;
+package com.tencent.wink.storage.winkkv;
 
 import static org.junit.Assert.assertEquals;
 

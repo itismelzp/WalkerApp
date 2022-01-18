@@ -1,5 +1,7 @@
 package com.walker.storage.winkkv;
 
+import com.walker.storage.winkkv.log.WinkKVLog;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

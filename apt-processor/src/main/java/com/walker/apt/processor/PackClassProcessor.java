@@ -2,11 +2,13 @@ package com.walker.apt.processor;
 
 import com.google.auto.service.AutoService;
 import com.walker.apt.annotation.PackClass;
+import com.walker.apt.proxy.EncoderRegisterCreatorProxy;
 import com.walker.apt.proxy.PackClassCreatorProxy;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +36,7 @@ public class PackClassProcessor extends AbstractProcessor {
     private Messager mMessager;
     private Elements mElementUtils;
     private Map<String, PackClassCreatorProxy> mProxyMap = new HashMap<>();
+    private Set<String> mTypeSet = new HashSet<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -69,17 +72,19 @@ public class PackClassProcessor extends AbstractProcessor {
                     proxy = new PackClassCreatorProxy(mElementUtils, classElement);
                     mProxyMap.put(fullClassName, proxy);
                 }
+                mTypeSet.add(proxy.getProxyClassFullName());
             }
         }
-        createSourceFile();
+        createEncoderSourceFile();
+        createEncoderRegisterSourceFile();
         mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] finish.");
         return true;
     }
 
     /**
-     * 通过StringBuilder生成源码
+     * 通过StringBuilder生成编码器源码
      */
-    private void createSourceFile() {
+    private void createEncoderSourceFile() {
         // 通过遍历mProxyMap，创建java文件
         for (String key : mProxyMap.keySet()) {
             PackClassCreatorProxy classCreator = mProxyMap.get(key);
@@ -103,6 +108,37 @@ public class PackClassProcessor extends AbstractProcessor {
                         mMessager.printMessage(Diagnostic.Kind.ERROR,
                                 "[createSourceFile] " + classCreator.getProxyClassFullName() + " error");
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * 通过StringBuilder生成编码器注册源码
+     */
+    private void createEncoderRegisterSourceFile() {
+
+        EncoderRegisterCreatorProxy classCreator
+                = new EncoderRegisterCreatorProxy("com.demo.storage", "EncoderUtil", mTypeSet);
+        mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
+        Writer writer = null;
+        try {
+            JavaFileObject jfo = processingEnv.getFiler()
+                    .createSourceFile(classCreator.getProxyClassFullName(), classCreator.getTypeElement());
+            writer = jfo.openWriter();
+            writer.write(classCreator.generateJavaCode());
+            writer.flush();
+        } catch (IOException e) {
+            mMessager.printMessage(Diagnostic.Kind.NOTE,
+                    "[createSourceFile] " + classCreator.getProxyClassFullName() + "error");
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    mMessager.printMessage(Diagnostic.Kind.ERROR,
+                            "[createSourceFile] " + classCreator.getProxyClassFullName() + " error");
                 }
             }
         }

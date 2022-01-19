@@ -23,7 +23,6 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -41,6 +40,8 @@ public class PackClassProcessor extends AbstractProcessor {
     private Elements mElementUtils;
     private final Map<String, PackClassCreatorProxy> mProxyMap = new HashMap<>();
     private final Set<String> mClassFullNameSet = new HashSet<>();
+
+    private boolean processDone;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -60,6 +61,22 @@ public class PackClassProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
+        if (annotations == null || annotations.isEmpty()) {
+            mMessager.printMessage(Diagnostic.Kind.NOTE, "No PackClass ioc annotation in this project.");
+            return false;
+        }
+
+        if (roundEnv.processingOver()) {
+            mMessager.printMessage(Diagnostic.Kind.ERROR, "[PackClassProcessor process]: annotations still available after processing over.");
+            return false;
+        }
+
+        if (processDone) {
+            mMessager.printMessage(Diagnostic.Kind.ERROR, "[PackClassProcessor process]: annotations still available after writing.");
+            return false;
+        }
+
+        long start = System.currentTimeMillis();
         mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] start.");
         mProxyMap.clear();
 
@@ -73,18 +90,7 @@ public class PackClassProcessor extends AbstractProcessor {
                 mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] fullClassName: " + fullClassName);
                 PackClassCreatorProxy proxy = mProxyMap.get(fullClassName);
                 if (proxy == null) {
-                    int interfacesType = 0;
-                    List<? extends TypeMirror> interfaces = classElement.getInterfaces();
-                    for (TypeMirror anInterface : interfaces) {
-                        mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] anInterface: " + anInterface.toString());
-                        if (anInterface.toString().contains("android.os.Parcelable")) {
-                            interfacesType = InterfaceType.PARCELABLE_TYPE;
-                        } else if (anInterface.toString().contains("io.packable.Packable")) {
-                            interfacesType = InterfaceType.PACKABLE_TYPE;
-                        }
-                    }
-                    proxy = new PackClassCreatorProxy(mElementUtils, classElement, interfacesType);
-                    mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] classElement.getInterfaces(): " + classElement.getInterfaces());
+                    proxy = new PackClassCreatorProxy(mElementUtils, classElement, getInterfaceType(classElement));
                     mProxyMap.put(fullClassName, proxy);
                 }
                 mClassFullNameSet.add(proxy.getProxyClassFullName());
@@ -92,8 +98,25 @@ public class PackClassProcessor extends AbstractProcessor {
         }
         createEncoderSourceFile();
         createEncoderRegisterSourceFile();
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] finish.");
+
+        long end = System.currentTimeMillis();
+        mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] finish, cost: " + (end - start));
+        processDone = true;
         return true;
+    }
+
+    private int getInterfaceType(TypeElement classElement) {
+        int interfacesType = 0;
+        List<? extends TypeMirror> interfaces = classElement.getInterfaces();
+        for (TypeMirror typeMirror : interfaces) {
+            mMessager.printMessage(Diagnostic.Kind.NOTE, "[getInterfacesType] typeMirror: " + typeMirror.toString());
+            if (typeMirror.toString().contains("android.os.Parcelable")) {
+                return InterfaceType.PARCELABLE_TYPE;
+            } else if (typeMirror.toString().contains("io.packable.Packable")) {
+                return InterfaceType.PACKABLE_TYPE;
+            }
+        }
+        return interfacesType;
     }
 
     /**

@@ -3,6 +3,8 @@ package com.tencent.wink.storage.winkkv;
 import com.demo.storage.EncoderUtil;
 import com.demo.storage.MyObject;
 import com.demo.storage.MyParcelObject;
+import com.demo.storage.PackableObject;
+import com.demo.storage.PackableObject$Encoder;
 import com.walker.storage.winkkv.WinkKV;
 import com.walker.storage.winkkv.log.WinkKVLog;
 import com.walker.storage.winkkv.type.WritingModeType;
@@ -15,7 +17,9 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -28,6 +32,7 @@ import java.util.Map;
 public class WinkKVTest {
 
     private static final String TAG = "WinkKVTest";
+    private static final String FILE_NAME = "test_put_and_get";
 
     @Before
     public void init() {
@@ -38,18 +43,10 @@ public class WinkKVTest {
     @Test
     public void testPutAndGet() {
 
-        WinkKV.Encoder<?>[] encoders = new WinkKV.Encoder[]{};
+        List<WinkKV.Encoder<?>> encoders = new ArrayList<>();
         String name = "test_put_and_get";
         WinkKV kv1 = new WinkKV.Builder(WinkTestHelper.DIR, name).build();
         kv1.clear();
-
-        String objKey = "obj_key";
-        MyObject obj = new MyObject(12345, "my test info.");
-        kv1.putObject(objKey, obj);
-
-        String parcelObjKey = "parcel_obj_key";
-        MyParcelObject parcelObj = new MyParcelObject(1,2,3, "str_str");
-        kv1.putObject(parcelObjKey, parcelObj);
 
         String boolKey = "bool_key";
         kv1.putBoolean(boolKey, true);
@@ -73,12 +70,6 @@ public class WinkKVTest {
         kv1.putStringSet(stringSetKey, WinkTestHelper.makeStringSet());
 
         WinkKV kv2 = new WinkKV(WinkTestHelper.DIR, name, /*encoders, */WritingModeType.NON_BLOCKING);
-
-        WinkKVLog.d(TAG, "kv1.getObject: " + kv1.getObject(objKey) + ", kv2.getObject: " + kv2.getObject(objKey));
-        Assert.assertTrue(kv1.getObject(objKey).equals(kv2.getObject(objKey)));
-
-        WinkKVLog.d(TAG, "kv1.parcelObjKey: " + kv1.getObject(parcelObjKey) + ", kv2.parcelObjKey: " + kv2.getObject(parcelObjKey));
-        Assert.assertTrue(kv1.getObject(parcelObjKey).equals(kv2.getObject(parcelObjKey)));
 
         Assert.assertEquals(kv1.getBoolean(boolKey), kv2.getBoolean(boolKey));
         Assert.assertEquals(kv1.getInt(intKey), kv2.getInt(intKey));
@@ -116,6 +107,38 @@ public class WinkKVTest {
     }
 
     @Test
+    public void testObjectPutAndGet() {
+
+        List<WinkKV.Encoder<?>> encoders = new ArrayList<>();
+        encoders.add(PackableObject$Encoder.INSTANCE);
+        WinkKV kv1 = new WinkKV.Builder(WinkTestHelper.DIR, FILE_NAME).encoder(encoders).build();
+
+        kv1.clear();
+        String objKey = "obj_key";
+        MyObject obj = new MyObject(12345, "my test info.");
+        kv1.putObject(objKey, obj);
+
+        String parcelObjKey = "parcel_obj_key";
+        MyParcelObject parcelObj = new MyParcelObject(1,2,3, "str_str");
+        kv1.putObject(parcelObjKey, parcelObj);
+
+        String packableObj = "packable_obj_key";
+        PackableObject packableObject = new PackableObject(1218, "walker");
+        kv1.putObject(packableObj, packableObject, PackableObject$Encoder.INSTANCE);
+
+
+        WinkKV kv2 = new WinkKV(WinkTestHelper.DIR, FILE_NAME, encoders, WritingModeType.NON_BLOCKING);
+        WinkKVLog.d(TAG, "kv1.objKey: " + kv1.getObject(objKey) + ", kv2.objKey: " + kv2.getObject(objKey));
+        Assert.assertTrue(kv1.getObject(objKey).equals(kv2.getObject(objKey)));
+
+        WinkKVLog.d(TAG, "kv1.parcelObjKey: " + kv1.getObject(parcelObjKey) + ", kv2.parcelObjKey: " + kv2.getObject(parcelObjKey));
+        Assert.assertTrue(kv1.getObject(parcelObjKey).equals(kv2.getObject(parcelObjKey)));
+
+        WinkKVLog.d(TAG, "kv1.packableObj: " + kv1.getObject(parcelObjKey) + ", kv2.packableObj: " + kv2.getObject(parcelObjKey));
+        Assert.assertTrue(kv1.getObject(packableObj).equals(kv2.getObject(packableObj)));
+    }
+
+    @Test
     public void testNotASCII() {
         String name = "test_not_ascii";
         WinkKV kv1 = new WinkKV.Builder(WinkTestHelper.DIR, name).build();
@@ -143,15 +166,6 @@ public class WinkKVTest {
             i++;
         }
     }
-
-    private static String generateString(int size) {
-        char[] a = new char[size];
-        for (int i = 0; i < size; i++) {
-            a[i] = (char) ('A' + (i % 26));
-        }
-        return new String(a);
-    }
-
 
     @Test
     public void testForce() throws Exception {

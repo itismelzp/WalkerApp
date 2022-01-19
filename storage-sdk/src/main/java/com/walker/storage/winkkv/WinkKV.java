@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 
 import com.walker.storage.winkkv.encoder.EncoderManager;
+import com.walker.storage.winkkv.encoder.StringSetEncoder;
 import com.walker.storage.winkkv.log.WinkKVLog;
 import com.walker.storage.winkkv.type.DataType;
 import com.walker.storage.winkkv.type.MaskType;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -95,20 +97,21 @@ public class WinkKV {
     private boolean autoCommit = true;
 
     public WinkKV(final String path, final String name, @WritingModeType int writingMode) {
-        this(path, name, EncoderManager.g().getEncoders(), writingMode);
+        this(path, name, EncoderManager.g().getEncoderList(), writingMode);
     }
 
-    public WinkKV(final String path, final String name, Encoder[] encoders, @WritingModeType int writingMode) {
+    public WinkKV(final String path, final String name, List<Encoder<?>> encoders, @WritingModeType int writingMode) {
         this.path = path;
         this.name = name;
         this.writingMode = writingMode;
         if (encoders == null) {
-            encoders = EncoderManager.g().getEncoders();
+            encoders = new ArrayList<>();
         }
+        encoders.addAll(EncoderManager.g().getEncoderList());
         Map<String, Encoder<?>> map = new HashMap<>();
         StringSetEncoder encoder = StringSetEncoder.INSTANCE;
         map.put(encoder.tag(), encoder);
-        if (encoders != null && encoders.length > 0) {
+        if (encoders.size() > 0) {
             for (Encoder e : encoders) {
                 String tag = e.tag();
                 if (map.containsKey(tag)) {
@@ -1774,7 +1777,7 @@ public class WinkKV {
         private static final Map<String, WinkKV> INSTANCE_MAP = new ConcurrentHashMap<>();
         private final String path;
         private final String name;
-        private Encoder[] encoders;
+        private List<Encoder<?>> encoders;
         private int writingMode = WritingModeType.NON_BLOCKING;
 
         public Builder(String path, String name) {
@@ -1794,7 +1797,7 @@ public class WinkKV {
          * @param encoders The encoder array to decode the bytes to obj.
          * @return the builder
          */
-        public Builder encoder(Encoder[] encoders) {
+        public Builder encoder(List<Encoder<?>> encoders) {
             this.encoders = encoders;
             return this;
         }

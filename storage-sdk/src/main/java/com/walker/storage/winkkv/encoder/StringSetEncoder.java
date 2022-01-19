@@ -1,4 +1,7 @@
-package com.walker.storage.winkkv;
+package com.walker.storage.winkkv.encoder;
+
+import com.walker.storage.winkkv.WinkBuffer;
+import com.walker.storage.winkkv.WinkKV;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -8,9 +11,9 @@ import java.util.Set;
  * <p>
  * Created by walkerzpli on 2021/10/15.
  */
-class StringSetEncoder implements WinkKV.Encoder<Set<String>> {
+public class StringSetEncoder implements WinkKV.Encoder<Set<String>> {
 
-    static final StringSetEncoder INSTANCE = new StringSetEncoder();
+    public static final StringSetEncoder INSTANCE = new StringSetEncoder();
 
     private StringSetEncoder() {
     }

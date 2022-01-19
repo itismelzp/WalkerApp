@@ -33,7 +33,6 @@ public class MyParcelObject implements Parcelable {
         b = in.readInt();
         c = in.readInt();
         str = in.readString();
-
     }
 
     public static final Creator<MyParcelObject> CREATOR = new Creator<MyParcelObject>() {

@@ -12,7 +12,6 @@ import com.walker.storage.winkkv.type.WritingModeType;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.lang.reflect.Field;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -63,7 +62,7 @@ public class WinkKV {
 
     private final String path;
     private final String name;
-    private final Map<String, Encoder> encoderMap;
+    private final Map<String, Encoder<?>> encoderMap;
     private final WinkKVLog logger = WinkKVConfig.mLogger;
 
     private FileChannel aChannel;
@@ -106,7 +105,7 @@ public class WinkKV {
         if (encoders == null) {
             encoders = EncoderManager.g().getEncoders();
         }
-        Map<String, Encoder> map = new HashMap<>();
+        Map<String, Encoder<?>> map = new HashMap<>();
         StringSetEncoder encoder = StringSetEncoder.INSTANCE;
         map.put(encoder.tag(), encoder);
         if (encoders != null && encoders.length > 0) {
@@ -857,18 +856,15 @@ public class WinkKV {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Encoder<T> getEncoder(T value) {
+    private <T> Encoder<T> getEncoder(T value) {
         Encoder<T> INSTANCE = null;
         if (value == null) {
             return null;
         }
         try {
-            String canonicalName = value.getClass().getCanonicalName() + "$Encoder";
-            Class<?> clazz = Class.forName(canonicalName);
-            Field creator = clazz.getDeclaredField("INSTANCE");
-            creator.setAccessible(true);
-            INSTANCE = (Encoder<T>) creator.get(value);
-        } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
+            String canonicalName = value.getClass().getSimpleName() + EncoderManager.SUFFIX;
+            INSTANCE = (Encoder<T>) encoderMap.get(canonicalName);
+        } catch (Exception e) {
             WinkKVLog.e(TAG, "getEncoder error: ", e);
         }
         return INSTANCE;
@@ -902,8 +898,7 @@ public class WinkKV {
             throw new IllegalArgumentException("Invalid encoder tag:" + tag);
         }
         if (!encoderMap.containsKey(tag)) {
-            encoderMap.put(tag, encoder);
-//            throw new IllegalArgumentException("Encoder hasn't been registered");
+            throw new IllegalArgumentException("Encoder hasn't been registered");
         }
 
         if (value == null) {
@@ -1841,19 +1836,12 @@ public class WinkKV {
                 synchronized (Builder.class) {
                     kv = INSTANCE_MAP.get(key);
                     if (kv == null) {
-                        if (encoders == null) {
-                            encoders = getEncoders();
-                        }
                         kv = new WinkKV(path, name, encoders, writingMode);
                         INSTANCE_MAP.put(key, kv);
                     }
                 }
             }
             return kv;
-        }
-
-        private Encoder[] getEncoders() {
-            return new Encoder[]{};
         }
 
     }

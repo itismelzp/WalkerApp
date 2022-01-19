@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EncoderManager {
 
+    public static final String SUFFIX = "$Encoder";
+
     private static final Map<String, WinkKV.Encoder<?>> ENCODERS = new ConcurrentHashMap<>();
 
     private static volatile EncoderManager INSTANCE;

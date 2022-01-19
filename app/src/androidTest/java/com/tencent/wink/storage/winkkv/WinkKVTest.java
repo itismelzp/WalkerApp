@@ -38,9 +38,9 @@ public class WinkKVTest {
     @Test
     public void testPutAndGet() {
 
-        WinkKV.Encoder<?>[] encoders = new WinkKV.Encoder[]{/*MyObjectEncoder.INSTANCE, MyParcelObject$Encoder.INSTANCE*/};
+        WinkKV.Encoder<?>[] encoders = new WinkKV.Encoder[]{};
         String name = "test_put_and_get";
-        WinkKV kv1 = new WinkKV.Builder(WinkTestHelper.DIR, name)/*.encoder(encoders)*/.build();
+        WinkKV kv1 = new WinkKV.Builder(WinkTestHelper.DIR, name).build();
         kv1.clear();
 
         String objKey = "obj_key";

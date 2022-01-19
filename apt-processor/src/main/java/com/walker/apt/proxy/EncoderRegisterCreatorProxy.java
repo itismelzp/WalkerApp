@@ -13,17 +13,14 @@ public class EncoderRegisterCreatorProxy {
 
     private static final String TAB_SPACE = "    ";
 
-    private String mOriginClassName;
-    private String mTargetClassName;
-    private String mPackageName;
+    private static final String mOriginClassName = "EncoderUtil";
+    private String mTargetClassName = mOriginClassName + SUFFIX;
+    private static final String mPackageName = "com.demo.storage";
     private TypeElement mTypeElement;
-    private Set<String> mEncoderSet;
+    private Set<String> mEncoderClassFullName;
 
-    public EncoderRegisterCreatorProxy(String packageName, String className, Set<String> encoders) {
-        this.mPackageName = packageName;
-        this.mOriginClassName = className;
-        this.mTargetClassName = className + SUFFIX;
-        this.mEncoderSet = encoders;
+    public EncoderRegisterCreatorProxy(Set<String> encoders) {
+        this.mEncoderClassFullName = encoders;
     }
 
     public String generateJavaCode() {
@@ -40,21 +37,22 @@ public class EncoderRegisterCreatorProxy {
     }
 
     private void generateImport(StringBuilder builder) {
-        for (String encoder : mEncoderSet) {
+        for (String encoder : mEncoderClassFullName) {
             builder.append("import ").append(encoder).append(";\n");
         }
     }
 
     private void generateRegisterCode(StringBuilder builder) {
-        for (String encoder : mEncoderSet) {
-            builder.append("        EncoderManager.g().registerEncoder(").append(encoder).append(".INSTANCE);").append('\n');
+        for (String encoder : mEncoderClassFullName) {
+            builder.append(TAB_SPACE).append(TAB_SPACE)
+                    .append("EncoderManager.g().registerEncoder(").append(encoder).append(".INSTANCE);").append('\n');
         }
     }
 
     private void generateMethods(StringBuilder builder) {
-        builder.append("    public static void init() {").append('\n');
+        builder.append(TAB_SPACE).append("public static void init() {").append('\n');
         generateRegisterCode(builder);
-        builder.append("    }").append('\n');
+        builder.append(TAB_SPACE).append("}").append('\n');
     }
 
     public String getProxyClassFullName() {

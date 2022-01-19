@@ -3,6 +3,7 @@ package com.walker.storage.winkkv;
 import androidx.annotation.NonNull;
 
 
+import com.walker.storage.winkkv.encoder.EncoderManager;
 import com.walker.storage.winkkv.log.WinkKVLog;
 import com.walker.storage.winkkv.type.DataType;
 import com.walker.storage.winkkv.type.MaskType;
@@ -94,11 +95,17 @@ public class WinkKV {
     // Only take effect when mode is not NON_BLOCKING
     private boolean autoCommit = true;
 
+    public WinkKV(final String path, final String name, @WritingModeType int writingMode) {
+        this(path, name, EncoderManager.g().getEncoders(), writingMode);
+    }
+
     public WinkKV(final String path, final String name, Encoder[] encoders, @WritingModeType int writingMode) {
         this.path = path;
         this.name = name;
         this.writingMode = writingMode;
-
+        if (encoders == null) {
+            encoders = EncoderManager.g().getEncoders();
+        }
         Map<String, Encoder> map = new HashMap<>();
         StringSetEncoder encoder = StringSetEncoder.INSTANCE;
         map.put(encoder.tag(), encoder);

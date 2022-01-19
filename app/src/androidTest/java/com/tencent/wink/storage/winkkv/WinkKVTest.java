@@ -1,9 +1,8 @@
 package com.tencent.wink.storage.winkkv;
 
+import com.demo.storage.EncoderUtil;
 import com.demo.storage.MyObject;
-import com.demo.storage.MyObjectEncoder;
 import com.demo.storage.MyParcelObject;
-import com.demo.storage.MyParcelObject$Encoder;
 import com.walker.storage.winkkv.WinkKV;
 import com.walker.storage.winkkv.log.WinkKVLog;
 import com.walker.storage.winkkv.type.WritingModeType;
@@ -33,26 +32,24 @@ public class WinkKVTest {
     @Before
     public void init() {
         WinkKVLog.init(WinkTestHelper.logger);
+        EncoderUtil.init();
     }
 
     @Test
     public void testPutAndGet() {
 
-        WinkKV.Encoder<?>[] encoders = new WinkKV.Encoder[]{MyObjectEncoder.INSTANCE, MyParcelObject$Encoder.INSTANCE};
+        WinkKV.Encoder<?>[] encoders = new WinkKV.Encoder[]{/*MyObjectEncoder.INSTANCE, MyParcelObject$Encoder.INSTANCE*/};
         String name = "test_put_and_get";
-        WinkKV kv1 = new WinkKV.Builder(WinkTestHelper.DIR, name).encoder(encoders).build();
+        WinkKV kv1 = new WinkKV.Builder(WinkTestHelper.DIR, name)/*.encoder(encoders)*/.build();
         kv1.clear();
 
         String objKey = "obj_key";
         MyObject obj = new MyObject(12345, "my test info.");
-        kv1.putObject(objKey, obj, MyObjectEncoder.INSTANCE);
+        kv1.putObject(objKey, obj);
 
         String parcelObjKey = "parcel_obj_key";
         MyParcelObject parcelObj = new MyParcelObject(1,2,3, "str_str");
-        kv1.putObject(parcelObjKey, parcelObj/*, MyParcelObjectEncoder.INSTANCE*/);
-
-//        Object annotation = new Object();
-//        kv1.putObject("annotation_key", annotation, Object.INSTANCE);
+        kv1.putObject(parcelObjKey, parcelObj);
 
         String boolKey = "bool_key";
         kv1.putBoolean(boolKey, true);
@@ -75,7 +72,7 @@ public class WinkKVTest {
         String stringSetKey = "string_set_key";
         kv1.putStringSet(stringSetKey, WinkTestHelper.makeStringSet());
 
-        WinkKV kv2 = new WinkKV(WinkTestHelper.DIR, name, encoders, WritingModeType.NON_BLOCKING);
+        WinkKV kv2 = new WinkKV(WinkTestHelper.DIR, name, /*encoders, */WritingModeType.NON_BLOCKING);
 
         WinkKVLog.d(TAG, "kv1.getObject: " + kv1.getObject(objKey) + ", kv2.getObject: " + kv2.getObject(objKey));
         Assert.assertTrue(kv1.getObject(objKey).equals(kv2.getObject(objKey)));

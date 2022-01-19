@@ -2,12 +2,15 @@ package com.demo.storage;
 
 import android.os.Parcel;
 
+import com.walker.apt.annotation.PackClass;
+
 import java.util.Objects;
 
 import io.packable.PackCreator;
 import io.packable.PackEncoder;
 import io.packable.Packable;
 
+@PackClass
 public class MyObject implements Packable {
     long id;
     String info;

@@ -4,12 +4,14 @@ import com.google.auto.service.AutoService;
 import com.walker.apt.annotation.PackClass;
 import com.walker.apt.proxy.EncoderRegisterCreatorProxy;
 import com.walker.apt.proxy.PackClassCreatorProxy;
+import com.walker.apt.type.InterfaceType;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +23,9 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -35,8 +39,8 @@ public class PackClassProcessor extends AbstractProcessor {
 
     private Messager mMessager;
     private Elements mElementUtils;
-    private Map<String, PackClassCreatorProxy> mProxyMap = new HashMap<>();
-    private Set<String> mTypeSet = new HashSet<>();
+    private final Map<String, PackClassCreatorProxy> mProxyMap = new HashMap<>();
+    private final Set<String> mClassFullNameSet = new HashSet<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -69,10 +73,21 @@ public class PackClassProcessor extends AbstractProcessor {
                 mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] fullClassName: " + fullClassName);
                 PackClassCreatorProxy proxy = mProxyMap.get(fullClassName);
                 if (proxy == null) {
-                    proxy = new PackClassCreatorProxy(mElementUtils, classElement);
+                    int interfacesType = 0;
+                    List<? extends TypeMirror> interfaces = classElement.getInterfaces();
+                    for (TypeMirror anInterface : interfaces) {
+                        mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] anInterface: " + anInterface.toString());
+                        if (anInterface.toString().contains("android.os.Parcelable")) {
+                            interfacesType = InterfaceType.PARCELABLE_TYPE;
+                        } else if (anInterface.toString().contains("io.packable.Packable")) {
+                            interfacesType = InterfaceType.PACKABLE_TYPE;
+                        }
+                    }
+                    proxy = new PackClassCreatorProxy(mElementUtils, classElement, interfacesType);
+                    mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] classElement.getInterfaces(): " + classElement.getInterfaces());
                     mProxyMap.put(fullClassName, proxy);
                 }
-                mTypeSet.add(proxy.getProxyClassFullName());
+                mClassFullNameSet.add(proxy.getProxyClassFullName());
             }
         }
         createEncoderSourceFile();
@@ -118,8 +133,7 @@ public class PackClassProcessor extends AbstractProcessor {
      */
     private void createEncoderRegisterSourceFile() {
 
-        EncoderRegisterCreatorProxy classCreator
-                = new EncoderRegisterCreatorProxy("com.demo.storage", "EncoderUtil", mTypeSet);
+        EncoderRegisterCreatorProxy classCreator = new EncoderRegisterCreatorProxy(mClassFullNameSet);
         mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
         Writer writer = null;
         try {

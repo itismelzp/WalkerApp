@@ -53,8 +53,17 @@ public class EncoderManager {
         unregisterEncoder(encoder.tag());
     }
 
-    public List<WinkKV.Encoder<?>> getEncoders() {
+    public List<WinkKV.Encoder<?>> getEncoderList() {
         return new ArrayList<>(ENCODERS.values());
+    }
+
+    public WinkKV.Encoder<?>[] getEncoders() {
+        WinkKV.Encoder<?>[] encoders = new WinkKV.Encoder[ENCODERS.size()];
+        int i = 0;
+        for (WinkKV.Encoder<?> value : ENCODERS.values()) {
+            encoders[i++] = value;
+        }
+        return encoders;
     }
 
 }

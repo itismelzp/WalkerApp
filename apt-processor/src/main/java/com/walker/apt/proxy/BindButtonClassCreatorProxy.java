@@ -47,24 +47,17 @@ import javax.lang.model.util.Elements;
  *     }
  * }
  */
-public class BindButtonClassCreatorProxy {
+public class BindButtonClassCreatorProxy extends BaseClassCreatorProxy{
 
-    private String mClassName;
-    private String mPackageName;
-    private TypeElement mTypeElement;
-    //    private Map<Integer, VariableElement> mVariableElements = new HashMap<>();
-//    private Map<Class<?>, VariableElement> mClassElements = new HashMap<>();
-    private Map<Annotation, BindButtonAnnotationInfo> mElements = new HashMap<>();
+    private final Map<Annotation, BindButtonAnnotationInfo> mElements = new HashMap<>();
 
     public BindButtonClassCreatorProxy(Elements elementUtils, TypeElement mTypeElement) {
         this.mTypeElement = mTypeElement;
-        PackageElement packageElement = elementUtils.getPackageOf(mTypeElement);
-        String packageName = packageElement.getQualifiedName().toString();
-        String className = mTypeElement.getSimpleName().toString();
-        this.mPackageName = packageName;
-        this.mClassName = className + AnnotationUtils.classSuffix;
+        this.mPackageName = getPackageName(elementUtils, mTypeElement);
+        this.mTargetClassName = getTargetClassName(mTypeElement);
     }
 
+    @Override
     public String generateJavaCode() {
         StringBuilder builder = new StringBuilder();
         builder.append("package ").append(mPackageName).append(";\n\n");
@@ -72,14 +65,14 @@ public class BindButtonClassCreatorProxy {
         builder.append("import android.content.Intent;\n");
         builder.append("import android.view.View;\n\n");
 
-        builder.append("public class ").append(mClassName).append(" {\n\n");
+        builder.append("public class ").append(mTargetClassName).append(" {\n\n");
         generateMethods(builder);
         builder.append("}\n");
         return builder.toString();
     }
 
     private void generateMethods(StringBuilder builder) {
-        builder.append("    public void bind(MainActivity host) {\n");
+        builder.append(getTabSpace()).append("public void bind(MainActivity host) {\n");
 
         for (Annotation annotation : mElements.keySet()) {
             BindButtonAnnotationInfo annotationInfo = mElements.get(annotation);
@@ -87,22 +80,22 @@ public class BindButtonClassCreatorProxy {
             builder.append(methodCode);
         }
 
-        builder.append("    }\n");
+        builder.append(getTabSpace()).append("}\n");
         builder.append("\n");
-        builder.append("    private void startActivity(Activity host, int resId, String className) {\n");
-        builder.append("        host.findViewById(resId).setOnClickListener(new View.OnClickListener() {\n");
-        builder.append("            @Override\n");
-        builder.append("            public void onClick(View view) {\n");
-        builder.append("                Intent intent = new Intent();\n");
-        builder.append("                intent.setClassName(host, className);\n");
-        builder.append("                host.startActivity(intent);\n");
-        builder.append("            }\n");
-        builder.append("        });\n");
-        builder.append("    }\n");
+        builder.append(getTabSpace()).append("private void startActivity(Activity host, int resId, String className) {\n");
+        builder.append(getTabSpace(2)).append("host.findViewById(resId).setOnClickListener(new View.OnClickListener() {\n");
+        builder.append(getTabSpace(3)).append("@Override\n");
+        builder.append(getTabSpace(3)).append("public void onClick(View view) {\n");
+        builder.append(getTabSpace(4)).append("Intent intent = new Intent();\n");
+        builder.append(getTabSpace(4)).append("intent.setClassName(host, className);\n");
+        builder.append(getTabSpace(4)).append("host.startActivity(intent);\n");
+        builder.append(getTabSpace(3)).append("}\n");
+        builder.append(getTabSpace(2)).append("});\n");
+        builder.append(getTabSpace()).append("}\n");
     }
 
     public TypeSpec generateJavaCodeByJavapoet() {
-        return TypeSpec.classBuilder(mClassName)
+        return TypeSpec.classBuilder(mTargetClassName)
                 .addModifiers(Modifier.PRIVATE)
                 .addMethod(generateMethodsByJavapoet())
                 .build();
@@ -116,16 +109,9 @@ public class BindButtonClassCreatorProxy {
         mElements.put(annotation, annotationInfo);
     }
 
-    public String getProxyClassFullName() {
-        return mPackageName + "." + mClassName;
-    }
-
-    public String getPackageName() {
-        return mPackageName;
-    }
-
-    public TypeElement getTypeElement() {
-        return mTypeElement;
+    @Override
+    protected String getSuffix() {
+        return AnnotationUtils.classSuffix;
     }
 
 }

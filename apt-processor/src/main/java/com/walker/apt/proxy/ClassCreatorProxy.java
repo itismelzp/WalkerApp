@@ -18,20 +18,14 @@ import javax.lang.model.util.Elements;
 /**
  * Created by walkerzpli on 2021/9/22.
  */
-public class ClassCreatorProxy {
+public class ClassCreatorProxy extends BaseClassCreatorProxy{
 
-    private String mBindingClassName;
-    private String mPackageName;
-    private TypeElement mTypeElement;
-    private Map<Integer, VariableElement> mVariableElementMap = new HashMap<>();
+    private final Map<Integer, VariableElement> mVariableElementMap = new HashMap<>();
 
     public ClassCreatorProxy(Elements elementUtils, TypeElement classElement) {
         this.mTypeElement = classElement;
-        PackageElement packageElement = elementUtils.getPackageOf(mTypeElement);
-        String packageName = packageElement.getQualifiedName().toString();
-        String className = mTypeElement.getSimpleName().toString();
-        this.mPackageName = packageName;
-        this.mBindingClassName = className + AnnotationUtils.classSuffix;
+        this.mPackageName = getPackageName(elementUtils, mTypeElement);
+        this.mTargetClassName = getTargetClassName(mTypeElement);
     }
 
     public void putElement(int id, VariableElement element) {
@@ -42,15 +36,14 @@ public class ClassCreatorProxy {
         StringBuilder builder = new StringBuilder();
         builder.append("package ").append(mPackageName).append(";\n\n");
         builder.append("import com.walker.apt.library.*;\n\n");
-        builder.append("public class ").append(mBindingClassName);
-        builder.append(" {\n");
+        builder.append("public class ").append(mTargetClassName).append(" {\n");
         generateMethods(builder);
         builder.append("}\n");
         return builder.toString();
     }
 
     public TypeSpec generateJavaCodeByJavapoet() {
-        return TypeSpec.classBuilder(mBindingClassName)
+        return TypeSpec.classBuilder(mTargetClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(generateMethodsByJavapoet())
                 .build();
@@ -63,10 +56,11 @@ public class ClassCreatorProxy {
             String name = element.getSimpleName().toString();
             String type = element.asType().toString();
             String methodCode = String.format(Locale.getDefault(),
-                    "\t\thost.%s = (%s)(((android.app.Activity) host).findViewById(%d));\n", name, type, id);
+                    getTabSpace(2) + "host.%s = (%s)(((android.app.Activity) host).findViewById(%d));\n",
+                    name, type, id);
             builder.append(methodCode);
         }
-        builder.append("\t}\n");
+        builder.append(getTabSpace()).append("}\n");
     }
 
     private MethodSpec generateMethodsByJavapoet() {
@@ -88,16 +82,9 @@ public class ClassCreatorProxy {
         return methodBuilder.build();
     }
 
-    public String getProxyClassFullName() {
-        return mPackageName + "." + mBindingClassName;
-    }
-
-    public TypeElement getTypeElement() {
-        return mTypeElement;
-    }
-
-    public String getPackageName() {
-        return mPackageName;
+    @Override
+    protected String getSuffix() {
+        return AnnotationUtils.classSuffix;
     }
 
 }

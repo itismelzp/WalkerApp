@@ -6,6 +6,7 @@ package com.walker.apt.type;
  * Created by walkerzpli on 2022/1/19.
  */
 public @interface InterfaceType {
+    int NONE_TYPE       = 0; // un define
     int PARCELABLE_TYPE = 1; // Parcelable
     int PACKABLE_TYPE   = 2; // Packable
 }

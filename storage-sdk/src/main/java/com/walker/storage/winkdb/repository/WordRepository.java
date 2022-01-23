@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.walker.storage.winkdb.WalkerRoomDatabase;
 import com.walker.storage.winkdb.dao.WordDao;
 import com.walker.storage.winkdb.model.Word;
-import com.walker.storage.winkdb.utils.DbLogUtil;
+import com.walker.storage.winkdb.log.WinkDbLog;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +42,7 @@ public class WordRepository {
             long begin = System.currentTimeMillis();
             mWordDao.insert(word);
             long cost = System.currentTimeMillis() - begin;
-            DbLogUtil.i(TAG, "insert finish, word: " + word + ", cost: " + cost);
+            WinkDbLog.i(TAG, "insert finish, word: " + word + ", cost: " + cost);
         });
     }
 
@@ -51,7 +51,7 @@ public class WordRepository {
             long begin = System.currentTimeMillis();
             mWordDao.delete(content);
             long cost = System.currentTimeMillis() - begin;
-            DbLogUtil.i(TAG, "delete finish, content: " + content + ", cost: " + cost);
+            WinkDbLog.i(TAG, "delete finish, content: " + content + ", cost: " + cost);
         });
     }
 
@@ -60,7 +60,7 @@ public class WordRepository {
             long begin = System.currentTimeMillis();
             mWordDao.delete(contents);
             long cost = System.currentTimeMillis() - begin;
-            DbLogUtil.i(TAG, "delete finish, contents: " + Arrays.toString(contents) + ", cost: " + cost);
+            WinkDbLog.i(TAG, "delete finish, contents: " + Arrays.toString(contents) + ", cost: " + cost);
         });
     }
 
@@ -69,7 +69,7 @@ public class WordRepository {
             long begin = System.currentTimeMillis();
             mWordDao.delete(contents);
             long cost = System.currentTimeMillis() - begin;
-            DbLogUtil.i(TAG, "delete finish, contents: " + contents + ", cost: " + cost);
+            WinkDbLog.i(TAG, "delete finish, contents: " + contents + ", cost: " + cost);
         });
     }
 
@@ -78,7 +78,7 @@ public class WordRepository {
             long begin = System.currentTimeMillis();
             mWordDao.update(word);
             long cost = System.currentTimeMillis() - begin;
-            DbLogUtil.i(TAG, "delete finish, word: " + word + ", cost: " + cost);
+            WinkDbLog.i(TAG, "delete finish, word: " + word + ", cost: " + cost);
         });
     }
 

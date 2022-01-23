@@ -1,16 +1,16 @@
-package com.walker.storage.winkdb.utils;
+package com.walker.storage.winkdb.log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by walkerzpli on 2021/10/18.
  */
-public class DbLogUtil {
+public class WinkDbLog {
 
-    private static volatile DbLogInterface sLogInf;
+    private static volatile ILog sLogInf;
     private static final AtomicBoolean INIT = new AtomicBoolean(false);
 
-    public static void init(DbLogInterface logInf) {
+    public static void init(ILog logInf) {
         if (logInf == null || !INIT.compareAndSet(false, true)) {
             return;
         }
@@ -62,7 +62,7 @@ public class DbLogUtil {
     /**
      * 外部设置的日志api
      */
-    public interface DbLogInterface {
+    public interface ILog {
 
         void v(String tag, String msg);
 

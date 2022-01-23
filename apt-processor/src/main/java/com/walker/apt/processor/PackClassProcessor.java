@@ -10,14 +10,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Messager;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -25,37 +21,26 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 /**
+ * PackClass注解处理类
+ * <p>
  * Created by walkerzpli on 2022/1/14.
  */
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class PackClassProcessor extends AbstractProcessor {
+public class PackClassProcessor extends BaseProcessor {
 
-    private Messager mMessager;
-    private Elements mElementUtils;
     private final Map<String, PackClassCreatorProxy> mProxyMap = new HashMap<>();
     private final Set<String> mClassFullNameSet = new HashSet<>();
 
     private boolean processDone;
 
     @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-
-        mMessager = processingEnv.getMessager();
-        mElementUtils = processingEnv.getElementUtils();
-    }
-
-    @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        Set<String> supportTypes = new LinkedHashSet<>();
-        supportTypes.add(PackClass.class.getCanonicalName());
-        return supportTypes;
+    protected Class<?>[] getSupportedAnnotation() {
+        return new Class[]{PackClass.class};
     }
 
     @Override

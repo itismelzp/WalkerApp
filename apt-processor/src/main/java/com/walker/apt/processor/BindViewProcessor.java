@@ -8,45 +8,28 @@ import com.walker.apt.proxy.ClassCreatorProxy;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Messager;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 @AutoService(Processor.class)
 //@SupportedSourceVersion(SourceVersion.RELEASE_8)
 //@SupportedAnnotationTypes({"com.walker.apt.annotation.BindView"})
-public class BindViewProcessor extends AbstractProcessor {
+public class BindViewProcessor extends BaseProcessor {
 
-    private Messager mMessager;
-    private Elements mElementUtils;
     private Map<String, ClassCreatorProxy> mProxyMap = new HashMap<>();
 
     @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-        mMessager = processingEnv.getMessager();
-        mElementUtils = processingEnv.getElementUtils();
-    }
-
-    @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        HashSet<String> supportTypes = new LinkedHashSet<>();
-        supportTypes.add(BindView.class.getCanonicalName());
-        return supportTypes;
+    protected Class<?>[] getSupportedAnnotation() {
+        return new Class[]{BindView.class};
     }
 
     @Override

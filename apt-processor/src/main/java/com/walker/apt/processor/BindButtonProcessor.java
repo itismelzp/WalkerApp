@@ -9,15 +9,11 @@ import com.walker.apt.proxy.BindButtonClassCreatorProxy;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Messager;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -27,30 +23,18 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class BindButtonProcessor extends AbstractProcessor {
+public class BindButtonProcessor extends BaseProcessor {
 
-    private Messager mMessager;
-    private Elements mElementUtils;
     private Map<String, BindButtonClassCreatorProxy> mProxyMap = new HashMap<>();
 
     @Override
-    public synchronized void init(ProcessingEnvironment processingEnvironment) {
-        super.init(processingEnvironment);
-        mMessager = processingEnvironment.getMessager();
-        mElementUtils = processingEnvironment.getElementUtils();
-    }
-
-    @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        Set<String> supportTypes = new LinkedHashSet<>();
-        supportTypes.add(BindButton.class.getCanonicalName());
-        return supportTypes;
+    protected Class<?>[] getSupportedAnnotation() {
+        return new Class<?>[]{BindButton.class};
     }
 
     /**

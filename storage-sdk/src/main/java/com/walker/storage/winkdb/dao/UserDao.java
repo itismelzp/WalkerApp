@@ -28,7 +28,7 @@ public interface UserDao {
     void insertAll(List<User> users);
 
     @Delete
-    void deleteById(User user);
+    void delete(User user);
 
     @Update
     void update(User... users);

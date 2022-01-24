@@ -52,7 +52,7 @@ public class UserRepository {
     }
 
     public void delete(User user) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.deleteById(user));
+        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.delete(user));
     }
 
     public void update(User... users) {

@@ -23,9 +23,7 @@ public class ClassCreatorProxy extends BaseClassCreatorProxy{
     private final Map<Integer, VariableElement> mVariableElementMap = new HashMap<>();
 
     public ClassCreatorProxy(Elements elementUtils, TypeElement classElement) {
-        this.mTypeElement = classElement;
-        this.mPackageName = getPackageName(elementUtils, mTypeElement);
-        this.mTargetClassName = getTargetClassName(mTypeElement);
+        super(elementUtils, classElement);
     }
 
     public void putElement(int id, VariableElement element) {

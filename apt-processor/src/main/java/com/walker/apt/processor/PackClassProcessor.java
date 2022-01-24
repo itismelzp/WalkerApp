@@ -36,43 +36,34 @@ public class PackClassProcessor extends BaseProcessor {
     private final Map<String, PackClassCreatorProxy> mProxyMap = new HashMap<>();
     private final Set<String> mClassFullNameSet = new HashSet<>();
 
-    private boolean processDone;
-
     @Override
     protected Class<?>[] getSupportedAnnotation() {
         return new Class[]{PackClass.class};
     }
 
     @Override
+    protected String getTag() {
+        return "PackClassProcessor";
+    }
+
+    @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
-        if (annotations == null || annotations.isEmpty()) {
-            mMessager.printMessage(Diagnostic.Kind.NOTE, "No PackClass ioc annotation in this project.");
-            return false;
-        }
-
-        if (roundEnv.processingOver()) {
-            mMessager.printMessage(Diagnostic.Kind.ERROR, "[PackClassProcessor process]: annotations still available after processing over.");
-            return false;
-        }
-
-        if (processDone) {
-            mMessager.printMessage(Diagnostic.Kind.ERROR, "[PackClassProcessor process]: annotations still available after writing.");
+        if (!checkCanProcess(annotations, roundEnv)) {
             return false;
         }
 
         long start = System.currentTimeMillis();
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] start.");
+        printMessage(Diagnostic.Kind.NOTE, getTag() + "[process] start.");
         mProxyMap.clear();
 
-        // 拿到所有被BindButton注解标的元素（这里是属性元素）
+        // 拿到所有被PackClass注解标的元素（这里是type元素）
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(PackClass.class);
 
         for (Element element : elements) {
             if (element instanceof TypeElement) {
                 TypeElement classElement = (TypeElement) element;
                 String fullClassName = classElement.getQualifiedName().toString();
-                mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] fullClassName: " + fullClassName);
+                printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] fullClassName: " + fullClassName);
                 PackClassCreatorProxy proxy = mProxyMap.get(fullClassName);
                 if (proxy == null) {
                     proxy = new PackClassCreatorProxy(mElementUtils, classElement, getInterfaceType(classElement));
@@ -85,8 +76,8 @@ public class PackClassProcessor extends BaseProcessor {
         createEncoderRegisterSourceFile();
 
         long end = System.currentTimeMillis();
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] finish, cost: " + (end - start));
-        processDone = true;
+        printMessage(Diagnostic.Kind.NOTE, "[PackClassProcessor process] finish, cost: " + (end - start) + "ms");
+        markProcessStatus(true);
         return true;
     }
 
@@ -94,7 +85,7 @@ public class PackClassProcessor extends BaseProcessor {
         int interfacesType = 0;
         List<? extends TypeMirror> interfaces = classElement.getInterfaces();
         for (TypeMirror typeMirror : interfaces) {
-            mMessager.printMessage(Diagnostic.Kind.NOTE, "[getInterfacesType] typeMirror: " + typeMirror.toString());
+            printMessage(Diagnostic.Kind.NOTE, "[getInterfacesType] typeMirror: " + typeMirror.toString());
             if (typeMirror.toString().contains("android.os.Parcelable")) {
                 return InterfaceType.PARCELABLE_TYPE;
             } else if (typeMirror.toString().contains("io.packable.Packable")) {
@@ -111,7 +102,7 @@ public class PackClassProcessor extends BaseProcessor {
         // 通过遍历mProxyMap，创建java文件
         for (String key : mProxyMap.keySet()) {
             PackClassCreatorProxy classCreator = mProxyMap.get(key);
-            mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
+            printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
             Writer writer = null;
             try {
                 JavaFileObject jfo = processingEnv.getFiler()
@@ -120,7 +111,7 @@ public class PackClassProcessor extends BaseProcessor {
                 writer.write(classCreator.generateJavaCode());
                 writer.flush();
             } catch (IOException e) {
-                mMessager.printMessage(Diagnostic.Kind.NOTE,
+                printMessage(Diagnostic.Kind.NOTE,
                         "[createSourceFile] " + classCreator.getProxyClassFullName() + "error");
             } finally {
                 if (writer != null) {
@@ -128,7 +119,7 @@ public class PackClassProcessor extends BaseProcessor {
                         writer.close();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        mMessager.printMessage(Diagnostic.Kind.ERROR,
+                        printMessage(Diagnostic.Kind.ERROR,
                                 "[createSourceFile] " + classCreator.getProxyClassFullName() + " error");
                     }
                 }
@@ -142,7 +133,7 @@ public class PackClassProcessor extends BaseProcessor {
     private void createEncoderRegisterSourceFile() {
 
         EncoderRegisterCreatorProxy classCreator = new EncoderRegisterCreatorProxy(mClassFullNameSet);
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
+        printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
         Writer writer = null;
         try {
             JavaFileObject jfo = processingEnv.getFiler()
@@ -151,7 +142,7 @@ public class PackClassProcessor extends BaseProcessor {
             writer.write(classCreator.generateJavaCode());
             writer.flush();
         } catch (IOException e) {
-            mMessager.printMessage(Diagnostic.Kind.NOTE,
+            printMessage(Diagnostic.Kind.NOTE,
                     "[createSourceFile] " + classCreator.getProxyClassFullName() + "error");
         } finally {
             if (writer != null) {
@@ -159,7 +150,7 @@ public class PackClassProcessor extends BaseProcessor {
                     writer.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    mMessager.printMessage(Diagnostic.Kind.ERROR,
+                    printMessage(Diagnostic.Kind.ERROR,
                             "[createSourceFile] " + classCreator.getProxyClassFullName() + " error");
                 }
             }

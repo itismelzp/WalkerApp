@@ -52,9 +52,7 @@ public class BindButtonClassCreatorProxy extends BaseClassCreatorProxy{
     private final Map<Annotation, BindButtonAnnotationInfo> mElements = new HashMap<>();
 
     public BindButtonClassCreatorProxy(Elements elementUtils, TypeElement mTypeElement) {
-        this.mTypeElement = mTypeElement;
-        this.mPackageName = getPackageName(elementUtils, mTypeElement);
-        this.mTargetClassName = getTargetClassName(mTypeElement);
+        super(elementUtils, mTypeElement);
     }
 
     @Override

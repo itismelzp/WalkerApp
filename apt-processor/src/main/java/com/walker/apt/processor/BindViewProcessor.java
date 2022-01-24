@@ -33,35 +33,48 @@ public class BindViewProcessor extends BaseProcessor {
     }
 
     @Override
+    protected String getTag() {
+        return "BindViewProcessor";
+    }
+
+    @Override
     public SourceVersion getSupportedSourceVersion() {
         return SourceVersion.latestSupported();
     }
 
     @Override
-    public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+
+        if (!checkCanProcess(annotations, roundEnv)) {
+            return false;
+        }
+
         // 根据注解生成Java文件
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] start.");
+        printMessage(Diagnostic.Kind.NOTE, "[process] start.");
         mProxyMap.clear();
 
         // 得到所有被BindView注解标注的元素（这里是属性元素）
-        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(BindView.class);
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(BindView.class);
         for (Element element : elements) {
-            VariableElement variableElement = (VariableElement) element;
-            TypeElement classElement = (TypeElement) variableElement.getEnclosingElement();
-            String fullClassName = classElement.getQualifiedName().toString();
-            ClassCreatorProxy proxy = mProxyMap.get(fullClassName);
-            if (proxy == null) {
-                proxy = new ClassCreatorProxy(mElementUtils, classElement);
-                mProxyMap.put(fullClassName, proxy);
+            if (element instanceof VariableElement) {
+                VariableElement variableElement = (VariableElement) element;
+                TypeElement classElement = (TypeElement) variableElement.getEnclosingElement();
+                String fullClassName = classElement.getQualifiedName().toString();
+                ClassCreatorProxy proxy = mProxyMap.get(fullClassName);
+                if (proxy == null) {
+                    proxy = new ClassCreatorProxy(mElementUtils, classElement);
+                    mProxyMap.put(fullClassName, proxy);
+                }
+                BindView bindViewAnnotation = variableElement.getAnnotation(BindView.class);
+                int id = bindViewAnnotation.value();
+                proxy.putElement(id, variableElement);
             }
-            BindView bindViewAnnotation = variableElement.getAnnotation(BindView.class);
-            int id = bindViewAnnotation.value();
-            proxy.putElement(id, variableElement);
         }
 
 //        createSourceFile();
         createSourceFileByJavapoet();
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] finish.");
+        printMessage(Diagnostic.Kind.NOTE, "[process] finish.");
+        markProcessStatus(true);
         return true;
     }
 
@@ -72,7 +85,7 @@ public class BindViewProcessor extends BaseProcessor {
         // 通过遍历mProxyMap，创建java文件
         for (String key : mProxyMap.keySet()) {
             ClassCreatorProxy classCreator = mProxyMap.get(key);
-            mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
+            printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
             Writer writer = null;
             try {
                 JavaFileObject jfo = processingEnv.getFiler()
@@ -81,7 +94,7 @@ public class BindViewProcessor extends BaseProcessor {
                 writer.write(classCreator.generateJavaCode());
                 writer.flush();
             } catch (IOException e) {
-                mMessager.printMessage(Diagnostic.Kind.NOTE,
+                printMessage(Diagnostic.Kind.NOTE,
                         "[createSourceFile] " + classCreator.getProxyClassFullName() + "error");
             } finally {
                 if (writer != null) {
@@ -89,7 +102,7 @@ public class BindViewProcessor extends BaseProcessor {
                         writer.close();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        mMessager.printMessage(Diagnostic.Kind.ERROR,
+                        printMessage(Diagnostic.Kind.ERROR,
                                 "[createSourceFile] " + classCreator.getProxyClassFullName() + " error");
                     }
                 }
@@ -109,10 +122,10 @@ public class BindViewProcessor extends BaseProcessor {
                 javaFile.writeTo(processingEnv.getFiler());
             } catch (IOException e) {
                 e.printStackTrace();
-                mMessager.printMessage(Diagnostic.Kind.ERROR,
+                printMessage(Diagnostic.Kind.ERROR,
                         "[createSourceFileByJavapoet] process failed: " + e.getMessage());
             }
         }
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFileByJavapoet] process finish.");
+        printMessage(Diagnostic.Kind.NOTE, "[createSourceFileByJavapoet] process finish.");
     }
 }

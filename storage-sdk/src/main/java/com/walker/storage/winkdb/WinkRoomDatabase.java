@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
  */
 
 @Database(entities = {Word.class, User.class, Library.class, MusicList.class}, version = 3, exportSchema = false)
-public abstract class WalkerRoomDatabase extends RoomDatabase {
+public abstract class WinkRoomDatabase extends RoomDatabase {
 
     private static final String TAG = "WordRoomDatabase";
 
@@ -40,16 +40,16 @@ public abstract class WalkerRoomDatabase extends RoomDatabase {
 
     public abstract MusicListDao musicListDao();
 
-    private static volatile WalkerRoomDatabase INSTANCE;
+    private static volatile WinkRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREAD = 4;
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREAD);
 
-    public static WalkerRoomDatabase getDatabase(final Context context) {
+    public static WinkRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (WalkerRoomDatabase.class) {
+            synchronized (WinkRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            WalkerRoomDatabase.class, "wink_database")
+                            WinkRoomDatabase.class, "wink_database")
                             .addCallback(sRoomDatabaseCallback) // 数据库创建的时候回调
                             .fallbackToDestructiveMigration()
                             .enableMultiInstanceInvalidation() // 使多实例失效，跨进程修改适用

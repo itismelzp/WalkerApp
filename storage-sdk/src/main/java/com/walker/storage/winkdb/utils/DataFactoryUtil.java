@@ -1,6 +1,6 @@
 package com.walker.storage.winkdb.utils;
 
-import com.walker.storage.winkdb.WalkerRoomDatabase;
+import com.walker.storage.winkdb.WinkRoomDatabase;
 import com.walker.storage.winkdb.dao.LibraryDao;
 import com.walker.storage.winkdb.dao.MusicListDao;
 import com.walker.storage.winkdb.dao.UserDao;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class DataFactoryUtil {
 
 
-    public static void initWords(WalkerRoomDatabase database) {
+    public static void initWords(WinkRoomDatabase database) {
 
         WordDao dao = database.wordDao();
         dao.deleteAll();
@@ -43,7 +43,7 @@ public class DataFactoryUtil {
         dao.insert(word);
     }
 
-    public static void initUsers(WalkerRoomDatabase database) {
+    public static void initUsers(WinkRoomDatabase database) {
 
         UserDao userDao = database.userDao();
         LibraryDao libraryDao = database.libraryDao();

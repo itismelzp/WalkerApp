@@ -122,10 +122,9 @@ public class WinkKVTest {
         MyParcelObject parcelObj = new MyParcelObject(1,2,3, "str_str");
         kv1.putObject(parcelObjKey, parcelObj);
 
-        String packableObj = "packable_obj_key";
+        String packableObjKey = "packable_obj_key";
         PackableObject packableObject = new PackableObject(1218, "walker");
-        kv1.putObject(packableObj, packableObject, PackableObject$Encoder.INSTANCE);
-
+        kv1.putObject(packableObjKey, packableObject, PackableObject$Encoder.INSTANCE);
 
         WinkKV kv2 = new WinkKV(WinkTestHelper.DIR, FILE_NAME, encoders, WritingModeType.NON_BLOCKING);
         WinkKVLog.d(TAG, "kv1.objKey: " + kv1.getObject(objKey) + ", kv2.objKey: " + kv2.getObject(objKey));
@@ -134,8 +133,8 @@ public class WinkKVTest {
         WinkKVLog.d(TAG, "kv1.parcelObjKey: " + kv1.getObject(parcelObjKey) + ", kv2.parcelObjKey: " + kv2.getObject(parcelObjKey));
         Assert.assertTrue(kv1.getObject(parcelObjKey).equals(kv2.getObject(parcelObjKey)));
 
-        WinkKVLog.d(TAG, "kv1.packableObj: " + kv1.getObject(parcelObjKey) + ", kv2.packableObj: " + kv2.getObject(parcelObjKey));
-        Assert.assertTrue(kv1.getObject(packableObj).equals(kv2.getObject(packableObj)));
+        WinkKVLog.d(TAG, "kv1.packableObjKey: " + kv1.getObject(parcelObjKey) + ", kv2.packableObjKey: " + kv2.getObject(parcelObjKey));
+        Assert.assertTrue(kv1.getObject(packableObjKey).equals(kv2.getObject(packableObjKey)));
     }
 
     @Test

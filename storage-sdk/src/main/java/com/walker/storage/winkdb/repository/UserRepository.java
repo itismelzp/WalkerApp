@@ -4,7 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.walker.storage.winkdb.WalkerRoomDatabase;
+import com.walker.storage.winkdb.WinkRoomDatabase;
 import com.walker.storage.winkdb.dao.UserDao;
 import com.walker.storage.winkdb.model.User;
 import com.walker.storage.winkdb.relation.UserAndLibrary;
@@ -24,7 +24,7 @@ public class UserRepository {
     private LiveData<List<UserWithMusicLists>> mAllUsersAndMusicLists;
 
     public UserRepository(Application application) {
-        WalkerRoomDatabase db = WalkerRoomDatabase.getDatabase(application);
+        WinkRoomDatabase db = WinkRoomDatabase.getDatabase(application);
         mUserDao = db.userDao();
         mAllUsers = mUserDao.getAll();
         mAllUsersAndLibrary = mUserDao.getAllUserWithLibrary();
@@ -48,15 +48,15 @@ public class UserRepository {
     }
 
     public void insert(User user) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.insertAll(user));
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.insertAll(user));
     }
 
     public void delete(User user) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.delete(user));
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.delete(user));
     }
 
     public void update(User... users) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.update(users));
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> mUserDao.update(users));
     }
 
 }

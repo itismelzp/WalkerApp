@@ -4,7 +4,7 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
-import com.walker.storage.winkdb.WalkerRoomDatabase;
+import com.walker.storage.winkdb.WinkRoomDatabase;
 import com.walker.storage.winkdb.dao.WordDao;
 import com.walker.storage.winkdb.model.Word;
 import com.walker.storage.winkdb.log.WinkDbLog;
@@ -23,7 +23,7 @@ public class WordRepository {
     private LiveData<List<Word>> mAllWords;
 
     public WordRepository(Context context) {
-        WalkerRoomDatabase db = WalkerRoomDatabase.getDatabase(context);
+        WinkRoomDatabase db = WinkRoomDatabase.getDatabase(context);
         mWordDao = db.wordDao();
         mAllWords = mWordDao.getAlphabetizedWords();
     }
@@ -37,7 +37,7 @@ public class WordRepository {
     }
 
     public void insert(Word word) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> {
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
 //            mWordDao.delete(word.getContent());
             long begin = System.currentTimeMillis();
             mWordDao.insert(word);
@@ -47,7 +47,7 @@ public class WordRepository {
     }
 
     public void delete(String content) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> {
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
             long begin = System.currentTimeMillis();
             mWordDao.delete(content);
             long cost = System.currentTimeMillis() - begin;
@@ -56,7 +56,7 @@ public class WordRepository {
     }
 
     public void delete(String... contents) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> {
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
             long begin = System.currentTimeMillis();
             mWordDao.delete(contents);
             long cost = System.currentTimeMillis() - begin;
@@ -65,7 +65,7 @@ public class WordRepository {
     }
 
     public void delete(List<String> contents) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> {
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
             long begin = System.currentTimeMillis();
             mWordDao.delete(contents);
             long cost = System.currentTimeMillis() - begin;
@@ -74,7 +74,7 @@ public class WordRepository {
     }
 
     public void update(Word word) {
-        WalkerRoomDatabase.databaseWriteExecutor.execute(() -> {
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
             long begin = System.currentTimeMillis();
             mWordDao.update(word);
             long cost = System.currentTimeMillis() - begin;

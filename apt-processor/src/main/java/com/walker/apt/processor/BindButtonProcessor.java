@@ -37,44 +37,43 @@ public class BindButtonProcessor extends BaseProcessor {
         return new Class<?>[]{BindButton.class};
     }
 
-    /**
-     * 各种Element对齐的类型：
-     * <p>
-     * ExecutableElement --> Method
-     * <p>
-     * VariableElement --> Field
-     * <p>
-     * TypeElement --> Class
-     * <p>
-     * PackageElement --> Package
-     */
     @Override
-    public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] start.");
+    protected String getTag() {
+        return "BindButtonProcessor";
+    }
+
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+
+        if (!checkCanProcess(annotations, roundEnv)) {
+            return false;
+        }
+
+        printMessage(Diagnostic.Kind.NOTE, "[process] start.");
         mProxyMap.clear();
 
         // 拿到所有被BindButton注解标的元素（这里是属性元素）
-        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(BindButton.class);
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(BindButton.class);
         for (Element element : elements) {
             // 1）实际是属性元素
             VariableElement variableElement = (VariableElement) element;
             // 2）拿到属性所在的类元素
             TypeElement classElement = (TypeElement) variableElement.getEnclosingElement();
             String fullClassName = classElement.getQualifiedName().toString();
-            mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] fullClassName: " + fullClassName);
+            printMessage(Diagnostic.Kind.NOTE, "[process] fullClassName: " + fullClassName);
             BindButtonClassCreatorProxy proxy = mProxyMap.get(fullClassName);
             if (proxy == null) {
                 proxy = new BindButtonClassCreatorProxy(mElementUtils, classElement);
                 mProxyMap.put(fullClassName, proxy);
             }
-            // 拿到属性对应的注解对象
+            // 3）拿到属性对应的注解对象
             BindButton annotation = variableElement.getAnnotation(BindButton.class);
             int resId = annotation.resId();
             String className = getClassFromAnnotation(variableElement);
-            mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] resId: " + resId);
-            mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] className: " + className);
+            printMessage(Diagnostic.Kind.NOTE, "[process] resId: " + resId);
+            printMessage(Diagnostic.Kind.NOTE, "[process] className: " + className);
             if (className == null) {
-                mMessager.printMessage(Diagnostic.Kind.ERROR, "[process] className should not be null.");
+                printMessage(Diagnostic.Kind.ERROR, "[process] className should not be null.");
                 return false;
             }
             BindButtonAnnotationInfo annotationInfo = new BindButtonAnnotationInfo(resId, className);
@@ -83,7 +82,9 @@ public class BindButtonProcessor extends BaseProcessor {
 
         createSourceFile();
 //        createSourceFileByJavapoet();
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[process] finish.");
+        printMessage(Diagnostic.Kind.NOTE, "[process] finish.");
+
+        markProcessStatus(true);
         return true;
     }
 
@@ -109,7 +110,7 @@ public class BindButtonProcessor extends BaseProcessor {
         // 通过遍历mProxyMap，创建java文件
         for (String key : mProxyMap.keySet()) {
             BindButtonClassCreatorProxy classCreator = mProxyMap.get(key);
-            mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
+            printMessage(Diagnostic.Kind.NOTE, "[createSourceFile] " + classCreator.getProxyClassFullName());
             Writer writer = null;
             try {
                 JavaFileObject jfo = processingEnv.getFiler()
@@ -118,15 +119,14 @@ public class BindButtonProcessor extends BaseProcessor {
                 writer.write(classCreator.generateJavaCode());
                 writer.flush();
             } catch (IOException e) {
-                mMessager.printMessage(Diagnostic.Kind.NOTE,
+                printMessage(Diagnostic.Kind.NOTE,
                         "[createSourceFile] " + classCreator.getProxyClassFullName() + "error");
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        mMessager.printMessage(Diagnostic.Kind.ERROR,
+                        printMessage(Diagnostic.Kind.ERROR,
                                 "[createSourceFile] " + classCreator.getProxyClassFullName() + " error");
                     }
                 }
@@ -137,8 +137,8 @@ public class BindButtonProcessor extends BaseProcessor {
     private void createSourceFileByJavapoet() {
         for (BindButtonClassCreatorProxy creatorProxy : mProxyMap.values()) {
 
-            mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFileByJavapoet] getPackageName: "+creatorProxy.getPackageName());
-//            mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFileByJavapoet] process finish.");
+            printMessage(Diagnostic.Kind.NOTE, "[createSourceFileByJavapoet] getPackageName: "+creatorProxy.getPackageName());
+//            printMessage(Diagnostic.Kind.NOTE, "[createSourceFileByJavapoet] process finish.");
 
             JavaFile javaFile = JavaFile
                     .builder(creatorProxy.getPackageName(), creatorProxy.generateJavaCodeByJavapoet())
@@ -146,13 +146,12 @@ public class BindButtonProcessor extends BaseProcessor {
             try {
                 javaFile.writeTo(processingEnv.getFiler());
             } catch (IOException e) {
-                e.printStackTrace();
-                mMessager.printMessage(Diagnostic.Kind.ERROR,
+                printMessage(Diagnostic.Kind.ERROR,
                         "[createSourceFileByJavapoet] process failed: " + e.getMessage());
 
             }
         }
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "[createSourceFileByJavapoet] process finish.");
+        printMessage(Diagnostic.Kind.NOTE, "[createSourceFileByJavapoet] process finish.");
 
     }
 }

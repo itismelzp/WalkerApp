@@ -70,7 +70,7 @@ public class RoomActivity extends AppCompatActivity {
         initFab();
     }
 
-    private final Observer observer = new Observer<List<Word>>() {
+    private final Observer<List<Word>> observer = new Observer<List<Word>>() {
         @Override
         public void onChanged(List<Word> words) {
             Log.d(TAG, "words: " + words);
@@ -162,7 +162,6 @@ public class RoomActivity extends AppCompatActivity {
 
         if(requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
-            word.setCreateTime(System.currentTimeMillis());
             Log.i(TAG, "[onActivityResult] word: " + word);
             mWordViewModel.insert(word);
         } else {

@@ -6,6 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".customview.activity.SlideConflictDemoActivity">
 
+    <RadioGroup
+        android:id="@+id/rg_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/rb_all_works"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="全部"
+            android:textColor="@color/wink_camera_selector_multi_photo_list_tab_btn_text_color"
+            android:textSize="14dp" />
+
+        <RadioButton
+            android:id="@+id/rb_video"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:button="@null"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="视频"
+            android:textColor="@color/wink_camera_selector_multi_photo_list_tab_btn_text_color"
+            android:textSize="14dp" />
+
+        <RadioButton
+            android:id="@+id/rb_photo"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:button="@null"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="照片"
+            android:textColor="@color/wink_camera_selector_multi_photo_list_tab_btn_text_color"
+            android:textSize="14dp" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="拍摄"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rg_radio_group" />
+
     <LinearLayout
         android:id="@+id/qfs_feed_album_ll"
         android:layout_width="match_parent"

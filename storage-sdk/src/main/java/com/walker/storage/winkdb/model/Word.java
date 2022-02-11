@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 
 //@Entity(tableName = "word_table")
-@Entity(tableName = "word_table", indices = {@Index(value = {"content"}, unique = true)})
+@Entity(tableName = "word_table", indices = {@Index(value = {"content"})})
 public class Word {
 
     @PrimaryKey(autoGenerate = true)
@@ -29,6 +29,7 @@ public class Word {
 
     public Word(@NonNull String content) {
         this.mContent = content;
+        this.mCreateTime = System.currentTimeMillis();
     }
 
     public void setId(int id) {
@@ -60,12 +61,12 @@ public class Word {
             return false;
         }
         Word word = (Word) o;
-        return mContent.equals(word.mContent);
+        return mCreateTime == word.mCreateTime && mContent.equals(word.mContent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mContent);
+        return Objects.hash(mContent, mCreateTime);
     }
 
     @Override

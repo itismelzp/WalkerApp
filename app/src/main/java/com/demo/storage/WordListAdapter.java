@@ -37,6 +37,11 @@ public class WordListAdapter extends ListAdapter<Word, WordViewHolder> {
         holder.bind(current.getContent(), current.getCreateTime());
 
         holder.itemView.setOnClickListener(view -> mWordViewModel.delete(current.getContent()));
+        holder.itemView.setOnLongClickListener(v -> {
+            Word word = new Word(current.getContent());
+            mWordViewModel.insert(word);
+            return true;
+        });
     }
 
     public static class WordDiff extends DiffUtil.ItemCallback<Word> {

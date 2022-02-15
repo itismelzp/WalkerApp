@@ -19,6 +19,7 @@ import com.walker.storage.winkdb.model.MusicList;
 import com.walker.storage.winkdb.model.User;
 import com.walker.storage.winkdb.model.Word;
 import com.walker.storage.winkdb.utils.DBUpdateUtil;
+import com.walker.storage.winkdb.safe.WinkDBHelperFactory;
 import com.walker.storage.winkdb.utils.DataFactoryUtil;
 
 import java.util.concurrent.ExecutorService;
@@ -32,6 +33,7 @@ import java.util.concurrent.Executors;
 public abstract class WinkRoomDatabase extends RoomDatabase {
 
     private static final String TAG = "WordRoomDatabase";
+    private static final char[] PASSPHRASE = {'w', 'i', 'n', 'k'};
 
     public abstract WordDao wordDao();
 
@@ -45,12 +47,15 @@ public abstract class WinkRoomDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREAD = 4;
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREAD);
 
+    private static final WinkDBHelperFactory FACTORY = new WinkDBHelperFactory(PASSPHRASE);
+
     public static WinkRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (WinkRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             WinkRoomDatabase.class, "wink_database")
+                            .openHelperFactory(FACTORY)
                             .addCallback(sRoomDatabaseCallback) // 数据库创建的时候回调
                             .fallbackToDestructiveMigration()
                             .enableMultiInstanceInvalidation() // 使多实例失效，跨进程修改适用

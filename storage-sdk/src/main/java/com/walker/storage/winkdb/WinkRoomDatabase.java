@@ -18,6 +18,7 @@ import com.walker.storage.winkdb.model.Library;
 import com.walker.storage.winkdb.model.MusicList;
 import com.walker.storage.winkdb.model.User;
 import com.walker.storage.winkdb.model.Word;
+import com.walker.storage.winkdb.utils.DBUpdateUtil;
 import com.walker.storage.winkdb.utils.DataFactoryUtil;
 
 import java.util.concurrent.ExecutorService;
@@ -27,7 +28,7 @@ import java.util.concurrent.Executors;
  * Created by walkerzpli on 2021/8/5.
  */
 
-@Database(entities = {Word.class, User.class, Library.class, MusicList.class}, version = 3, exportSchema = false)
+@Database(entities = {Word.class, User.class, Library.class, MusicList.class}, version = 5, exportSchema = false)
 public abstract class WinkRoomDatabase extends RoomDatabase {
 
     private static final String TAG = "WordRoomDatabase";
@@ -53,7 +54,7 @@ public abstract class WinkRoomDatabase extends RoomDatabase {
                             .addCallback(sRoomDatabaseCallback) // 数据库创建的时候回调
                             .fallbackToDestructiveMigration()
                             .enableMultiInstanceInvalidation() // 使多实例失效，跨进程修改适用
-                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                            .addMigrations(getMigrations())
                             .build();
                 }
             }
@@ -74,6 +75,11 @@ public abstract class WinkRoomDatabase extends RoomDatabase {
             });
         }
     };
+
+    @NonNull
+    private static Migration[] getMigrations() {
+        return DBUpdateUtil.getMigrations();
+    }
 
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override

@@ -20,6 +20,7 @@ import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.ryg.ViewEventDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
+import com.demo.ipc.IPCDemoActivity;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
 import com.demo.storage.WinkKVDemoActivity;
@@ -85,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
     @BindButton(resId = R.id.rxjava_test, clazz = RxJavaActivity.class)
     private Button rxjavaTestBtn;
+
+
+    @BindButton(resId = R.id.ipc_test, clazz = IPCDemoActivity.class)
+    private Button ipcTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -396,7 +396,7 @@ public class WinkKV {
                 }
                 String key = buffer.getString(keySize);
                 int pos = buffer.position;
-                if (type <= DataType.DOUBLE) {
+                if (type <= DataType.DOUBLE) { // 基础类型
                     switch (type) {
                         case DataType.BOOLEAN:
                             data.put(key, new Container.BooleanContainer(pos, buffer.get() == 1));
@@ -414,7 +414,7 @@ public class WinkKV {
                             data.put(key, new Container.DoubleContainer(pos, buffer.getDouble()));
                             break;
                     }
-                } else {
+                } else { // 非基础类型value部分分为长度和实现value部分
                     int valueSize = buffer.getShort() & 0xFFFF;
                     boolean external = (typeInfo & MaskType.MASK_TYPE_EXTERNAL) != 0;
                     checkValueSize(valueSize, external);

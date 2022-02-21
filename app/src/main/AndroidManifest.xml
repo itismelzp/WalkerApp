@@ -10,6 +10,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".ipc.messenger.MessengerServer"
+            android:enabled="true"
+            android:exported="true"
+            android:label="myService">
+            <intent-filter>
+                <action android:name="android.intent.action.MESSENGER" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".ipc.IPCDemoActivity"
+            android:exported="false"
+            android:process=":remote" />
+
+        <service
+            android:name=".ipc.aidl.MyAIDLService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="myService">
+            <intent-filter>
+                <action android:name="com.demo.ipc.myservice" />
+            </intent-filter>
+        </service>
+
         <activity android:name=".rxjava.RxJavaActivity" />
         <activity android:name=".animator.AnimatorActivity" />
         <activity android:name=".customview.activity.SlideConflictDemoActivity" />

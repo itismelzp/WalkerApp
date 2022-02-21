@@ -208,9 +208,19 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="rxjava demo"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ipc_test"
         app:layout_constraintLeft_toRightOf="@id/gl_50_percent_vertical"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/animator_test" />
+
+    <Button
+        android:id="@+id/ipc_test"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="ipc demo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/gl_50_percent_vertical"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rxjava_test" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

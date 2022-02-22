@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.demo.MyApplication;
-import com.walker.storage.winkkv.log.WinkKVLog;
+import com.tencent.wink.storage.winkkv.log.WinkKVLog;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

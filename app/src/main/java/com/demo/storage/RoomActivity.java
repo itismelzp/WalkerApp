@@ -19,12 +19,12 @@ import android.widget.Toast;
 import com.demo.R;
 import com.demo.customview.activity.OtherProcessActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.walker.storage.winkdb.model.User;
-import com.walker.storage.winkdb.model.Word;
-import com.walker.storage.winkdb.relation.UserAndLibrary;
-import com.walker.storage.winkdb.relation.UserWithMusicLists;
-import com.walker.storage.winkdb.viewmodel.UserViewModel;
-import com.walker.storage.winkdb.viewmodel.WordViewModel;
+import com.tencent.wink.storage.winkdb.model.User;
+import com.tencent.wink.storage.winkdb.model.Word;
+import com.tencent.wink.storage.winkdb.relation.UserAndLibrary;
+import com.tencent.wink.storage.winkdb.relation.UserWithMusicLists;
+import com.tencent.wink.storage.winkdb.viewmodel.UserViewModel;
+import com.tencent.wink.storage.winkdb.viewmodel.WordViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;

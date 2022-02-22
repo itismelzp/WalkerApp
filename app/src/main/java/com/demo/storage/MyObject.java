@@ -2,7 +2,7 @@ package com.demo.storage;
 
 import android.os.Parcel;
 
-import com.walker.apt.annotation.PackClass;
+import com.tencent.wink.apt.annotation.PackClass;
 
 import java.util.Objects;
 

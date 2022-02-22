@@ -2,7 +2,7 @@ package com.demo.storage;
 
 import androidx.annotation.NonNull;
 
-import com.walker.storage.winkkv.WinkKV;
+import com.tencent.wink.storage.winkkv.WinkKV;
 
 import io.packable.PackDecoder;
 import io.packable.PackEncoder;

@@ -20,9 +20,9 @@ import com.demo.storage.WordListAdapter;
 import com.demo.storage.utils.MMKVUtil;
 import com.demo.storage.utils.WinkKVUtil;
 import com.tencent.mmkv.MMKV;
-import com.walker.storage.winkdb.model.Word;
-import com.walker.storage.winkdb.viewmodel.WordViewModel;
-import com.walker.storage.winkkv.WinkKV;
+import com.tencent.wink.storage.winkdb.model.Word;
+import com.tencent.wink.storage.winkdb.viewmodel.WordViewModel;
+import com.tencent.wink.storage.winkkv.WinkKV;
 
 import java.util.List;
 

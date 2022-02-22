@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import com.demo.animator.AnimatorActivity;
@@ -27,8 +26,8 @@ import com.demo.storage.WinkKVDemoActivity;
 import com.demo.widget.activity.ScaleActivity;
 import com.demo.widget.activity.ShapeBgActivity;
 import com.demo.wink.WinkActivity;
-import com.walker.apt.annotation.BindButton;
-import com.walker.apt.library.BindButtonTools;
+import com.tencent.wink.apt.annotation.BindButton;
+import com.tencent.wink.apt.library.BindButtonTools;
 
 
 public class MainActivity extends AppCompatActivity {

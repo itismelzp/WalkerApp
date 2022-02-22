@@ -5,9 +5,9 @@ import com.demo.storage.MyObject;
 import com.demo.storage.MyParcelObject;
 import com.demo.storage.PackableObject;
 import com.demo.storage.PackableObject$Encoder;
-import com.walker.storage.winkkv.WinkKV;
-import com.walker.storage.winkkv.log.WinkKVLog;
-import com.walker.storage.winkkv.type.WritingModeType;
+import com.tencent.wink.storage.winkkv.WinkKV;
+import com.tencent.wink.storage.winkkv.log.WinkKVLog;
+import com.tencent.wink.storage.winkkv.type.WritingModeType;
 
 import org.junit.Assert;
 import org.junit.Before;

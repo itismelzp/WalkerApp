@@ -3,13 +3,12 @@ package com.demo.apt;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.demo.R;
-import com.walker.apt.annotation.BindView;
-import com.walker.apt.library.BindViewTools;
+import com.tencent.wink.apt.annotation.BindView;
+import com.tencent.wink.apt.library.BindViewTools;
 
 public class AptDemoActivity extends AppCompatActivity {
 

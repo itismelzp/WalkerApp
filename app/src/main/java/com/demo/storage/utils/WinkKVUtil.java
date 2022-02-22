@@ -2,7 +2,7 @@ package com.demo.storage.utils;
 
 import android.content.Context;
 
-import com.walker.storage.winkkv.WinkKV;
+import com.tencent.wink.storage.winkkv.WinkKV;
 
 /**
  * Created by walkerzpli on 2022/1/6.

@@ -15,7 +15,7 @@ import com.demo.customview.activity.OtherProcessActivity;
 import com.demo.storage.utils.MMKVUtil;
 import com.demo.storage.utils.WinkKVUtil;
 import com.tencent.mmkv.MMKV;
-import com.walker.storage.winkkv.WinkKV;
+import com.tencent.wink.storage.winkkv.WinkKV;
 
 public class WinkKVDemoActivity extends AppCompatActivity {
 

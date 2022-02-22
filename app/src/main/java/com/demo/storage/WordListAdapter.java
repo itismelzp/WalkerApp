@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.walker.storage.winkdb.model.Word;
-import com.walker.storage.winkdb.viewmodel.WordViewModel;
+import com.tencent.wink.storage.winkdb.model.Word;
+import com.tencent.wink.storage.winkdb.viewmodel.WordViewModel;
 
 /**
  * Created by walkerzpli on 2021/8/6.

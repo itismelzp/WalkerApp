@@ -3,7 +3,7 @@ package com.demo.storage;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.walker.storage.winkkv.WinkKV;
+import com.tencent.wink.storage.winkkv.WinkKV;
 
 
 /**

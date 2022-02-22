@@ -21,6 +21,10 @@ public class ProcessUtil {
 
     private static String currentProcessName;
 
+    public static String getCurProcessLog() {
+        return "Current process: " + getCurrentProcessNameByApplication();
+    }
+
     /**
      * @return 当前进程名
      */

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.R;
+import com.demo.ipc.ashmem.AshmemServiceConnection;
 
 public class IPCDemoActivity extends AppCompatActivity {
 
@@ -43,19 +44,44 @@ public class IPCDemoActivity extends AppCompatActivity {
     private TextView tv_message;
     private Button btn_send;
 
+    private final AshmemServiceConnection ashmemServiceConnection = new AshmemServiceConnection();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ipcdemo);
 
-        initView();
-
-
+        // AIDL
+        initAIDLView();
         bindAIDLService();
+
+        // Ashmem
+        initAshmemView();
+        bindAshmemService();
     }
 
+    private void bindAshmemService() {
+        Intent intent = new Intent();
+        intent.setAction("com.demo.ipc.ashmem.myashmemservice");
+        intent.setPackage("com.demo");
+        bindService(intent, ashmemServiceConnection, BIND_AUTO_CREATE);
+    }
 
-    private void initView() {
+    private void initAshmemView() {
+        Button getAshmemServiceBtn = findViewById(R.id.get_ashmem_service);
+        getAshmemServiceBtn.setOnClickListener(view -> {
+            try {
+                Toast.makeText(IPCDemoActivity.this,
+                        ProcessUtil.getCurProcessLog() + ": "
+                                + ashmemServiceConnection.getIMyAshmemAidlInterface().getString(),
+                        Toast.LENGTH_SHORT).show();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void initAIDLView() {
         Button getAIDLBtn = findViewById(R.id.get_aidl_service);
         getAIDLBtn.setOnClickListener(view -> {
             if (mIMyAidlInterface == null) {

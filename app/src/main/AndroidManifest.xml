@@ -11,6 +11,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
+            android:name=".ipc.ashmem.MyAshmemService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.demo.ipc.ashmem.myashmemservice" />
+            </intent-filter>
+        </service>
+
+        <service
             android:name=".ipc.messenger.MessengerServer"
             android:enabled="true"
             android:exported="true"

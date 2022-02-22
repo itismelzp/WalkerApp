@@ -33,7 +33,7 @@ public class ClassCreatorProxy extends BaseClassCreatorProxy{
     public String generateJavaCode() {
         StringBuilder builder = new StringBuilder();
         builder.append("package ").append(mPackageName).append(";\n\n");
-        builder.append("import com.walker.apt.library.*;\n\n");
+        builder.append("import com.tencent.wink.apt.library.*;\n\n");
         builder.append("public class ").append(mTargetClassName).append(" {\n");
         generateMethods(builder);
         builder.append("}\n");

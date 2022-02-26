@@ -14,12 +14,12 @@ import androidx.annotation.NonNull;
 
 public class MessengerServer extends Service {
 
-    private static final int MSG_FROM_CLIENT = 0x10001;
-    private static final int MSG_TO_CLIENT = 0x10002;
+    public static final int MSG_FROM_CLIENT = 0x10001;
+    public static final int MSG_TO_CLIENT = 0x10002;
 
-    private static final String IS_LOGIN = "isLogin";
-    private static final String NICK_NAME = "nickName";
-    private static final String USER_ID = "userId";
+    public static final String IS_LOGIN = "isLogin";
+    public static final String NICK_NAME = "nickName";
+    public static final String USER_ID = "userId";
 
     private final Messenger mMessenger = new Messenger(new InnerHandler(Looper.myLooper()));
     private IBinder mIBinder;

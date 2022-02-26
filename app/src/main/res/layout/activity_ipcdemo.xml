@@ -24,4 +24,13 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/get_aidl_service" />
 
+    <Button
+        android:id="@+id/get_messenger_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="get messager service data"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/get_ashmem_service" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,12 +21,17 @@ public class MyAIDLService extends Service {
 
     private static final String TAG = "MyAIDLService";
 
+    private IBinder mIBinder;
+
     public MyAIDLService() {
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new MyBinder();
+        if (mIBinder == null) {
+            mIBinder = new MyBinder();
+        }
+        return mIBinder;
     }
 
     static class MyBinder extends IMyAidlInterface.Stub {

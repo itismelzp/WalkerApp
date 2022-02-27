@@ -38,11 +38,19 @@ public class WordRepository {
 
     public void insert(Word word) {
         WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
-//            mWordDao.delete(word.getContent());
             long begin = System.currentTimeMillis();
             mWordDao.insert(word);
             long cost = System.currentTimeMillis() - begin;
             WinkDbLog.i(TAG, "insert finish, word: " + word + ", cost: " + cost);
+        });
+    }
+
+    public void insertAll(List<Word> words) {
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
+            long begin = System.currentTimeMillis();
+            mWordDao.insertAll(words);
+            long cost = System.currentTimeMillis() - begin;
+            WinkDbLog.i(TAG, "insert finish, word: " + words + ", cost: " + cost);
         });
     }
 

@@ -66,6 +66,7 @@ dependencies {
     implementation 'com.google.protobuf:protoc:3.5.1'
     implementation 'io.github.billywei01:packable:1.0.2'
 
+    // apt
     compileOnly project(':apt-annotation')
     implementation project(':apt-library')
     annotationProcessor project(':apt-processor')
@@ -81,4 +82,7 @@ dependencies {
     // rxjava
     implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    implementation 'com.tencent.wcdb:wcdb-android:1.0.8'
+
 }

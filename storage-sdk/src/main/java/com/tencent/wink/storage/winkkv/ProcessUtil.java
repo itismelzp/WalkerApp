@@ -1,4 +1,4 @@
-package com.demo.ipc;
+package com.tencent.wink.storage.winkkv;
 
 import android.app.ActivityManager;
 import android.app.Application;
@@ -99,9 +99,5 @@ public class ProcessUtil {
             }
         }
         return null;
-    }
-
-    public static void killMyProcess() {
-        android.os.Process.killProcess(android.os.Process.myPid());
     }
 }

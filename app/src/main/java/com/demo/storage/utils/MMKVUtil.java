@@ -7,8 +7,17 @@ import com.tencent.mmkv.MMKV;
  */
 public class MMKVUtil {
 
-    public static MMKV getMultiProcessMMKV() {
+    public static MMKV getMPMMKV() {
         return MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+//        return MMKV.mmkvWithID("imported", MMKV.MULTI_PROCESS_MODE);
+    }
+
+    /**
+     * single process
+     * @return
+     */
+    public static MMKV getMMKV() {
+        return MMKV.defaultMMKV();
     }
 
 }

@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.demo.R;
+import com.demo.ipc.aidl.MyAIDLServiceConnection;
 import com.demo.ipc.ashmem.AshmemServiceConnection;
 import com.demo.ipc.messenger.MessengerServer;
 import com.demo.ipc.messenger.MessengerServiceConnection;
@@ -27,11 +28,11 @@ public class IPCDemoActivity extends AppCompatActivity {
     private static final String TAG = "IPCDemoActivity";
 
     // AIDL
-    private IMyAidlInterface mIMyAidlInterface;
+    private final MyAIDLServiceConnection myAIDLServiceConnection = new MyAIDLServiceConnection();
 
     // Messenger
     private final Messenger mMessenger = new Messenger(new InnerHandler(Looper.myLooper()));
-    private MessengerServiceConnection mMessengerServiceConnection = new MessengerServiceConnection();
+    private final MessengerServiceConnection mMessengerServiceConnection = new MessengerServiceConnection();
 
     // Ashmem
     private final AshmemServiceConnection ashmemServiceConnection = new AshmemServiceConnection();
@@ -79,7 +80,7 @@ public class IPCDemoActivity extends AppCompatActivity {
 
     private void bindAshmemService() {
         Intent intent = new Intent();
-        intent.setAction("com.demo.ipc.ashmem.myashmemservice");
+        intent.setAction("com.demo.ipc.ashmem.MyAshmemService");
         intent.setPackage("com.demo");
         bindService(intent, ashmemServiceConnection, BIND_AUTO_CREATE);
     }
@@ -101,45 +102,22 @@ public class IPCDemoActivity extends AppCompatActivity {
     private void initAIDLView() {
         Button getAIDLBtn = findViewById(R.id.get_aidl_service);
         getAIDLBtn.setOnClickListener(view -> {
-            if (mIMyAidlInterface == null) {
-                Toast.makeText(IPCDemoActivity.this,
-                        "mIMyAidlInterface == null", Toast.LENGTH_SHORT
-                ).show();
-                return;
-            }
-            try {
-                Toast.makeText(IPCDemoActivity.this,
-                        String.format("Process: %s, accept name: %s",
-                                ProcessUtil.getCurrentProcessName(this),
-                                mIMyAidlInterface.getName()),
-                        Toast.LENGTH_SHORT).show();
-
-                Log.i(TAG, String.format("Process: %s, accept name: %s",
-                        ProcessUtil.getCurrentProcessName(this),
-                        mIMyAidlInterface.getName()));
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            Toast.makeText(IPCDemoActivity.this,
+                    String.format("Process: %s, accept name: %s",
+                            ProcessUtil.getCurrentProcessName(this),
+                            myAIDLServiceConnection.getName()),
+                    Toast.LENGTH_SHORT).show();
+            Log.i(TAG, String.format("Process: %s, accept name: %s",
+                    ProcessUtil.getCurrentProcessName(this),
+                    myAIDLServiceConnection.getName()));
         });
     }
 
     private void bindAIDLService() {
         Intent intent = new Intent();
-        intent.setAction("com.demo.ipc.myservice");
+        intent.setAction("com.demo.ipc.MyAIDLService");
         intent.setPackage("com.demo");
-
-        bindService(intent, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                mIMyAidlInterface = IMyAidlInterface.Stub.asInterface(iBinder);
-                Log.d(TAG, "[onServiceConnected] mIMyAidlInterface: " + mIMyAidlInterface);
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-
-            }
-        }, BIND_AUTO_CREATE);
+        bindService(intent, myAIDLServiceConnection, BIND_AUTO_CREATE);
     }
 
     private class InnerHandler extends Handler {

@@ -1,5 +1,8 @@
 package com.demo;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +32,8 @@ import com.demo.wink.WinkActivity;
 import com.tencent.wink.apt.annotation.BindButton;
 import com.tencent.wink.apt.library.BindButtonTools;
 
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     @BindButton(resId = R.id.btn_list_view_demo, clazz = ListViewDemoActivity.class)
     private Button listViewDemoBtn;
 
-    @BindButton(resId = R.id.test_other_process, clazz = OtherProcessActivity.class)
+    //    @BindButton(resId = R.id.test_other_process, clazz = OtherProcessActivity.class)
     private Button otherProcessTest;
 
     @BindButton(resId = R.id.btn_test_recycle_view, clazz = ScaleActivity.class)
@@ -102,10 +107,71 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().getName());
 
+        startActivity(MainActivity.this, R.id.test_other_process, OtherProcessActivity.class);
+        preLoadSub(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent preLoader = new Intent();
+        preLoader.setAction("com.demo.ipc.SubPreLoadService");
+        preLoader.setPackage("com.demo");
+        stopService(preLoader);
+    }
+
+    private void startActivity(Activity host, int resId, Class<?> clazz) {
+        host.findViewById(resId).setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.setClass(host, clazz);
+            intent.putExtra("startTime", System.currentTimeMillis());
+            host.startActivity(intent);
+        });
+    }
+
+
+    private void preLoadSub(Context context) {
+        if (context == null || isSubAlive(context)) {
+            return;
+        }
+        new Thread(() -> {
+            Intent preLoader = new Intent();
+            preLoader.setAction("com.demo.ipc.SubPreLoadService");
+            preLoader.setPackage("com.demo");
+            try {
+                context.startService(preLoader);
+            } catch (Exception e) {
+                Log.e(TAG, "[preLoadSub] preLoadSub failed.");
+            }
+            Log.e(TAG, "[preLoadSub] preLoadSub...");
+        }).start();
+    }
+
+    private boolean isSubAlive(Context context) {
+        try {
+            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+                String processName = info.processName;
+                if ("com.demo:sub".equals(processName)) {
+                    Log.e(TAG, "[isSubAlive] isSubAlive == true");
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "get process info fail.");
+        }
+        Log.e(TAG, "[isSubAlive] isSubAlive == false");
+        return false;
     }
 }

@@ -25,10 +25,7 @@ public class WinkKVBinder extends Binder {
 
     private static final String TAG = "WinkKVBinder";
 
-    private WinkKVService.CallbackOnBind callbackOnBind;
-
-    public WinkKVBinder(WinkKVService.CallbackOnBind callbackOnBind) {
-        this.callbackOnBind = callbackOnBind;
+    public WinkKVBinder() {
     }
 
     @Override

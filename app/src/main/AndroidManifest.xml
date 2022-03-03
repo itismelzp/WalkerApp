@@ -11,14 +11,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
+            android:name=".ipc.SubPreLoadService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":sub">
+            <intent-filter>
+                <action android:name="com.demo.ipc.SubPreLoadService" />
+            </intent-filter>
+        </service>
+        <service
             android:name=".ipc.ashmem.MyAshmemService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.demo.ipc.ashmem.myashmemservice" />
+                <action android:name="com.demo.ipc.ashmem.MyAshmemService" />
             </intent-filter>
         </service>
-
         <service
             android:name=".ipc.messenger.MessengerServer"
             android:enabled="true"
@@ -38,9 +46,9 @@
             android:name=".ipc.aidl.MyAIDLService"
             android:enabled="true"
             android:exported="true"
-            android:label="myService">
+            android:label="MyAIDLService">
             <intent-filter>
-                <action android:name="com.demo.ipc.myservice" />
+                <action android:name="com.demo.ipc.MyAIDLService" />
             </intent-filter>
         </service>
 

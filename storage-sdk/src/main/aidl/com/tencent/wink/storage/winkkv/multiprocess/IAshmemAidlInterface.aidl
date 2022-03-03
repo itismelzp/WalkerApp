@@ -6,7 +6,7 @@ package com.tencent.wink.storage.winkkv.multiprocess;
 interface IAshmemAidlInterface {
 
     void putAll(in Map map);
-//
+
     Map getAll();
 
     void putString(String key, String value);

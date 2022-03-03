@@ -1,4 +1,4 @@
-package com.tencent.wink.storage.winkkv.multiprocess;
+package com.tencent.wink.storage.winkkv;
 
 import java.util.Map;
 
@@ -7,7 +7,7 @@ import java.util.Map;
  * <p>
  * Created by walkerzpli on 2022/3/2.
  */
-interface IWinkKV {
+public interface IWinkKV {
 
     void putAll(Map<String, Object> dataMap);
 

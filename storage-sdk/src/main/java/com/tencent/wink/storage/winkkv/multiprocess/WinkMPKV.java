@@ -1,7 +1,11 @@
-package com.tencent.wink.storage.winkkv.multiprocess;
+package com.tencent.wink.storage.winkkv;
 
 import android.content.Context;
 import android.content.Intent;
+
+import com.tencent.wink.storage.winkkv.multiprocess.IWinkKV;
+import com.tencent.wink.storage.winkkv.multiprocess.WinkKVService;
+import com.tencent.wink.storage.winkkv.multiprocess.WinkKVServiceConnection;
 
 import java.util.Map;
 

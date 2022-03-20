@@ -129,7 +129,8 @@ class SensorsAnalyticsClassModifier {
             byte[] modifiedClassBytes = modifyClass(sourceClassBytes)
             if (modifiedClassBytes) {
                 modified = new File(tempDir, className.replace('.', '') + '.class')
-                println("modifyClassFile modified className: " + className)
+                // /Users/walker/android_demo/gradle_demo/AutoTrackTransformProject/app/build/tmp/transformClassesWithSensorsAnalyticsForDebug/comdemoMainActivity.class
+                println("modifyClassFile modified className: " + modified)
                 if (modified.exists()) {
                     modified.delete()
                 }
@@ -138,6 +139,7 @@ class SensorsAnalyticsClassModifier {
             }
         } catch (Exception e) {
             e.printStackTrace()
+            println("modifyClassFile error: " + e)
             modified = classFile
         }
         return modified

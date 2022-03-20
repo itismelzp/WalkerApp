@@ -3,12 +3,15 @@ package com.demo;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Printer;
+import android.view.Choreographer;
 import android.widget.Button;
 
 import com.demo.animator.AnimatorActivity;
@@ -95,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
     @BindButton(resId = R.id.ipc_test, clazz = IPCDemoActivity.class)
     private Button ipcTest;
 
+    private long mLastFrameNanos;
+    private static final long NANO_UNIT = 1000000L;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -109,6 +115,36 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(MainActivity.this, R.id.test_other_process, OtherProcessActivity.class);
         preLoadSub(this);
+
+//        initMonitor(); // 卡顿监控
+    }
+
+    private void initMonitor() {
+
+        // 1) Looper方案--BlockCanary
+        Looper.getMainLooper().setMessageLogging(s -> {
+            // >>>>> Dispatching to
+            // <<<<< Finished to
+            Log.d(TAG, "[println] s: " + s);
+        });
+
+        // 2) Choreographer方案--ArgusAPM、LogMonitor
+        Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+            @Override
+            public void doFrame(long frameTimeNanos) {
+                if (mLastFrameNanos == 0L) {
+                    mLastFrameNanos = frameTimeNanos;
+                }
+                if (frameTimeNanos - mLastFrameNanos > 100) {
+                    //
+                }
+                Log.i(TAG, "[doFrame] time gap: " + (float) (frameTimeNanos - mLastFrameNanos) / NANO_UNIT + "ms");
+                mLastFrameNanos = frameTimeNanos;
+                Choreographer.getInstance().postFrameCallback(this);
+            }
+        });
+
+        // 1) + 2)--Matrix
     }
 
     @Override

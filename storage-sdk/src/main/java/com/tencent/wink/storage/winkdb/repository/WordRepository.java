@@ -25,15 +25,18 @@ public class WordRepository {
     public WordRepository(Context context) {
         WinkRoomDatabase db = WinkRoomDatabase.getDatabase(context);
         mWordDao = db.wordDao();
-        mAllWords = mWordDao.getAlphabetizedWords();
     }
 
     public LiveData<Word> getLastWord() {
-        return mWordDao.getLastWord();
+        long begin = System.currentTimeMillis();
+        LiveData<Word> lastWord = mWordDao.getLastWord();
+        long cost = System.currentTimeMillis() - begin;
+        WinkDbLog.i(TAG, "getLastWord finish, lastWord: " + lastWord + ", cost: " + cost);
+        return lastWord;
     }
 
     public LiveData<List<Word>> getAllWords() {
-        return mAllWords;
+        return mWordDao.getAlphabetizedWords();
     }
 
     public void insert(Word word) {

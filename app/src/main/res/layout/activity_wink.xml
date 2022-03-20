@@ -67,6 +67,8 @@
         android:layout_height="80dp"
         android:scaleType="centerCrop"
         app:bgColor="#73FFFFFF"
+        app:circleBgColor="#73FFFFFF"
+        app:circleFgColor="#FFFFFFFF"
         app:circleRadius="13dp"
         app:circleWidth="3dp"
         app:currentColor="#FFFFFFFF"

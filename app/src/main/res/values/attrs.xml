@@ -109,6 +109,9 @@
         <attr name="cornerColor" format="color" />
         <attr name="corner" format="dimension" />
         <attr name="borderWidth" format="dimension" />
+        <attr name="circleBgColor" format="color" />
+        <attr name="circleFgColor" format="color" />
+        <attr name="circleRadius" />
     </declare-styleable>
 
 </resources>

@@ -29,7 +29,7 @@ import javax.lang.model.util.Elements;
  *
  * public class MainActivity$BindButton {
  *
- *     public void bind(MainActivity host) {
+ *     public void bind(Activity host) {
  *         startActivity(host, 11111, "xxxx");
  *         startActivity(host, 22222, "yyyy");
  *     }
@@ -40,7 +40,6 @@ import javax.lang.model.util.Elements;
  *             public void onClick(View view) {
  *                 Intent intent = new Intent();
  *                 intent.setClassName(host, className);
- *                 intent.putExtra("TAG", "MainActivity");
  *                 host.startActivity(intent);
  *             }
  *         });
@@ -70,7 +69,7 @@ public class BindButtonClassCreatorProxy extends BaseClassCreatorProxy{
     }
 
     private void generateMethods(StringBuilder builder) {
-        builder.append(getTabSpace()).append("public void bind(MainActivity host) {\n");
+        builder.append(getTabSpace()).append("public void bind(Activity host) {\n");
 
         for (Annotation annotation : mElements.keySet()) {
             BindButtonAnnotationInfo annotationInfo = mElements.get(annotation);

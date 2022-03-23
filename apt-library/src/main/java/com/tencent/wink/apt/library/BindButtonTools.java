@@ -1,6 +1,7 @@
 package com.tencent.wink.apt.library;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.tencent.wink.apt.utils.AnnotationUtils;
 
@@ -12,12 +13,14 @@ import java.lang.reflect.Method;
  */
 public class BindButtonTools {
 
+    private static final String TAG = "BindButtonTools";
+
     public static void bind(Activity activity) {
         Class<? extends Activity> clazz = activity.getClass();
 
         try {
             Class<?> bindViewClass = Class.forName(clazz.getName() + AnnotationUtils.classSuffix);
-            Method method = bindViewClass.getMethod("bind", activity.getClass());
+            Method method = bindViewClass.getMethod("bind", Activity.class);
             method.invoke(bindViewClass.newInstance(), activity);
         } catch (ClassNotFoundException
                 | NoSuchMethodException
@@ -25,6 +28,7 @@ public class BindButtonTools {
                 | InstantiationException
                 | InvocationTargetException e) {
             e.printStackTrace();
+            Log.e(TAG, "[bind] error.", e);
         }
     }
 

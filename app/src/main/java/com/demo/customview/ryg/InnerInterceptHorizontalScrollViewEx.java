@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Scroller;
 
 public class InnerInterceptHorizontalScrollViewEx extends ViewGroup {
-    private static final String TAG = "HorizontalScrollViewEx2";
+    private static final String TAG = "InnerInterceptHorizontalScrollViewEx";
 
     private int mChildrenSize;
     private int mChildWidth;

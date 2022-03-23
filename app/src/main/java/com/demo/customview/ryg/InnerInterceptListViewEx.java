@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.widget.ListView;
 
 public class InnerInterceptListViewEx extends ListView {
-    private static final String TAG = "ListViewEx";
+    private static final String TAG = "InnerInterceptListViewEx";
 
     private InnerInterceptHorizontalScrollViewEx mHorizontalScrollViewEx2;
 
@@ -36,9 +36,11 @@ public class InnerInterceptListViewEx extends ListView {
     public boolean dispatchTouchEvent(MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
+        Log.d(TAG, " event.getAction():" + event.getAction());
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
+                Log.d(TAG, "requestDisallowInterceptTouchEvent(true)");
                 mHorizontalScrollViewEx2.requestDisallowInterceptTouchEvent(true);
                 break;
             }
@@ -47,6 +49,7 @@ public class InnerInterceptListViewEx extends ListView {
                 int deltaY = y - mLastY;
                 Log.d(TAG, "dx:" + deltaX + " dy:" + deltaY);
                 if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    Log.d(TAG, "requestDisallowInterceptTouchEvent(false)");
                     mHorizontalScrollViewEx2.requestDisallowInterceptTouchEvent(false);
                 }
                 break;

@@ -55,7 +55,7 @@ public abstract class WinkRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             WinkRoomDatabase.class, "wink_database")
-                            .openHelperFactory(FACTORY)
+//                            .openHelperFactory(FACTORY)
                             .addCallback(sRoomDatabaseCallback) // 数据库创建的时候回调
                             .fallbackToDestructiveMigration()
                             .enableMultiInstanceInvalidation() // 使多实例失效，跨进程修改适用

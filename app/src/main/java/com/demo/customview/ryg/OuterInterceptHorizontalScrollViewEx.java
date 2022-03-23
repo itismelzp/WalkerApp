@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Scroller;
 
 public class OuterInterceptHorizontalScrollViewEx extends ViewGroup {
-    private static final String TAG = "HorizontalScrollViewEx";
+    private static final String TAG = "OuterInterceptHorizontalScrollViewEx";
 
     private int mChildrenSize;
     private int mChildWidth;
@@ -65,11 +65,7 @@ public class OuterInterceptHorizontalScrollViewEx extends ViewGroup {
             case MotionEvent.ACTION_MOVE: {
                 int deltaX = x - mLastXIntercept;
                 int deltaY = y - mLastYIntercept;
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    intercepted = true;
-                } else {
-                    intercepted = false;
-                }
+                intercepted = Math.abs(deltaX) > Math.abs(deltaY);
                 break;
             }
             case MotionEvent.ACTION_UP: {
@@ -80,7 +76,7 @@ public class OuterInterceptHorizontalScrollViewEx extends ViewGroup {
                 break;
         }
 
-        Log.d(TAG, "intercepted=" + intercepted);
+        Log.d(TAG, "action=" + event.getAction() + ", intercepted=" + intercepted);
         mLastX = x;
         mLastY = y;
         mLastXIntercept = x;

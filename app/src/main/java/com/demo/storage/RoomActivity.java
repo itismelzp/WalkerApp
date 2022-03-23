@@ -160,10 +160,20 @@ public class RoomActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
             Log.i(TAG, "[onActivityResult] word: " + word);
-            mWordViewModel.insert(word);
+//            mWordViewModel.insert(word);
+            for (int i = 0; i < 10000; i++) {
+                final int idx = i;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY) +"_" + idx);
+                        mWordViewModel.insert(word);
+                    }
+                }).start();
+            }
         } else {
             Toast.makeText(getApplicationContext(),
                     R.string.empty_not_saved,

@@ -22,6 +22,7 @@ import com.demo.customview.activity.ListViewDemoActivity;
 import com.demo.customview.activity.OtherProcessActivity;
 import com.demo.customview.activity.SlideConflictDemoActivity;
 import com.demo.customview.aige.activity.AigeActivity;
+import com.demo.customview.ryg.ViewDispatchDemoActivity;
 import com.demo.customview.ryg.ViewEventDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     @BindButton(resId = R.id.btn_storage, clazz = RoomActivity.class)
     private Button storageBtn;
 
-    @BindButton(resId = R.id.view_dispatch_demo, clazz = ViewEventDispatchDemoActivity.class)
+    @BindButton(resId = R.id.view_dispatch_demo, clazz = ViewDispatchDemoActivity.class)
     private Button dispatchView;
 
     @BindButton(resId = R.id.test_apt_demo, clazz = AptDemoActivity.class)

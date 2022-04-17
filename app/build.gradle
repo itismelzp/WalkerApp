@@ -39,7 +39,12 @@ android {
 
 protobuf {
     protoc {
-        artifact = 'com.google.protobuf:protoc:3.5.1' // 也可以配置本地编译器路径
+        // for apple m1, please add protoc_platform=osx-x86_64 in gradle.properties
+        if (project.hasProperty('protoc_platform')) {
+            artifact = "com.google.protobuf:protoc:3.5.1:${protoc_platform}"
+        } else {undefined
+            artifact = "com.google.protobuf:protoc:3.5.1"
+        }
     }
 
     generateProtoTasks {

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.walker.android'
+apply plugin: 'com.walker.autotrack'
 apply plugin: 'com.google.protobuf'
 
 android {

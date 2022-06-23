@@ -1,5 +1,6 @@
 package com.demo;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.walker.analytics.sdk.SensorsDataAPI;
  */
 public class MyApplication extends Application {
 
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
     @Override

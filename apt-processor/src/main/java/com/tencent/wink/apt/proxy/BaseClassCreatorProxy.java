@@ -47,7 +47,7 @@ public abstract class BaseClassCreatorProxy {
     }
 
     protected String getOriginClassName(TypeElement classElement) {
-        return classElement.getSimpleName().toString();
+        return classElement.getQualifiedName().toString();
     }
 
     protected String getTargetClassName(TypeElement classElement) {

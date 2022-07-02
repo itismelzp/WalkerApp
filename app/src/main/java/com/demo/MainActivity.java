@@ -168,9 +168,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startActivity(Activity host, int resId, Class<?> clazz) {
+        startActivity(host, resId, clazz, -1);
+    }
+
+    private void startActivity(Activity host, int resId, Class<?> clazz, int flag) {
         host.findViewById(resId).setOnClickListener(view -> {
             Intent intent = new Intent();
             intent.setClass(host, clazz);
+            if (flag != -1) {
+                intent.setFlags(flag);
+            }
             intent.putExtra("startTime", System.currentTimeMillis());
             host.startActivity(intent);
         });

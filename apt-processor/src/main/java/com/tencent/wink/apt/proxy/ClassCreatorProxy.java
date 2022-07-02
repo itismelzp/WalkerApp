@@ -18,7 +18,7 @@ import javax.lang.model.util.Elements;
 /**
  * Created by walkerzpli on 2021/9/22.
  */
-public class ClassCreatorProxy extends BaseClassCreatorProxy{
+public class ClassCreatorProxy extends BaseClassCreatorProxy {
 
     private final Map<Integer, VariableElement> mVariableElementMap = new HashMap<>();
 

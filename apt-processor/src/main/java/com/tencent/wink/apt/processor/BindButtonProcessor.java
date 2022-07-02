@@ -70,13 +70,14 @@ public class BindButtonProcessor extends BaseProcessor {
             BindButton annotation = variableElement.getAnnotation(BindButton.class);
             int resId = annotation.resId();
             String className = getClassFromAnnotation(variableElement);
-            printMessage(Diagnostic.Kind.NOTE, "[process] resId: " + resId);
-            printMessage(Diagnostic.Kind.NOTE, "[process] className: " + className);
+            int flag = annotation.flag();
+            printMessage(Diagnostic.Kind.NOTE, "[process] resId: " + resId + ", className: " + className + "flag: " + flag);
             if (className == null) {
                 printMessage(Diagnostic.Kind.ERROR, "[process] className should not be null.");
                 return false;
             }
-            BindButtonAnnotationInfo annotationInfo = new BindButtonAnnotationInfo(resId, className);
+            BindButtonAnnotationInfo annotationInfo = new BindButtonAnnotationInfo(resId, className, flag);
+            annotationInfo.filedName = variableElement.toString();
             proxy.putElement(annotation, annotationInfo);
         }
 

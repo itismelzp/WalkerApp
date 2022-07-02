@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface BindButton {
     int resId();
     Class<?> clazz();
+    int flag() default -1;
 }

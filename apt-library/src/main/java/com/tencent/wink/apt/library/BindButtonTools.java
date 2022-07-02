@@ -20,7 +20,7 @@ public class BindButtonTools {
 
         try {
             Class<?> bindViewClass = Class.forName(clazz.getName() + AnnotationUtils.classSuffix);
-            Method method = bindViewClass.getMethod("bind", Activity.class);
+            Method method = bindViewClass.getMethod("bind", clazz);
             method.invoke(bindViewClass.newInstance(), activity);
         } catch (ClassNotFoundException
                 | NoSuchMethodException

@@ -17,22 +17,21 @@ import javax.lang.model.util.Elements;
 
 /**
  * Created by walkerzpli on 2021/9/27.
- * <p>
- * code:
- * <p>
+ *
+ * <pre>{@code
  * package com.demo;
- * <p>
+ *
  * import android.app.Activity;
  * import android.content.Intent;
  * import android.view.View;
- * <p>
+ *
  * public class MainActivity$BindButton {
- * <p>
+ *
  *     public void bind(Activity host) {
  *         startActivity(host, 11111, "xxxx");
  *         startActivity(host, 22222, "yyyy");
  *     }
- * <p>
+ *
  *     private void startActivity(Activity host, int resId, String className) {
  *         host.findViewById(resId).setOnClickListener(new View.OnClickListener() {
  *             @Override
@@ -43,7 +42,7 @@ import javax.lang.model.util.Elements;
  *             }
  *         });
  *     }
- * }
+ * }}</pre>
  */
 public class BindButtonClassCreatorProxy extends BaseClassCreatorProxy {
 

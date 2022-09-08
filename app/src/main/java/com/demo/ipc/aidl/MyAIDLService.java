@@ -7,7 +7,6 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.demo.MyApplication;
-import com.demo.ipc.IMyAidlInterface;
 import com.demo.ipc.ProcessUtil;
 
 /**

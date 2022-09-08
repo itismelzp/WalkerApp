@@ -1,5 +1,5 @@
 // IMyAidlInterface.aidl
-package com.demo.ipc;
+package com.demo.ipc.aidl;
 
 // Declare any non-default types here with import statements
 

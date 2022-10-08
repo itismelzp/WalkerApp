@@ -8,13 +8,14 @@ buildscript {
 //        maven { url 'http://localhost:8081/repository/autotracktransform/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath 'com.android.tools.build:gradle:7.2.2'
         
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'com.walker:autotrack.android:1.0.0'
         // 解决0.8.6报错：specified for property '$3' does not exist.
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
     }
 }
 

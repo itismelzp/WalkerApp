@@ -10,6 +10,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".logger.LoggerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <service
             android:name=".ipc.aidl.MyRemoteAIDLService"
             android:enabled="true"
@@ -86,7 +94,8 @@
             android:name=".customview.activity.ListViewDemoActivity"
             android:screenOrientation="fullSensor" />
         <activity android:name=".customview.ryg.ViewEventDispatchDemoActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

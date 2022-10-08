@@ -11,6 +11,7 @@ import com.demo.customview.ryg.ViewDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
 import com.demo.ipc.IPCDemoActivity;
+import com.demo.logger.LoggerActivity;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
 import com.demo.storage.WinkKVDemoActivity;
@@ -44,6 +45,7 @@ public class MainButtonModel {
         buttons.add(new MainButton("动画demo",  MainButtonType.TYPE_SYSTEM_VIEW, AnimatorActivity.class));
         buttons.add(new MainButton("rxjava demo", RxJavaActivity.class));
         buttons.add(new MainButton("ipc demo", IPCDemoActivity.class));
+        buttons.add(new MainButton("logger demo", LoggerActivity.class));
         buttons.sort(Comparator.comparingInt(o -> o.type));
         mainButtonViewModel.getMainButtonList().postValue(buttons);
     }

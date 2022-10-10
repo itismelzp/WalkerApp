@@ -97,6 +97,18 @@ dependencies {
     implementation 'com.tencent.wcdb:wcdb-android:1.0.8'
 
     // log
+    // log --> logger
     implementation 'com.orhanobut:logger:1.15'
+    // log --> timber
+    implementation 'com.jakewharton.timber:timber:4.3.1'
+    // log --> logback
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'com.github.tony19:logback-android:2.0.0'
+    // log --> XLog
+    implementation 'com.elvishew:xlog:1.10.1'
+    // log --> mars
+//    implementation 'com.tencent.mars:mars-wrapper:1.2.5'
+//    implementation 'com.tencent.mars:mars-core:1.2.5' // for app
+//    implementation "com.tencent.mars:mars-xlog:1.2.5" // just use xlog, included in mars-wrapper and mars-core
 
 }

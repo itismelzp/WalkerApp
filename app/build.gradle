@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'com.walker.autotrack'
-//    id 'com.google.protobuf'
+    id 'com.google.protobuf'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
 }
@@ -41,27 +41,27 @@ android {
     }
 }
 
-//protobuf {
-//    protoc {
-//        // for apple m1, please add protoc_platform=osx-x86_64 in gradle.properties
-//        if (project.hasProperty('protoc_platform')) {
-//            artifact = "com.google.protobuf:protoc:3.5.1:${protoc_platform}"
-//        } else {undefined
-//            artifact = "com.google.protobuf:protoc:3.5.1"
-//        }
-//    }
-//
-//    generateProtoTasks {
-//        all().each { task ->
-//            task.builtins {
-//                remove java
-//            }
-//            task.builtins {
-//                java {}// 生产java源码
-//            }
-//        }
-//    }
-//}
+protobuf {
+    protoc {
+        // for apple m1, please add protoc_platform=osx-x86_64 in gradle.properties
+        if (project.hasProperty('protoc_platform')) {
+            artifact = "com.google.protobuf:protoc:3.5.1:${protoc_platform}"
+        } else {
+            artifact = "com.google.protobuf:protoc:3.5.1"
+        }
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.builtins {
+                java {}// 生产java源码
+            }
+        }
+    }
+}
 
 dependencies {
     implementation project(':track-sdk')

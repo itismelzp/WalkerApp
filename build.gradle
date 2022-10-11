@@ -14,7 +14,7 @@ buildscript {
         // in the individual module build.gradle files
         classpath 'com.walker:autotrack.android:1.0.0'
         // 解决0.8.6报错：specified for property '$3' does not exist.
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.16'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
     }
 }

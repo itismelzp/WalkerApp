@@ -23,7 +23,7 @@ open class BaseActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager()) {
-                toast("存储权限获取成功")
+                toast("存储权限获取成功: isExternalStorageManager")
             } else {
                 toast("存储权限获取失败")
             }
@@ -33,9 +33,7 @@ open class BaseActivity : AppCompatActivity() {
     protected fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // 先判断有没有权限
-            if (Environment.isExternalStorageManager()) {
-                toast("存储权限获取成功")
-            } else {
+            if (!Environment.isExternalStorageManager()) {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                 intent.data = Uri.parse("package:" + MyApplication.getInstance().packageName)
                 startActivityForResult(intent, REQUEST_CODE)
@@ -90,7 +88,7 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun toast(text: String?) {
+    protected fun toast(text: String?) {
         Toast.makeText(this@BaseActivity, text, Toast.LENGTH_SHORT).show()
     }
 

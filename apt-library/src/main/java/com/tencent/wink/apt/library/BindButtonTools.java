@@ -28,7 +28,7 @@ public class BindButtonTools {
                 | InstantiationException
                 | InvocationTargetException e) {
             e.printStackTrace();
-            Log.e(TAG, "[bind] error.", e);
+            Log.w(TAG, "[bind] error.", e);
         }
     }
 

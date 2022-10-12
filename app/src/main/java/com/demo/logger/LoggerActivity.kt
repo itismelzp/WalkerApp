@@ -2,6 +2,7 @@ package com.demo.logger
 
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import com.demo.BuildConfig
 import com.demo.R
 import com.elvishew.xlog.LogConfiguration
@@ -17,6 +18,9 @@ import com.elvishew.xlog.interceptor.BlacklistTagsFilterInterceptor
 import com.orhanobut.logger.Logger
 import org.slf4j.LoggerFactory
 import timber.log.Timber
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 
 class LoggerActivity : BaseActivity() {
 
@@ -45,6 +49,46 @@ class LoggerActivity : BaseActivity() {
         // mars-xlog -- 文件存储效率高
         initMarslog(false)
 
+
+        ping("10.250.13.125")
+        ping("10.250.12.155")
+    }
+
+    /**
+     * Ping命令格式为：ping -c 1 -w 5 ip
+     * 其中参数 ：
+     * -c：是指ping的次数
+     * -w：是指执行的最后期限，单位为秒
+     */
+    private fun ping(ip: String) {
+
+        val cmd = "ping -c 1 -w 4 $ip"
+        Log.i(TAG, "ping ip: $ip")
+        val process = Runtime.getRuntime().exec(cmd)
+
+        val br: BufferedReader?
+        val output = StringBuffer()
+
+        br = BufferedReader(InputStreamReader(process.inputStream))
+        while (true) {
+            val line: String = br.readLine() ?: break
+            appendLine(output, line)
+        }
+
+        val status = process.waitFor()
+        val msg = if (status == 0) {
+            appendLine(output, "exec cmd success:$cmd");
+            "ping ip: $ip, status: 0, result: success."
+        } else {
+            appendLine(output, "exec cmd fail.");
+            "ping ip: $ip, status: $status, result: failed."
+        }
+//        toast(msg)
+        toast(output.toString())
+    }
+
+    private fun appendLine(sb: StringBuffer?, line: String) {
+        sb?.append("$line\n")
     }
 
     /**

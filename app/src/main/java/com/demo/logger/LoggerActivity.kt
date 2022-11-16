@@ -197,8 +197,8 @@ class LoggerActivity : BaseActivity() {
         if (!canUse) {
             return
         }
-//        System.loadLibrary("c++_shared")
-//        System.loadLibrary("marsxlog")
+        System.loadLibrary("c++_shared")
+        System.loadLibrary("marsxlog")
         val sdcard: String = Environment.getExternalStorageDirectory().absolutePath
         val logPath: String = "$sdcard/marssample/log"
 

@@ -26,13 +26,13 @@ android {
 
     sourceSets {
         main {
-//            java {
-//                srcDir 'src/main/java'
-//            }
-//            proto {
-//                srcDir 'src/proto' // 指定.proto文件路径
-//                include '**/*.proto'
-//            }
+            java {
+                srcDir 'src/main/java'
+            }
+            proto {
+                srcDir 'src/proto' // 指定.proto文件路径
+                include '**/*.proto'
+            }
         }
     }
     compileOptions {
@@ -43,7 +43,7 @@ android {
 
 protobuf {
     protoc {
-        // for apple m1, please add protoc_platform=osx-x86_64 in gradle.properties
+        // boolean isMaxOsX = org.gradle.internal.os.OperatingSystem.current().isMacOsX()
         if (project.hasProperty('protoc_platform')) {
             artifact = "com.google.protobuf:protoc:3.5.1:${protoc_platform}"
         } else {
@@ -107,8 +107,8 @@ dependencies {
     // log --> XLog
     implementation 'com.elvishew:xlog:1.10.1'
     // log --> mars
-//    implementation 'com.tencent.mars:mars-wrapper:1.2.5'
-//    implementation 'com.tencent.mars:mars-core:1.2.5' // for app
-//    implementation "com.tencent.mars:mars-xlog:1.2.5" // just use xlog, included in mars-wrapper and mars-core
+    implementation 'com.tencent.mars:mars-wrapper:1.2.5'
+    implementation 'com.tencent.mars:mars-core:1.2.5' // for app
+    implementation "com.tencent.mars:mars-xlog:1.2.5" // just use xlog, included in mars-wrapper and mars-core
 
 }

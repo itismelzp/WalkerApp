@@ -3,6 +3,9 @@ package com.demo.logger
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
+import androidx.lifecycle.lifecycleScope
 import com.demo.BuildConfig
 import com.demo.R
 import com.elvishew.xlog.LogConfiguration
@@ -16,6 +19,8 @@ import com.elvishew.xlog.formatter.stacktrace.DefaultStackTraceFormatter
 import com.elvishew.xlog.formatter.thread.DefaultThreadFormatter
 import com.elvishew.xlog.interceptor.BlacklistTagsFilterInterceptor
 import com.orhanobut.logger.Logger
+import kotlinx.android.synthetic.main.activity_logger_layout.*
+import kotlinx.coroutines.*
 import org.slf4j.LoggerFactory
 import timber.log.Timber
 import java.io.BufferedReader
@@ -49,9 +54,20 @@ class LoggerActivity : BaseActivity() {
         // mars-xlog -- 文件存储效率高
         initMarslog(false)
 
+        btn_ping.setOnClickListener {
+            lifecycleScope.launch {
+                val result = withContext(Dispatchers.IO) {
+//                    ping("127.0.0.1")
+                    ping("10.250.13.125")
+                }
+                toastPintMsg(result)
+            }
+        }
+    }
 
-        ping("10.250.13.125")
-        ping("10.250.12.155")
+    @UiThread
+    private fun toastPintMsg(msg: String) {
+        toast(msg)
     }
 
     /**
@@ -60,7 +76,8 @@ class LoggerActivity : BaseActivity() {
      * -c：是指ping的次数
      * -w：是指执行的最后期限，单位为秒
      */
-    private fun ping(ip: String) {
+    @WorkerThread
+    private fun ping(ip: String): String {
 
         val cmd = "ping -c 1 -w 4 $ip"
         Log.i(TAG, "ping ip: $ip")
@@ -84,7 +101,7 @@ class LoggerActivity : BaseActivity() {
             "ping ip: $ip, status: $status, result: failed."
         }
 //        toast(msg)
-        toast(output.toString())
+        return output.toString()
     }
 
     private fun appendLine(sb: StringBuffer?, line: String) {

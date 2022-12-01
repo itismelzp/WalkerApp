@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Environment
 import android.provider.Settings
 import android.widget.Toast
+import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.demo.MyApplication
@@ -88,6 +89,7 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    @UiThread
     protected fun toast(text: String?) {
         Toast.makeText(this@BaseActivity, text, Toast.LENGTH_SHORT).show()
     }

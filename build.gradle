@@ -1,24 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url uri('repo') }
-//        maven { url 'http://localhost:8081/repository/autotracktransform/' }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
-        
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-        classpath 'com.walker:autotrack.android:1.0.0'
-        // 解决0.8.6报错：specified for property '$3' does not exist.
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.16'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
-    }
-}
-
 ext {
 
     appCompatVersion = '1.3.0'
@@ -33,10 +14,36 @@ ext {
     androidxJunitVersion = '1.1.2'
 
     protocPlatformForM1 = 'osx-x86_64'
+
+    shadow_version = 'local-8d9c7a7f-SNAPSHOT'
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+        google()
+        mavenCentral()
+        maven { url uri('repo') }
+//        maven { url 'http://localhost:8081/repository/autotracktransform/' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.2'
+        
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+        classpath 'com.walker:autotrack.android:1.0.0'
+        // 解决0.8.6报错：specified for property '$3' does not exist.
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.16'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
+        classpath "com.tencent.shadow.core:gradle-plugin:local-8d9c7a7f-SNAPSHOT"
+    }
 }
 
 allprojects {
     repositories {
+        mavenLocal()
+        jcenter()
         google()
         mavenCentral()
     }

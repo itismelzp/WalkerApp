@@ -8,6 +8,8 @@ public class MainButton {
 
     public Class<?> jumpClass;
 
+    public OnclickListener onclickListener;
+
     public MainButton(String name, Class<?> jumpClass) {
         this.name = name;
         this.jumpClass = jumpClass;
@@ -17,6 +19,13 @@ public class MainButton {
         this.name = name;
         this.type = type;
         this.jumpClass = jumpClass;
+    }
+
+    public MainButton(String name, int type, Class<?> jumpClass, OnclickListener onclickListener) {
+        this.name = name;
+        this.type = type;
+        this.jumpClass = jumpClass;
+        this.onclickListener = onclickListener;
     }
 
     public int getColor() {
@@ -34,5 +43,9 @@ public class MainButton {
                 return -1;
         }
 
+    }
+
+    interface OnclickListener {
+        void onclickListener();
     }
 }

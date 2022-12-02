@@ -30,7 +30,12 @@ public class MainButtonViewHolder extends RecyclerView.ViewHolder {
         if (mainButton.getColor() != -1) {
             button.setBackgroundColor(mainButton.getColor());
         }
-        button.setOnClickListener(v -> startActivity(button.getContext(), mainButton.jumpClass));
+
+        if (mainButton.onclickListener != null) {
+            button.setOnClickListener(v -> mainButton.onclickListener.onclickListener());
+        } else {
+            button.setOnClickListener(v -> startActivity(button.getContext(), mainButton.jumpClass));
+        }
     }
 
     private void startActivity(Context context, Class<?> clazz) {

@@ -3,7 +3,6 @@ plugins {
     id 'com.walker.autotrack'
     id 'com.google.protobuf'
     id 'org.jetbrains.kotlin.android'
-//    id 'com.tencent.shadow.plugin'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
 }
@@ -121,10 +120,10 @@ dependencies {
     compileOnly "com.tencent.mars:mars-xlog:1.2.5" // just use xlog, included in mars-wrapper and mars-core
 
     // shadow
-//    implementation "com.tencent.shadow.dynamic:host:$rootProject.shadow_version"
-//    // Shadow Transform后业务代码会有一部分实际引用runtime中的类
-//    // 如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
-//    compileOnly "com.tencent.shadow.core:runtime:$shadow_version"
+    implementation "com.tencent.shadow.dynamic:host:$rootProject.shadow_version"
+    // Shadow Transform后业务代码会有一部分实际引用runtime中的类
+    // 如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
+    compileOnly "com.tencent.shadow.core:runtime:$shadow_version"
 
     // test
     testImplementation 'junit:junit:4.12'

@@ -6,9 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-
     <!-- 网络权限 -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MyApplication"
@@ -123,6 +122,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- for shadow -->
+        <activity
+            android:name="com.tencent.shadow.sample.runtime.PluginDefaultProxyActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:launchMode="standard"
+            android:process=":plugin"
+            android:screenOrientation="portrait"
+            android:theme="@style/PluginContainerActivity" />
+        <activity
+            android:name="com.tencent.shadow.sample.runtime.PluginSingleInstance1ProxyActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:process=":plugin"
+            android:screenOrientation="portrait"
+            android:theme="@style/PluginContainerActivity" />
+        <activity
+            android:name="com.tencent.shadow.sample.runtime.PluginSingleTask1ProxyActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:process=":plugin"
+            android:screenOrientation="portrait"
+            android:theme="@style/PluginContainerActivity" />
+        <provider
+            android:name="com.tencent.shadow.core.runtime.container.PluginContainerContentProvider"
+            android:authorities="com.tencent.shadow.contentprovider.authority.dynamic" />
+        <service
+            android:name="com.tencent.shadow.sample.introduce_shadow_lib.MainPluginProcessService"
+            android:process=":plugin" />
+
     </application>
 
 </manifest>

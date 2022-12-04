@@ -6,6 +6,11 @@ include ':storage-sdk'
 include ':apt-annotation'
 include ':apt-processor'
 include ':apt-library'
+include ':plugin-manager'
+
+include ':plugin:plugin-app'
+include ':plugin:my-runtime'
+include ':plugin:my-loader'
 
 //project(':app').name = 'Walker App'
 //project(':track-sdk').name = 'walker-track-sdk'

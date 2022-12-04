@@ -112,10 +112,8 @@ public class MyApplication extends Application {
             }
         }
 
-//        FixedPathPmUpdater fixedPathPmUpdater
-//                = new FixedPathPmUpdater(new File(Environment.getExternalStorageDirectory().getPath() + "/sample-manager-debug.apk"));
         FixedPathPmUpdater fixedPathPmUpdater
-                = new FixedPathPmUpdater(new File("/data/local/tmp/sample-manager-debug.apk"));
+                = new FixedPathPmUpdater(new File("/data/local/tmp/plugin-manager-debug.apk"));
         boolean needWaitingUpdate
                 = fixedPathPmUpdater.wasUpdating()//之前正在更新中，暗示更新出错了，应该放弃之前的缓存
                 || fixedPathPmUpdater.getLatest() == null;//没有本地缓存

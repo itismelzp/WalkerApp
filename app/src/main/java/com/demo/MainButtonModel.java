@@ -69,7 +69,7 @@ public class MainButtonModel {
             // partKey 每个插件都有自己的 partKey 用来区分多个插件，如何配置在下面讲到
             bundle.putString("part_key", "my-plugin");
             // 路径举例：com.google.samples.apps.sunflower.GardenActivity
-            bundle.putString("activity_class_name", "com.demo.MainActivity");
+            bundle.putString("activity_class_name", "com.example.demo_plugin.MainActivity");
             // 要传入到插件里的参数
             bundle.putBundle("extra_to_plugin_bundle", new Bundle());
 

@@ -1,15 +1,16 @@
 plugins {
     id 'com.android.application'
+    id 'com.tencent.shadow.plugin'
 }
 
 android {
-    namespace 'com.demo'
-    compileSdk 32
+    namespace 'com.plugin.demo'
+    compileSdkVersion Integer.parseInt(project.ANDROID_COMPILE_SDK_VERSION)
 
     defaultConfig {
-        applicationId "com.demo"
-        minSdk 21
-        targetSdk 32
+        applicationId "com.plugin.demo"
+        minSdkVersion Integer.parseInt(project.ANDROID_MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK_VERSION)
         versionCode 1
         versionName "1.0"
 
@@ -22,6 +23,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    // 将插件applicationId设置为和宿主相同
+    productFlavors {
+        plugin {
+            applicationId "com.demo"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -47,7 +56,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 }
 
-apply plugin: 'com.tencent.shadow.plugin'
+
 
 shadow {
     packagePlugin {

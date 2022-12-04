@@ -7,7 +7,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ShadowDemoHost">
+        android:theme="@style/Theme.PluginApp">
         <activity
             android:name="com.example.demo_plugin.MainActivity"
             android:exported="true">

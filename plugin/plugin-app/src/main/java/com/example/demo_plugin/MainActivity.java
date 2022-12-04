@@ -4,7 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.demo.R;
+import com.plugin.demo.R;
+
 
 public class MainActivity extends AppCompatActivity {
 

@@ -150,7 +150,7 @@
             android:theme="@style/PluginContainerActivity" />
         <provider
             android:name="com.tencent.shadow.core.runtime.container.PluginContainerContentProvider"
-            android:authorities="com.tencent.shadow.contentprovider.authority.dynamic" />
+            android:authorities="${applicationId}.contentprovider.authority.dynamic" />
         <service
             android:name="com.tencent.shadow.sample.introduce_shadow_lib.MainPluginProcessService"
             android:process=":plugin" />

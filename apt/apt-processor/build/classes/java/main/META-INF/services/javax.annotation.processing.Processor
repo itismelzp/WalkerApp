@@ -1,0 +1,4 @@
+com.tencent.wink.apt.processor.BindButtonProcessor
+com.tencent.wink.apt.processor.BindViewProcessor
+com.tencent.wink.apt.processor.ColumnUpdateProcessor
+com.tencent.wink.apt.processor.PackClassProcessor

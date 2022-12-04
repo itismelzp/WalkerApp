@@ -91,9 +91,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycleVersion"
 
     // apt
-    compileOnly project(':apt-annotation')
-    implementation project(':apt-library')
-    annotationProcessor project(':apt-processor')
+    compileOnly project(':apt:apt-annotation')
+    implementation project(':apt:apt-library')
+    annotationProcessor project(':apt:apt-processor')
 
     compileOnly 'com.tencent:mmkv:1.2.11'
     compileOnly "androidx.room:room-runtime:$rootProject.roomVersion"

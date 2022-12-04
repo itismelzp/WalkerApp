@@ -1,0 +1,91 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.demo'
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.demo"
+        minSdk 21
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    aaptOptions {
+        additionalParameters "--package-id", "0x7E", "--allow-reserved-package-id"
+    }
+
+}
+
+dependencies {
+
+    //Shadow Transform后业务代码会有一部分实际引用runtime中的类
+    //如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
+    compileOnly "com.tencent.shadow.core:runtime:$shadow_version"
+
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+}
+
+apply plugin: 'com.tencent.shadow.plugin'
+
+shadow {
+    packagePlugin {
+        pluginTypes {
+            debug {
+                loaderApkConfig = new Tuple2('my-loader-debug.apk', ':my-loader:assembleDebug')
+                runtimeApkConfig = new Tuple2('my-runtime-debug.apk', ':my-runtime:assembleDebug')
+                pluginApks {
+                    pluginApk1 {
+                        businessName = 'my-plugin'//businessName相同的插件，context获取的Dir是相同的。businessName留空，表示和宿主相同业务，直接使用宿主的Dir。
+                        partKey = 'my-plugin'
+                        buildTask = 'assembleDebug'
+                        apkPath = 'plugin-app/build/outputs/apk/plugin/debug/plugin-app-plugin-debug.apk'
+                        // hostWhiteList = ["com.tencent.shadow.sample.host.lib"] // 配置允许插件访问宿主的类
+                    }
+                }
+            }
+
+            release {
+                loaderApkConfig = new Tuple2('my-loader-release-unsigned.apk', ':my-loader:assembleRelease')
+                runtimeApkConfig = new Tuple2('my-runtime-release-unsigned.apk', ':my-runtime:assembleRelease')
+                pluginApks {
+                    pluginApk1 {
+                        businessName = 'my-plugin'
+                        partKey = 'my-plugin'
+                        buildTask = 'assembleRelease'
+                        apkPath = 'plugin-app/build/outputs/apk/plugin/release/plugin-app-plugin-release-unsigned.apk'
+                        // hostWhiteList = ["com.tencent.shadow.sample.host.lib"] // 配置允许插件访问宿主的类
+                    }
+                }
+            }
+        }
+
+        loaderApkProjectPath = 'my-loader'
+        runtimeApkProjectPath = 'my-runtime'
+
+        version = 4
+        compactVersion = [1, 2, 3]
+        uuidNickName = "1.1.5"
+    }
+}

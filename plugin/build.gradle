@@ -1,0 +1,29 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext {
+        shadow_version = 'local-8d9c7a7f-SNAPSHOT'
+    }
+
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath "com.tencent.shadow.core:gradle-plugin:$shadow_version"
+    }
+}
+
+allprojects {
+    repositories {
+//        mavenLocal()
+//        google()
+//        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

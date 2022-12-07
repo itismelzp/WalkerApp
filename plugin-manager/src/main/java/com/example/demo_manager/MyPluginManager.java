@@ -85,7 +85,7 @@ public class MyPluginManager extends PluginManagerThatUseDynamicLoader {
         if (className == null) {
             throw new NullPointerException("className == null");
         }
-        if (fromId == 1011) { // 打开 Activity 示例
+        if (fromId == 1011L) { // 打开 Activity 示例
             final Bundle extras = bundle.getBundle("extra_to_plugin_bundle");
             if (callback != null) {
                 // 开始加载插件了，实现加载布局

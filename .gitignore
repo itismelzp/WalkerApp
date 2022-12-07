@@ -13,5 +13,6 @@
 .DS_Store
 /build
 /captures
+/.ignore_res
 .externalNativeBuild
 .cxx

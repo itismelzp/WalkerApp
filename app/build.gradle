@@ -5,6 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'kotlin-kapt' // 引入kapt后apt就不生效了？？
 }
 
 android {
@@ -94,6 +95,12 @@ dependencies {
     compileOnly project(':apt:apt-annotation')
     implementation project(':apt:apt-library')
     annotationProcessor project(':apt:apt-processor')
+
+    // kapt
+    implementation project(path: ':apt:kapt-library')
+    kapt project(path: ':apt:kapt-annotation')
+    implementation project(path: ':apt:kapt-annotation')
+    kapt project(path: ':apt:kapt-compiler') // 一定要kapt
 
     compileOnly 'com.tencent:mmkv:1.2.11'
     compileOnly "androidx.room:room-runtime:$rootProject.roomVersion"

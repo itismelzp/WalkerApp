@@ -1,13 +1,18 @@
 rootProject.name='WalkerApp'
+include ':app'
 include ':track-sdk'
 include ':track-plugin'
-include ':app'
 include ':storage-sdk'
+
 include ':apt:apt-annotation'
 include ':apt:apt-processor'
 include ':apt:apt-library'
-include ':plugin-manager'
 
+include ':apt:kapt-annotation'
+include ':apt:kapt-compiler'
+include ':apt:kapt-library'
+
+include ':plugin-manager'
 include ':plugin:plugin-app'
 include ':plugin:my-runtime'
 include ':plugin:my-loader'

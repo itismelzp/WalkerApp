@@ -1,4 +1,4 @@
-package com.ccand99.apt
+package com.walker.apt
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.ccand99.apt.test", appContext.packageName)
+        assertEquals("com.walker.apt.test", appContext.packageName)
     }
 }

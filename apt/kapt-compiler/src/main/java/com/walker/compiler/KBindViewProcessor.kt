@@ -102,14 +102,14 @@ class KBindViewProcessor : AbstractProcessor() {
             val viewBindElements = it.value
             println("clazz------------> ${clazz.simpleName}")
             // 继承接口名称获取
-            val interfaceClassName = ClassName("com.ccand99.apt", "Unbinder")
+            val interfaceClassName = ClassName("com.walker.apt", "Unbinder")
             //动态获取包名
             val packageName = mElementUtils?.getPackageOf(clazz)?.qualifiedName?.toString()
                 ?: throw RuntimeException("无法获取包名")
             val activityStr = clazz.simpleName.toString()
             val activityKtClass = ClassName(packageName, activityStr)
             val callSuperClassName = ClassName("androidx.annotation", "CallSuper")
-            val findByIdUtilsClass = ClassName("com.ccand99.apt", "Utils")
+            val findByIdUtilsClass = ClassName("com.walker.apt", "Utils")
             // 类 属性
             val property = PropertySpec.builder("target", activityKtClass.copy(nullable = true))
                 .initializer("target")

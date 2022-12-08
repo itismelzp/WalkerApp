@@ -14,7 +14,7 @@ import com.demo.customview.utils.ViewUtils;
 import com.tencent.shadow.sample.introduce_shadow_lib.AndroidLoggerFactory;
 
 import com.tencent.shadow.sample.introduce_shadow_lib.FixedPathPmUpdater;
-import com.demo.storage.EncoderUtil;
+//import com.demo.storage.EncoderUtil;
 import com.tencent.mmkv.MMKV;
 import com.tencent.shadow.core.common.LoggerFactory;
 import com.tencent.shadow.dynamic.host.DynamicPluginManager;
@@ -49,7 +49,7 @@ public class MyApplication extends Application {
         ViewUtils.initContext(mContext);
         SensorsDataAPI.init(this);
         MMKV.initialize(this);
-        EncoderUtil.init();
+//        EncoderUtil.init();
         WinkKVUtil.init(this, true);
         WinkDbLog.init(new WalkerLog());
 

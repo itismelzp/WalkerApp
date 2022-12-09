@@ -82,7 +82,6 @@ public class PackClassProcessor extends BaseProcessor {
     }
 
     private int getInterfaceType(TypeElement classElement) {
-        int interfacesType = 0;
         List<? extends TypeMirror> interfaces = classElement.getInterfaces();
         for (TypeMirror typeMirror : interfaces) {
             printMessage(Diagnostic.Kind.NOTE, "[getInterfacesType] typeMirror: " + typeMirror.toString());
@@ -92,7 +91,7 @@ public class PackClassProcessor extends BaseProcessor {
                 return InterfaceType.PACKABLE_TYPE;
             }
         }
-        return interfacesType;
+        return InterfaceType.NONE_TYPE;
     }
 
     /**

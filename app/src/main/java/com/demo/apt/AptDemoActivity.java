@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.walker.apt.Apt;
-import com.walker.apt.Unbinder;
-import com.walker.annotations.KBindView;
 import com.demo.R;
 import com.tencent.wink.apt.annotation.BindView;
 import com.tencent.wink.apt.library.BindViewTools;
@@ -23,10 +20,7 @@ public class AptDemoActivity extends AppCompatActivity {
     @BindView(R.id.btn_apt_test_2)
     Button mButton2;
 
-    @KBindView(R.id.btn_kapt_test)
     Button mBtnKaptTest;
-
-    private Unbinder mUnbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +28,6 @@ public class AptDemoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_apt_demo);
 
         BindViewTools.bind(this);
-        mUnbinder = Apt.bind(this);
 
         if (mButton != null) {
             mButton.setOnClickListener(view ->
@@ -57,8 +50,5 @@ public class AptDemoActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
-        }
     }
 }

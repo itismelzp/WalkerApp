@@ -5,6 +5,6 @@ package com.walker.annotations
  */
 @Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.BINARY)
-annotation class KBindView(
+annotation class BindView(
     val value: Int
 )

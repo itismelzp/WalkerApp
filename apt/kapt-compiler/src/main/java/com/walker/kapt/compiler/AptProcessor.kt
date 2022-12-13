@@ -1,8 +1,8 @@
-package com.walker.compiler
+package com.walker.kapt.compiler
 
-import com.walker.annotations.KBindView
 import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.*
+import com.walker.annotations.BindView
 import java.io.IOException
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -11,7 +11,7 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 
 @AutoService(Processor::class)
-class KBindViewProcessor : AbstractProcessor() {
+class AptProcessor : AbstractProcessor() {
 
     private var mFiler: Filer? = null
 
@@ -41,36 +41,9 @@ class KBindViewProcessor : AbstractProcessor() {
     private fun getSupportedAnnotations(): Set<Class<out Annotation>> {
         val annotations: LinkedHashSet<Class<out Annotation>> = LinkedHashSet()
         // 需要解析的自定义注解
-        annotations.add(KBindView::class.java)
+        annotations.add(BindView::class.java)
         return annotations
     }
-
-    /**
-    KotlinPoet 官方helloWorld示例：
-
-    val greeterClass = ClassName("", "Greeter")
-    val file = FileSpec.builder("", "HelloWorld")
-    .addType(TypeSpec.classBuilder("Greeter")
-    .primaryConstructor(FunSpec.constructorBuilder()
-    .addParameter("name", String::class).build())
-    .addProperty(PropertySpec.builder("name", String::class)
-    .initializer("name").build())
-    .addFunction(FunSpec.builder("greet")
-    .addStatement("println(%P)", "Hello, \$name").build())
-    .build())
-    .addFunction(FunSpec.builder("main")
-    .addParameter("args", String::class, VARARG)
-    .addStatement("%T(args[0]).greet()", greeterClass).build())
-    .build()
-
-    file.writeTo(System.out)
-
-    ——————————————————————————————————
-    class Greeter(val name: String) {
-    fun greet() {println("""Hello, $name""")}}
-
-    fun main(vararg args: String) {Greeter(args[0]).greet()}
-     */
 
     override fun process(
         p0: MutableSet<out TypeElement>?,
@@ -80,7 +53,7 @@ class KBindViewProcessor : AbstractProcessor() {
         val elementMap = LinkedHashMap<Element, ArrayList<Element>>()
 
         // 有注解就会进来
-        roundEnvironment?.getElementsAnnotatedWith(KBindView::class.java)?.forEach { element ->
+        roundEnvironment?.getElementsAnnotatedWith(BindView::class.java)?.forEach { element ->
             //注解 属性 名称
             println("element.simpleName ------------> ${element.simpleName}")
             //注解 所在类 名称
@@ -102,14 +75,14 @@ class KBindViewProcessor : AbstractProcessor() {
             val viewBindElements = it.value
             println("clazz------------> ${clazz.simpleName}")
             // 继承接口名称获取
-            val interfaceClassName = ClassName("com.walker.apt", "Unbinder")
+            val interfaceClassName = ClassName(Constant.PACKAGE_NAME, "Unbinder")
             //动态获取包名
             val packageName = mElementUtils?.getPackageOf(clazz)?.qualifiedName?.toString()
                 ?: throw RuntimeException("无法获取包名")
             val activityStr = clazz.simpleName.toString()
             val activityKtClass = ClassName(packageName, activityStr)
             val callSuperClassName = ClassName("androidx.annotation", "CallSuper")
-            val findByIdUtilsClass = ClassName("com.walker.apt", "Utils")
+            val findByIdUtilsClass = ClassName(Constant.PACKAGE_NAME, "Utils")
             // 类 属性
             val property = PropertySpec.builder("target", activityKtClass.copy(nullable = true))
                 .initializer("target")
@@ -119,7 +92,7 @@ class KBindViewProcessor : AbstractProcessor() {
             val constructorMethodBuilder = FunSpec.constructorBuilder()
                 .addParameter("target", activityKtClass.copy(nullable = true))//java 不需要传类型 可空
             viewBindElements.forEach { element ->
-                val resId = element.getAnnotation(KBindView::class.java).value
+                val resId = element.getAnnotation(BindView::class.java).value
                 //constructorMethodBuilder.addComment("target.${element.simpleName} = \$T.findViewById(source,$resId)",findByIdUtilsClass)
                 constructorMethodBuilder.addStatement(
                     "target?.${element.simpleName} = %T.findViewById(target,$resId)",
@@ -165,6 +138,7 @@ class KBindViewProcessor : AbstractProcessor() {
             } catch (e: IOException) {
                 println(e.message)
             }
+
         }
 
         return false

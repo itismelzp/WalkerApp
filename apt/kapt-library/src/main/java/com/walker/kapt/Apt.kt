@@ -1,11 +1,10 @@
-package com.walker.apt
+package com.walker.kapt
 
 import android.app.Activity
 import java.lang.reflect.Constructor
 
 object Apt {
 
-    @JvmStatic
     fun bind(activity: Activity): Unbinder {
         //反射创建实例
         try {

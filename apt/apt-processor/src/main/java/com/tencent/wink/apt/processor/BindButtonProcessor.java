@@ -48,6 +48,7 @@ public class BindButtonProcessor extends BaseProcessor {
         }
         printMessage(Diagnostic.Kind.NOTE, "[process] start.");
 
+        // ClassName -> BindButtonClassCreatorProxy
         Map<String, BindButtonClassCreatorProxy> proxyMap = new HashMap<>();
         assembleAnnotationInfo(roundEnv, proxyMap);
 

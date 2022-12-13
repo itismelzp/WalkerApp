@@ -1,4 +1,4 @@
-package com.walker.apt
+package com.walker.kapt
 
 import androidx.annotation.UiThread
 

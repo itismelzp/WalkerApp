@@ -13,7 +13,7 @@ import com.demo.customview.utils.ViewUtils;
 
 public class MainListAdapter extends ListAdapter<MainButton, MainButtonViewHolder> {
 
-    protected MainListAdapter(@NonNull DiffUtil.ItemCallback<MainButton> diffCallback) {
+    public MainListAdapter(@NonNull DiffUtil.ItemCallback<MainButton> diffCallback) {
         super(diffCallback);
     }
 
@@ -44,7 +44,7 @@ public class MainListAdapter extends ListAdapter<MainButton, MainButtonViewHolde
 
     public static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
 
-        private int space;
+        private final int space;
 
         public SpaceItemDecoration() {
             space = ViewUtils.dpToPx(2);
@@ -55,8 +55,9 @@ public class MainListAdapter extends ListAdapter<MainButton, MainButtonViewHolde
         }
 
         @Override
-        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-            outRect.set(space, space, space,space);
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+                                   @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+            outRect.set(space, space, space, space);
         }
     }
 

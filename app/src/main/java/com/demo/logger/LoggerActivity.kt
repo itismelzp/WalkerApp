@@ -56,9 +56,11 @@ class LoggerActivity : BaseActivity() {
 
         btn_ping.setOnClickListener {
             lifecycleScope.launch {
+                val ip = "10.250.13.125"
+                toast("ping: $ip")
                 val result = withContext(Dispatchers.IO) {
 //                    ping("127.0.0.1")
-                    ping("10.250.13.125")
+                    ping(ip)
                 }
                 toastPintMsg(result)
             }

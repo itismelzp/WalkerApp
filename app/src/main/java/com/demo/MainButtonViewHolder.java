@@ -32,7 +32,7 @@ public class MainButtonViewHolder extends RecyclerView.ViewHolder {
         }
 
         if (mainButton.onclickListener != null) {
-            button.setOnClickListener(v -> mainButton.onclickListener.onclickListener());
+            button.setOnClickListener(v -> mainButton.onclickListener.onClickListener());
         } else {
             button.setOnClickListener(v -> startActivity(button.getContext(), mainButton.jumpClass));
         }

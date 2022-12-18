@@ -46,6 +46,6 @@ public class MainButton {
     }
 
     interface OnclickListener {
-        void onclickListener();
+        void onClickListener();
     }
 }

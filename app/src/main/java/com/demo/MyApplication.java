@@ -1,16 +1,15 @@
 package com.demo;
 
-import static android.os.Process.myPid;
-
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 import android.webkit.WebView;
 
 import com.demo.customview.utils.ViewUtils;
+import com.demo.ipc.ProcessUtil;
+import com.demo.logger.LogUtil;
+import com.demo.logger.MyLog;
 import com.tencent.shadow.sample.introduce_shadow_lib.AndroidLoggerFactory;
 
 import com.tencent.shadow.sample.introduce_shadow_lib.FixedPathPmUpdater;
@@ -51,8 +50,9 @@ public class MyApplication extends Application {
         MMKV.initialize(this);
 //        EncoderUtil.init();
         WinkKVUtil.init(this, true);
-        WinkDbLog.init(new WalkerLog());
+        WinkDbLog.init(new LogUtil.DefaultLog());
 
+        MyLog.init(new LogUtil.TimberLog());
         onApplicationCreate(this);
     }
 
@@ -60,48 +60,11 @@ public class MyApplication extends Application {
         return mContext;
     }
 
-    private static class WalkerLog implements WinkDbLog.ILog {
-        @Override
-        public void v(String tag, String msg) {
-            Log.v(tag, msg);
-        }
-
-        @Override
-        public void d(String tag, String msg) {
-            Log.d(tag, msg);
-        }
-
-        @Override
-        public void i(String tag, String msg) {
-            Log.i(tag, msg);
-        }
-
-        @Override
-        public void w(String tag, String msg) {
-            Log.w(tag, msg);
-        }
-
-        @Override
-        public void w(String tag, String msg, Throwable t) {
-            Log.w(tag, msg, t);
-        }
-
-        @Override
-        public void e(String tag, String msg) {
-            Log.e(tag, msg);
-        }
-
-        @Override
-        public void e(String tag, String msg, Throwable t) {
-            Log.e(tag, msg, t);
-        }
-    }
-
     public static void onApplicationCreate(Application application) {
         //Log接口Manager也需要使用，所以主进程也初始化。
         LoggerFactory.setILoggerFactory(new AndroidLoggerFactory());
 
-        if (isProcess(application, ":plugin")) {
+        if (ProcessUtil.isProcessByName(application, ":plugin")) {
             //在全动态架构中，Activity组件没有打包在宿主而是位于被动态加载的runtime，
             //为了防止插件crash后，系统自动恢复crash前的Activity组件，此时由于没有加载runtime而发生classNotFound异常，导致二次crash
             //因此这里恢复加载上一次的runtime
@@ -126,20 +89,6 @@ public class MyApplication extends Application {
             }
         }
         sPluginManager = new DynamicPluginManager(fixedPathPmUpdater);
-    }
-
-    private static boolean isProcess(Context context, String processName) {
-        String currentProcName = "";
-        ActivityManager manager =
-                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo processInfo : manager.getRunningAppProcesses()) {
-            if (processInfo.pid == myPid()) {
-                currentProcName = processInfo.processName;
-                break;
-            }
-        }
-
-        return currentProcName.endsWith(processName);
     }
 
 }

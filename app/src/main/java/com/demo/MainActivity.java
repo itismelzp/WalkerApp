@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .add(R.id.fragment_container,
                         MainFragment.newInstance("hello world", "hello main fragment"), "mainFragment")
-                .addToBackStack("mainFragment")
+//                .addToBackStack("mainFragment")
                 .commit();
     }
 

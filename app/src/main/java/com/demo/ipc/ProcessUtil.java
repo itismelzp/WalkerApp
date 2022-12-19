@@ -1,5 +1,7 @@
 package com.demo.ipc;
 
+import static android.os.Process.myPid;
+
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
@@ -103,5 +105,19 @@ public class ProcessUtil {
 
     public static void killMyProcess() {
         android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    public static boolean isProcessByName(Context context, String processName) {
+        String curProcessName = "";
+        ActivityManager manager =
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo processInfo : manager.getRunningAppProcesses()) {
+            if (processInfo.pid == myPid()) {
+                curProcessName = processInfo.processName;
+                break;
+            }
+        }
+
+        return curProcessName.endsWith(processName);
     }
 }

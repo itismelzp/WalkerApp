@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.demo.*
 import com.demo.MainListAdapter.MainDiff
 import com.demo.MainListAdapter.SpaceItemDecoration
+import com.demo.logger.MyLog
 import com.tencent.wink.apt.library.BindButtonTools
 
 // TODO: Rename parameter arguments, choose names that match
@@ -32,10 +33,9 @@ private const val ARG_PARAM2 = "param2"
  */
 class MainFragment : Fragment() {
 
+    private var contentView: View? = null
 
-    private lateinit var contentView: View
-
-    private lateinit var recyclerView: RecyclerView
+    private var recyclerView: RecyclerView? = null
     private var mainListAdapter: MainListAdapter? = null
     private lateinit var mainButtonViewModel: MainButtonViewModel
 
@@ -48,6 +48,7 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MyLog.d(TAG, "onCreate")
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -58,16 +59,19 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        MyLog.d(TAG, "onCreateView: $contentView")
         // Inflate the layout for this fragment
-        contentView = inflater.inflate(R.layout.fragment_main, container, false)
         return contentView
+            ?: inflater.inflate(R.layout.fragment_main, container, false).apply {
+                this@MainFragment.contentView = this
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 //        setContentView(R.layout.activity_main)
-
+        MyLog.d(TAG, "onViewCreated")
         BindButtonTools.bind(activity)
 //        MainActivity$ViewBinding binding = new MainActivity$ViewBinding();
 //        binding.bind(this);
@@ -77,15 +81,15 @@ class MainFragment : Fragment() {
 
         Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().name)
 
-        recyclerView = contentView.findViewById(R.id.main_rv)
+        recyclerView = contentView?.findViewById(R.id.main_rv)
         mainListAdapter = MainListAdapter(MainDiff())
-        recyclerView.adapter = mainListAdapter
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        recyclerView?.adapter = mainListAdapter
+        recyclerView?.layoutManager = GridLayoutManager(context, 2)
 
 //        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
 //        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.addItemDecoration(SpaceItemDecoration())
+        recyclerView?.addItemDecoration(SpaceItemDecoration())
 
         preLoadSubProcess(context)
 
@@ -175,6 +179,7 @@ class MainFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        MyLog.d(TAG, "onDestroyView")
         val preLoader = Intent()
         preLoader.action = "com.demo.ipc.SubPreLoadService"
         preLoader.setPackage("com.demo")

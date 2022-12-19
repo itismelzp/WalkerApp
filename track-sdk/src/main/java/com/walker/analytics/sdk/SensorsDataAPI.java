@@ -16,7 +16,7 @@ public class SensorsDataAPI {
 
     private final String TAG = this.getClass().getSimpleName();
     public static final String SDK_VERSION = "1.0.0";
-    private static SensorsDataAPI INSTANCE;
+    private static volatile SensorsDataAPI INSTANCE;
     private static final Object mLock = new Object();
     private static Map<String, Object> mDeviceInfo;
     private String mDeviceId;

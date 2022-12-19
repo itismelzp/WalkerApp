@@ -29,8 +29,8 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
+    implementation "com.google.android.material:material:$rootProject.materialVersion"
 
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
@@ -48,9 +48,9 @@ dependencies {
 
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
 
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation "junit:junit:$rootProject.junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
 
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 

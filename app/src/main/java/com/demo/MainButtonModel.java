@@ -60,8 +60,8 @@ public class MainButtonModel {
         buttons.add(new MainButton("rxjava demo", RxJavaActivity.class));
         buttons.add(new MainButton("ipc demo", IPCDemoActivity.class));
         buttons.add(new MainButton("logger demo", LoggerActivity.class));
-        buttons.add(new MainButton("plugin demo", MainButtonType.TYPE_OTHER, null, pluginClickListener));
-        buttons.add(new MainButton("fragment demo", MainButtonType.TYPE_OTHER, null, fragmentClickListener));
+        buttons.add(new MainButton("plugin demo", pluginClickListener));
+        buttons.add(new MainButton("fragment demo", fragmentClickListener));
 
         buttons.sort(Comparator.comparingInt(o -> o.type));
         mainButtonViewModel.getMainButtonList().postValue(buttons);
@@ -111,7 +111,9 @@ public class MainButtonModel {
         }
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, BlankFragment.newInstance("hello world", "hello fragment"), "blockFragment")
+                .replace(R.id.fragment_container,
+                        BlankFragment.newInstance("hello world", "hello fragment"),
+                        "blockFragment")
                 .addToBackStack("blockFragment")
                 .commit();
     };

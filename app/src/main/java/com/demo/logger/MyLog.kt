@@ -23,40 +23,34 @@ class MyLog {
             sLogInf = logInf
         }
 
+        @JvmStatic
         fun v(tag: String?, msg: String?) {
-            if (sLogInf != null) {
-                sLogInf!!.v(tag, msg)
-            }
+            sLogInf?.apply { v(tag, msg) }
         }
 
+        @JvmStatic
         fun d(tag: String?, msg: String?) {
-            if (sLogInf != null) {
-                sLogInf!!.d(tag, msg)
-            }
+            sLogInf?.apply { d(tag, msg) }
         }
 
+        @JvmStatic
         fun i(tag: String?, msg: String?) {
-            if (sLogInf != null) {
-                sLogInf!!.i(tag, msg)
-            }
+            sLogInf?.apply { i(tag, msg) }
         }
 
+        @JvmStatic
         fun w(tag: String?, msg: String?) {
-            if (sLogInf != null) {
-                sLogInf!!.w(tag, msg)
-            }
+            sLogInf?.apply { w(tag, msg) }
         }
 
+        @JvmStatic
         fun e(tag: String?, msg: String?) {
-            if (sLogInf != null) {
-                sLogInf!!.e(tag, msg)
-            }
+            sLogInf?.apply { e(tag, msg) }
         }
 
+        @JvmStatic
         fun e(tag: String?, msg: String?, t: Throwable?) {
-            if (sLogInf != null) {
-                sLogInf!!.e(tag, msg, t)
-            }
+            sLogInf?.apply { e(tag, msg, t) }
         }
     }
 

@@ -1,8 +1,6 @@
 package com.demo.fragment
 
-import android.app.ActivityManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -13,13 +11,20 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.demo.*
+import com.demo.MainButtonModel
+import com.demo.MainButtonViewModel
+import com.demo.MainListAdapter
 import com.demo.MainListAdapter.MainDiff
 import com.demo.MainListAdapter.SpaceItemDecoration
+import com.demo.R
+import com.demo.ipc.ProcessUtil
 import com.demo.logger.MyLog
 import com.tencent.wink.apt.library.BindButtonTools
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,8 +43,9 @@ class MainFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
     private var mainListAdapter: MainListAdapter? = null
     private lateinit var mainButtonViewModel: MainButtonViewModel
-
+    
     private var mLastFrameNanos: Long = 0
+    private var isViewCreate = false
 
 
     // TODO: Rename and change types of parameters
@@ -61,89 +67,59 @@ class MainFragment : Fragment() {
     ): View {
         MyLog.d(TAG, "onCreateView: $contentView")
         // Inflate the layout for this fragment
-        return contentView
-            ?: inflater.inflate(R.layout.fragment_main, container, false).apply {
-                this@MainFragment.contentView = this
-            }
+        return contentView?.apply {
+            isViewCreate = true
+        } ?: inflater.inflate(R.layout.fragment_main, container, false).apply {
+            this@MainFragment.contentView = this
+            isViewCreate = false
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        setContentView(R.layout.activity_main)
-        MyLog.d(TAG, "onViewCreated")
-        BindButtonTools.bind(activity)
-//        MainActivity$ViewBinding binding = new MainActivity$ViewBinding();
-//        binding.bind(this);
-        //        MainActivity$ViewBinding binding = new MainActivity$ViewBinding();
-//        binding.bind(this);
+        if (isViewCreate) {
+            return
+        }
+        BindButtonTools.bind(activity) // or ```val binding = MainActivity$ViewBinding() binding.bind(this)```
         initViewModel()
+        initView()
+        preLoadSubProcess(context) // 预加载子进程
+//        initMonitor() // 卡顿监控
+        MainButtonModel.initData(mainButtonViewModel, activity as AppCompatActivity)
+        MyLog.d(TAG, "onViewCreated currentThread: " + Thread.currentThread().name)
+    }
 
-        Log.d(TAG, "onCreate currentThread: " + Thread.currentThread().name)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        ProcessUtil.stopSubProcessService(context)
+        MyLog.d(TAG, "onDestroyView")
+    }
 
+    private fun initView() {
         recyclerView = contentView?.findViewById(R.id.main_rv)
         mainListAdapter = MainListAdapter(MainDiff())
         recyclerView?.adapter = mainListAdapter
         recyclerView?.layoutManager = GridLayoutManager(context, 2)
-
-//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
-//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+//        recyclerView?.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+//        recyclerView?.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         recyclerView?.addItemDecoration(SpaceItemDecoration())
-
-        preLoadSubProcess(context)
-
-//        initMonitor(); // 卡顿监控
-//        initMonitor(); // 卡顿监控
-        MainButtonModel.initData(mainButtonViewModel, activity as AppCompatActivity)
     }
 
     private fun initViewModel() {
-        mainButtonViewModel = ViewModelProvider(this).get(
-            MainButtonViewModel::class.java
-        )
-        mainButtonViewModel.mainButtonList.observe(
-            viewLifecycleOwner
-        ) { mainButtons: List<MainButton?>? ->
-            mainListAdapter!!.submitList(
-                mainButtons
-            )
+        mainButtonViewModel = ViewModelProvider(this)[MainButtonViewModel::class.java]
+        mainButtonViewModel.mainButtonList.observe(viewLifecycleOwner) {
+            mainListAdapter?.submitList(it)
         }
     }
 
     private fun preLoadSubProcess(context: Context?) {
-        if (context == null || isSubAlive(context)) {
-            return
-        }
-        Thread {
-            val preLoader = Intent()
-            preLoader.action = "com.demo.ipc.SubPreLoadService"
-            preLoader.setPackage("com.demo")
-            try {
-                context.startService(preLoader)
-            } catch (e: Exception) {
-                Log.e(TAG, "[preLoadSub] preLoadSub failed.")
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (context == null || ProcessUtil.isSubProcessAlive(context)) {
+                return@launch
             }
-            Log.e(TAG, "[preLoadSub] preLoadSub...")
-        }.start()
-    }
-
-    private fun isSubAlive(context: Context): Boolean {
-        try {
-            val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val processInfos = am.runningAppProcesses
-            for (info in processInfos) {
-                val processName = info.processName
-                if ("com.demo:sub" == processName) {
-                    Log.e(TAG, "[isSubAlive] isSubAlive == true")
-                    return true
-                }
-            }
-        } catch (e: java.lang.Exception) {
-            Log.e(TAG, "get process info fail.")
+            ProcessUtil.loadSubProcessService(context)
         }
-        Log.e(TAG, "[isSubAlive] isSubAlive == false")
-        return false
     }
 
     private fun initMonitor() {
@@ -174,16 +150,6 @@ class MainFragment : Fragment() {
         })
 
         // 1) + 2)--Matrix
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        MyLog.d(TAG, "onDestroyView")
-        val preLoader = Intent()
-        preLoader.action = "com.demo.ipc.SubPreLoadService"
-        preLoader.setPackage("com.demo")
-        context?.stopService(preLoader)
     }
 
     companion object {

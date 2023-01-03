@@ -21,10 +21,14 @@ public class MainButton {
         this.jumpClass = jumpClass;
     }
 
-    public MainButton(String name, int type, Class<?> jumpClass, OnclickListener onclickListener) {
+    public MainButton(String name, OnclickListener onclickListener) {
+        this.name = name;
+        this.onclickListener = onclickListener;
+    }
+
+    public MainButton(String name, int type, OnclickListener onclickListener) {
         this.name = name;
         this.type = type;
-        this.jumpClass = jumpClass;
         this.onclickListener = onclickListener;
     }
 

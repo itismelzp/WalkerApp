@@ -3,8 +3,9 @@ package com.walker.kapt
 import android.app.Activity
 import java.lang.reflect.Constructor
 
-object Apt {
+object Kapt {
 
+    @Suppress("UNCHECKED_CAST")
     fun bind(activity: Activity): Unbinder {
         //反射创建实例
         try {

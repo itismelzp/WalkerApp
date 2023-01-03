@@ -82,6 +82,7 @@ dependencies {
     implementation 'com.google.protobuf:protoc:3.5.1'
     implementation 'io.github.billywei01:packable:1.0.2'
     implementation "com.google.code.gson:gson:2.8.7"
+    implementation 'com.airbnb.android:lottie:5.2.0'
 
     // kotlin
     implementation 'androidx.core:core-ktx:1.8.0'
@@ -100,9 +101,10 @@ dependencies {
 
     // kapt
     implementation project(path: ':apt:kapt-library')
-    kapt project(path: ':apt:kapt-annotations')
-    implementation project(path: ':apt:kapt-annotations')
-    kapt project(path: ':apt:kapt-compiler') // 一定要kapt
+    kapt project(path: ':apt:kapt-annotation')
+    implementation project(path: ':apt:kapt-annotation')
+    kapt project(path: ':apt:kapt-processor')
+    // 一定要kapt
 
     compileOnly 'com.tencent:mmkv:1.2.11'
     compileOnly "androidx.room:room-runtime:$rootProject.roomVersion"

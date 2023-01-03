@@ -39,15 +39,20 @@ ext {
     materialVersion = '1.7.0'
     roomVersion = '2.4.0-alpha03'
 
+    gsonVersion = '2.8.8'
+    kotlinVersion = '1.6.0'
+    ktxVersion = '1.8.0'
+
+    protocPlatformForM1 = 'osx-x86_64'
+
+    shadow_version = 'local-8d9c7a7f-SNAPSHOT'
+
+
     // testing
     coreTestingVersion = '2.1.0'
     junitVersion = '4.13.2'
     espressoVersion = '3.5.0'
     androidxJunitVersion = '1.1.4'
-
-    protocPlatformForM1 = 'osx-x86_64'
-
-    shadow_version = 'local-8d9c7a7f-SNAPSHOT'
 }
 
 task clean(type: Delete) {

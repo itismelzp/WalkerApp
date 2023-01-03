@@ -1,4 +1,4 @@
-package com.walker.kapt
+package com.demo.kapt
 
 import com.google.protobuf.Any
 import com.google.protobuf.Internal

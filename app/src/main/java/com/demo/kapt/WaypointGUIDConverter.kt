@@ -1,4 +1,4 @@
-package com.walker.kapt
+package com.demo.kapt
 
 import com.google.gson.Gson
 import com.google.protobuf.Any

@@ -1,4 +1,4 @@
-package com.walker.kapt
+package com.demo.kapt
 
 /**
  * Created by lizhiping on 2022/9/26.

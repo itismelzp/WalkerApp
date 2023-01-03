@@ -1,4 +1,4 @@
-package com.walker.kapt
+package com.demo.kapt
 
 import com.walker.annotations.AutelKey
 

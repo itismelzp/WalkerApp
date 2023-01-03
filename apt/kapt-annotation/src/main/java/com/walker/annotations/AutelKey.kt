@@ -11,8 +11,8 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.BINARY)
 annotation class AutelKey(
-    val keyType: String = "",
-    val keyName: String = "",
+    val keyType: String,
+    val keyName: String,
     val canSet: Boolean = false,
     val canGet: Boolean = false,
     val canAction: Boolean = false,

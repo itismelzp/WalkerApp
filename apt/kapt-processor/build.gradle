@@ -12,10 +12,10 @@ java {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlinVersion"
     implementation project(path: ':apt:kapt-annotation')
     implementation "com.google.auto.service:auto-service:1.0"
     kapt "com.google.auto.service:auto-service:1.0"
     implementation "com.squareup:kotlinpoet:1.8.0"
-    compileOnly "com.google.code.gson:gson:2.8.7"
+    compileOnly "com.google.code.gson:gson:$rootProject.gsonVersion"
 }

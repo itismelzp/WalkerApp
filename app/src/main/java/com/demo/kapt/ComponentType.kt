@@ -1,4 +1,4 @@
-package com.walker.kapt
+package com.demo.kapt
 
 /**
  * @Description:模块类型

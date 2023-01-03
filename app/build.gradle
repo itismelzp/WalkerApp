@@ -81,12 +81,12 @@ dependencies {
     implementation 'com.google.protobuf:protobuf-java:3.5.1'
     implementation 'com.google.protobuf:protoc:3.5.1'
     implementation 'io.github.billywei01:packable:1.0.2'
-    implementation "com.google.code.gson:gson:2.8.7"
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
     implementation 'com.airbnb.android:lottie:5.2.0'
 
     // kotlin
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.0"
+    implementation "androidx.core:core-ktx:$rootProject.ktxVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlinVersion"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "androidx.activity:activity-ktx:1.2.2"

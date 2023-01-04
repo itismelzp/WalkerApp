@@ -4,7 +4,6 @@ plugins {
     id 'com.google.protobuf'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'kotlin-kapt' // 引入kapt后apt就不生效了？？
 }
 
@@ -45,6 +44,11 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    buildFeatures {
+        viewBinding true
+    }
+
 }
 
 protobuf {

@@ -5,8 +5,7 @@ import android.util.Log
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.lifecycleScope
-import com.demo.R
-import kotlinx.android.synthetic.main.activity_logger_layout.*
+import com.demo.databinding.ActivityLoggerLayoutBinding
 import kotlinx.coroutines.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -16,18 +15,20 @@ class LoggerActivity : BaseActivity() {
 
     private lateinit var logger: MyLog.ILog
 
+    private lateinit var binding: ActivityLoggerLayoutBinding
+
     companion object {
         private const val TAG = "LoggerActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_logger_layout)
-
+        binding = ActivityLoggerLayoutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         requestPermission()
         initLog()
 
-        btn_ping.setOnClickListener {
+        binding.btnPing.setOnClickListener {
             lifecycleScope.launch {
                 val ip = "10.250.13.125"
                 toast("ping: $ip")

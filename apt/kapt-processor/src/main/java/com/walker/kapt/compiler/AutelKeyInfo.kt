@@ -1,6 +1,7 @@
 package com.walker.kapt.compiler
 
 import com.squareup.kotlinpoet.ClassName
+import com.walker.annotations.ComponentType
 import javax.lang.model.element.Element
 
 /**
@@ -11,6 +12,7 @@ import javax.lang.model.element.Element
 data class AutelKeyInfo(
     var element: Element, // 这里用于拿到属性变量
     val keyName: String,
+    val componentType: ComponentType,
     var canSet: Boolean = false,
     var canGet: Boolean = false,
     var canAction: Boolean = false,

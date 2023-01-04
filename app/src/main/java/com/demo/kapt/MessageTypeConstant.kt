@@ -1,6 +1,7 @@
 package com.demo.kapt
 
 import com.walker.annotations.AutelKey
+import com.walker.annotations.ComponentType
 
 object MessageTypeConstant {
 
@@ -11,6 +12,7 @@ object MessageTypeConstant {
     @AutelKey(
         keyType = "WaypointMissionKey",
         keyName = "keyEnter",
+        componentType = ComponentType.MISSION,
         canGet = true,
         canSet = true,
         paramBean = MissionWaypointGUIDBean::class,
@@ -21,6 +23,7 @@ object MessageTypeConstant {
     @AutelKey(
         keyType = "WaypointMissionKey",
         keyName = "keyExit",
+        componentType = ComponentType.MISSION,
         canGet = true,
         canAction = true,
         paramBean = Void::class,
@@ -31,6 +34,7 @@ object MessageTypeConstant {
     @AutelKey(
         keyType = "OtherMissionKey",
         keyName = "startMission",
+        componentType = ComponentType.MISSION,
         canGet = true,
         canAction = true,
         paramBean = Void::class,
@@ -41,6 +45,7 @@ object MessageTypeConstant {
     @AutelKey(
         keyType = "OtherMissionKey",
         keyName = "pauseMission",
+        componentType = ComponentType.UNKNOWN,
         canGet = true,
         canAction = true,
         paramBean = Void::class,

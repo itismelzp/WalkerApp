@@ -1,8 +1,7 @@
-package com.demo.kapt
+package com.walker.annotations
 
 /**
  * @Description:模块类型
- * @Copyright Powered By Autel ROBOTICS
  * @date:  2022-09-13 8:36
  */
 enum class ComponentType(val value: Int) {

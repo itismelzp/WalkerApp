@@ -1,12 +1,14 @@
 package com.demo.kapt
 
+import com.walker.annotations.ComponentType
+
 /**
  * Created by lizhiping on 2022/12/8.
  * <p>
  * description
  */
 class AutelActionKeyInfo<D, T>(
-    componentVal: Int,
+    componentType: ComponentType,
     msgType: String,
     packConvert: IAutelConverter<D, *>,
     unpackConvert: IAutelConverter<*, T>,

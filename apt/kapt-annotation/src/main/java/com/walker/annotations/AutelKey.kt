@@ -13,6 +13,7 @@ import kotlin.reflect.KClass
 annotation class AutelKey(
     val keyType: String,
     val keyName: String,
+    val componentType: ComponentType,
     val canSet: Boolean = false,
     val canGet: Boolean = false,
     val canAction: Boolean = false,

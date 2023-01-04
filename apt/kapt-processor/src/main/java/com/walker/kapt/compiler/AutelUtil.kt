@@ -19,6 +19,7 @@ class AutelUtil {
             val convertInfo = AutelKeyInfo(
                 element = element,
                 keyName = annotation.keyName,
+                componentType = annotation.componentType,
                 paramBean = getClassNameFromAnnotation(element, "paramBean"),
                 resultBean = getClassNameFromAnnotation(element, "resultBean")
             )

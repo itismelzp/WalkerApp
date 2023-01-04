@@ -3,7 +3,7 @@ package com.walker.kapt.compiler
 import com.google.gson.Gson
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.walker.kapt.compiler.generator.ConverterGenerator
+import com.walker.annotations.ComponentType
 import java.io.IOException
 import javax.annotation.processing.Filer
 import javax.lang.model.element.TypeElement
@@ -38,10 +38,10 @@ class CodeGenerator {
             // 构造类
             val clazzBuilder = TypeSpec.objectBuilder(clazz.simpleName)
             val componentProperty = PropertySpec
-                .builder("component", componentClass)
-                .initializer("ComponentType.MISSION")
+                .builder("component", ComponentType::class)
+                .initializer("%T.%L", ComponentType::class.asClassName(), ComponentType.MISSION)
                 .build()
-            clazzBuilder.addProperty(componentProperty)
+//            clazzBuilder.addProperty(componentProperty)
             creatorProxy.autelInfoMap.forEach {
                 val info = it.value
                 println("forEach it: $it")
@@ -57,7 +57,7 @@ class CodeGenerator {
                 val paramConverter = generateConverter(filer, info.paramBean)
                 val resultConverter = generateConverter(filer, info.resultBean)
                 val initCode = "%T(\n" +
-                        "    component.value,\n" +
+                        "    %T.%L,\n" +
                         "    %M,\n" +
                         "    %T(),\n" +
                         "    %T()\n" +
@@ -71,6 +71,7 @@ class CodeGenerator {
                     .initializer(
                         initCode,
                         parameterizedAutelKeyInfoClass,
+                        ComponentType::class, info.componentType,
                         msgType,
                         paramConverter,
                         resultConverter,
@@ -96,23 +97,24 @@ class CodeGenerator {
         }
 
         private fun generateConverter(filer: Filer, bean: ClassName): ClassName {
-            val emptyConverter = ClassName(Constant.PACKAGE_NAME, "AutelEmptyConvert")
+            var resultConverter = ClassName(Constant.PACKAGE_NAME, "AutelEmptyConvert")
             if (converterMap.contains(bean.toString())) {
-                return converterMap[bean.toString()] ?: emptyConverter
+                return converterMap[bean.toString()] ?: resultConverter
             }
 
-            val voidBean = ClassName("java.lang", "Void")
+            val voidBean = Void::class.asClassName()
             if (bean == voidBean) {
-                converterMap[bean.toString()] = emptyConverter
-                return emptyConverter
+                converterMap[bean.toString()] = resultConverter
+                return resultConverter
             }
 
             val formJasonStr = FunSpec.builder("fromJsonStr")
                 .addParameter("str", String::class)
                 .returns(bean.copy(nullable = true))
                 .addStatement(
+//                    "return %T().fromJson(str, %T::class.java)",
                     "return %T().fromJson(str, %T::class.java)",
-                    ClassName("com.google.gson", "Gson"),
+                    Gson::class.asClassName(),
                     bean
                 )
                 .build()
@@ -121,8 +123,7 @@ class CodeGenerator {
                 .returns(String::class.asTypeName().copy(nullable = true))
                 .addStatement(
                     "return %T().toJson(%T(guid = 123456789))",
-//                    ClassName("com.google.gson", "Gson"),
-                    Gson::class,
+                    Gson::class.asClassName(),
                     bean
                 )
                 .build()
@@ -161,13 +162,12 @@ class CodeGenerator {
                 .build()
             try {
                 classFile.writeTo(filer)
-                converterMap[bean.toString()] = clazzName
-                return clazzName
+                resultConverter = clazzName
             } catch (e: IOException) {
-                println(e.message)
+                println("[generateConverter] message: $e.message")
             }
-            converterMap[bean.toString()] = emptyConverter
-            return emptyConverter
+            converterMap[bean.toString()] = resultConverter
+            return resultConverter
         }
     }
 

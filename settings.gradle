@@ -3,6 +3,7 @@ include ':app'
 include ':track-sdk'
 include ':track-plugin'
 include ':storage-sdk'
+include ':constant'
 
 include ':apt:apt-annotation'
 include ':apt:apt-processor'

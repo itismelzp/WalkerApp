@@ -44,7 +44,7 @@ class MainFragment : Fragment() {
     private var mainListAdapter: MainListAdapter? = null
     private lateinit var mainButtonViewModel: MainButtonViewModel
     
-    private var mLastFrameNanos: Long = 0
+    private var mLastFrameNanos: Long = 0L
     private var isViewCreate = false
 
 

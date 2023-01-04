@@ -1,6 +1,9 @@
 package com.example.demo_manager;
 
 
+import static com.demo.constant.Constant.FROM_ID_START_ACTIVITY;
+import static com.demo.constant.Constant.FROM_ID_START_SERVICE;
+
 import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
@@ -85,79 +88,70 @@ public class MyPluginManager extends PluginManagerThatUseDynamicLoader {
         if (className == null) {
             throw new NullPointerException("className == null");
         }
-        if (fromId == 1011L) { // 打开 Activity 示例
+        if (fromId == FROM_ID_START_ACTIVITY) { // 打开 Activity 示例
             final Bundle extras = bundle.getBundle("extra_to_plugin_bundle");
             if (callback != null) {
                 // 开始加载插件了，实现加载布局
                 callback.onShowLoadingView(null);
             }
-            executorService.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        InstalledPlugin installedPlugin
-                                = installPlugin(pluginZipPath, null, true);//这个调用是阻塞的
-                        Intent pluginIntent = new Intent();
-                        pluginIntent.setClassName(
-                                context.getPackageName(),
-                                className
-                        );
-                        if (extras != null) {
-                            pluginIntent.replaceExtras(extras);
-                        }
+            executorService.execute(() -> {
+                try {
+                    InstalledPlugin installedPlugin
+                            = installPlugin(pluginZipPath, null, true);//这个调用是阻塞的
+                    Intent pluginIntent = new Intent();
+                    pluginIntent.setClassName(
+                            context.getPackageName(),
+                            className
+                    );
+                    if (extras != null) {
+                        pluginIntent.replaceExtras(extras);
+                    }
 
-                        startPluginActivity(context, installedPlugin, partKey, pluginIntent);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    if (callback != null) {
-                        Handler uiHandler = new Handler(Looper.getMainLooper());
-                        uiHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // 到这里插件就启动完成了
-                                callback.onCloseLoadingView();
-                                callback.onEnterComplete();
-                            }
-                        });
-                    }
+                    startPluginActivity(context, installedPlugin, partKey, pluginIntent);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                if (callback != null) {
+                    Handler uiHandler = new Handler(Looper.getMainLooper());
+                    uiHandler.post(() -> {
+                        // 到这里插件就启动完成了
+                        callback.onCloseLoadingView();
+                        callback.onEnterComplete();
+                    });
                 }
             });
 
-        } else if (fromId == 1012) { // 打开Server示例
+        } else if (fromId == FROM_ID_START_SERVICE) { // 打开Server示例
             Intent pluginIntent = new Intent();
             pluginIntent.setClassName(context.getPackageName(), className);
 
-            executorService.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        InstalledPlugin installedPlugin
-                                = installPlugin(pluginZipPath, null, true);//这个调用是阻塞的
+            executorService.execute(() -> {
+                try {
+                    InstalledPlugin installedPlugin
+                            = installPlugin(pluginZipPath, null, true);//这个调用是阻塞的
 
-                        loadPlugin(installedPlugin.UUID, partKey);
+                    loadPlugin(installedPlugin.UUID, partKey);
 
-                        Intent pluginIntent = new Intent();
-                        pluginIntent.setClassName(context.getPackageName(), className);
+                    Intent pluginIntent1 = new Intent();
+                    pluginIntent1.setClassName(context.getPackageName(), className);
 
-                        boolean callSuccess = mPluginLoader.bindPluginService(pluginIntent, new PluginServiceConnection() {
-                            @Override
-                            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                                // 在这里实现AIDL进行通信操作
-                            }
-
-                            @Override
-                            public void onServiceDisconnected(ComponentName componentName) {
-                                throw new RuntimeException("onServiceDisconnected");
-                            }
-                        }, Service.BIND_AUTO_CREATE);
-
-                        if (!callSuccess) {
-                            throw new RuntimeException("bind service失败 className==" + className);
+                    boolean callSuccess = mPluginLoader.bindPluginService(pluginIntent1, new PluginServiceConnection() {
+                        @Override
+                        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                            // 在这里实现AIDL进行通信操作
                         }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+
+                        @Override
+                        public void onServiceDisconnected(ComponentName componentName) {
+                            throw new RuntimeException("onServiceDisconnected");
+                        }
+                    }, Service.BIND_AUTO_CREATE);
+
+                    if (!callSuccess) {
+                        throw new RuntimeException("bind service失败 className==" + className);
                     }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             });
         } else {

@@ -39,7 +39,7 @@ ext {
     materialVersion = '1.7.0'
     roomVersion = '2.4.0-alpha03'
 
-    gsonVersion = '2.8.8'
+    gsonVersion = '2.9.0'
     kotlinVersion = '1.6.0'
     ktxVersion = '1.8.0'
 

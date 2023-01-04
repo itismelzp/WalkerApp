@@ -71,6 +71,7 @@ protobuf {
 }
 
 dependencies {
+    implementation project(':constant')
     implementation project(':track-sdk')
     implementation project(':storage-sdk')
     implementation fileTree(dir: 'libs', include: ['*.jar'])

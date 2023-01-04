@@ -1,5 +1,7 @@
 package com.demo;
 
+import static com.demo.constant.Constant.FROM_ID_START_ACTIVITY;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -69,12 +71,6 @@ public class MainButtonModel {
 
     private static final MainButton.OnclickListener pluginClickListener = () -> {
         PluginManager pluginManager = MyApplication.getPluginManager();
-        /**
-         * @param context context
-         * @param formId  标识本次请求的来源位置，用于区分入口
-         * @param bundle  参数列表, 建议在参数列表加入自己的验证
-         * @param callback 用于从PluginManager实现中返回View
-         */
         Bundle bundle = new Bundle();
         // 插件 zip，这几个参数也都可以不传，直接在 PluginManager 中硬编码
         bundle.putString("plugin_path", "/data/local/tmp/plugin-debug.zip");
@@ -85,7 +81,13 @@ public class MainButtonModel {
         // 要传入到插件里的参数
         bundle.putBundle("extra_to_plugin_bundle", new Bundle());
 
-        pluginManager.enter(MyApplication.getInstance(), 1011L, bundle, new EnterCallback() {
+        /**
+         * @param context context
+         * @param formId  标识本次请求的来源位置，用于区分入口
+         * @param bundle  参数列表, 建议在参数列表加入自己的验证
+         * @param callback 用于从PluginManager实现中返回View
+         */
+        pluginManager.enter(MyApplication.getInstance(), FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
             @Override
             public void onShowLoadingView(View view) {
                 Log.i(TAG, "[onShowLoadingView]");

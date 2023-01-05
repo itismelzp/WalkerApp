@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.application'
-    id 'com.walker.autotrack'
+//    id 'com.walker.autotrack'
     id 'com.google.protobuf'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'

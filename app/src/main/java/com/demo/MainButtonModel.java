@@ -41,6 +41,17 @@ public class MainButtonModel {
 
     private static WeakReference<AppCompatActivity> mActivityRef;
 
+    private final static int SLIDE_RIGHT_ENTER_ANIMATION = R.anim.coui_open_slide_enter;
+    private final static int SLIDE_LEFT_EXIT_ANIMATION = R.anim.coui_open_slide_exit;
+    private final static int SLIDE_LEFT_ENTER_ANIMATION = R.anim.coui_close_slide_enter;
+    private final static int SLIDE_RIGHT_EXIT_ANIMATION = R.anim.coui_close_slide_exit;
+    private final static int[] anim = new int[]{
+            SLIDE_RIGHT_ENTER_ANIMATION,
+            SLIDE_LEFT_EXIT_ANIMATION,
+            SLIDE_LEFT_ENTER_ANIMATION,
+            SLIDE_RIGHT_EXIT_ANIMATION
+    };
+
     public static void initData(MainButtonViewModel mainButtonViewModel, AppCompatActivity activity) {
         mActivityRef = new WeakReference<>(activity);
         List<MainButton> buttons = new ArrayList<>();
@@ -113,6 +124,15 @@ public class MainButtonModel {
         }
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
+//                .setCustomAnimations(R.anim.cu_push_right_in, R.anim.cu_push_left_out,
+//                        R.anim.cu_push_right_in, R.anim.cu_push_left_out)
+                .setCustomAnimations(
+                        anim[0],
+                        anim[1],
+                        anim[2],
+                        anim[3]
+                )
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.fragment_container,
                         BlankFragment.newInstance("hello world", "hello fragment"),
                         "blockFragment")

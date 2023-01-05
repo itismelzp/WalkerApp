@@ -1,10 +1,8 @@
 package com.walker.annotations
 
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import kotlin.reflect.KClass
 
-@Retention(RetentionPolicy.CLASS)
+@Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FIELD)
 annotation class BindButton(val resId: Int,
                             val clazz: KClass<*>,

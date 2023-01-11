@@ -38,6 +38,9 @@ public interface WordDao {
     @Query("DELETE FROM word_table WHERE content IN (:args)")
     void delete(List<String> args);
 
+    @Query("DELETE FROM word_table WHERE content LIKE '%' || :arg || '%'")
+    void deleteFuzzy(String arg);
+
     @Update
     void update(Word word);
 

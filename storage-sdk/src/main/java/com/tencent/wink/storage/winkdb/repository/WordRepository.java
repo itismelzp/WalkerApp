@@ -57,6 +57,15 @@ public class WordRepository {
         });
     }
 
+    public void deleteAll() {
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
+            long begin = System.currentTimeMillis();
+            mWordDao.deleteAll();
+            long cost = System.currentTimeMillis() - begin;
+            WinkDbLog.i(TAG, "deleteAll finish, cost: " + cost);
+        });
+    }
+
     public void delete(String content) {
         WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
             long begin = System.currentTimeMillis();
@@ -81,6 +90,15 @@ public class WordRepository {
             mWordDao.delete(contents);
             long cost = System.currentTimeMillis() - begin;
             WinkDbLog.i(TAG, "delete finish, contents: " + contents + ", cost: " + cost);
+        });
+    }
+
+    public void deleteFuzzy(String content) {
+        WinkRoomDatabase.databaseWriteExecutor.execute(() -> {
+            long begin = System.currentTimeMillis();
+            mWordDao.deleteFuzzy(content);
+            long cost = System.currentTimeMillis() - begin;
+            WinkDbLog.i(TAG, "delete finish, content: " + content + ", cost: " + cost);
         });
     }
 

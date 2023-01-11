@@ -16,8 +16,9 @@
     <string name="add_word">添加单词</string>
     <string name="other_process">其它进程</string>
 
-    <string name="hint_word">Word...</string>
+    <string name="hint_word">Word…</string>
     <string name="button_save">Save</string>
+    <string name="button_batch_save">批量保存</string>
     <string name="empty_not_saved">Word not saved because it is empty.</string>
 
 </resources>

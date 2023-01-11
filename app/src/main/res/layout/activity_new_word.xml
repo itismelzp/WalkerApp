@@ -23,4 +23,13 @@
         android:layout_margin="@dimen/big_padding"
         android:textColor="@color/buttonLabel" />
 
+    <Button
+        android:id="@+id/button_batch_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/button_batch_save"
+        android:layout_margin="@dimen/big_padding"
+        android:textColor="@color/buttonLabel" />
+
 </LinearLayout>

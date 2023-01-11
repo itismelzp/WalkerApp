@@ -82,6 +82,10 @@ public class WordViewModel extends AndroidViewModel {
         mRepository.insert(word);
     }
 
+    public void deleteAll() {
+        mRepository.deleteAll();
+    }
+
     public void delete(String word) {
         mRepository.delete(word);
     }
@@ -92,6 +96,10 @@ public class WordViewModel extends AndroidViewModel {
 
     public void delete(List<String> words) {
         mRepository.delete(words);
+    }
+
+    public void deleteFuzzy(String word) {
+        mRepository.deleteFuzzy(word);
     }
 
     public void update(Word word) {

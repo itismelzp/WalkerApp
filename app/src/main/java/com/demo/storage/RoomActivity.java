@@ -141,7 +141,13 @@ public class RoomActivity extends AppCompatActivity {
             String text = editText.getText().toString();
             Log.d(TAG, "editText text: " + text);
             String[] words = text.split(" ");
-            mWordViewModel.delete(Arrays.asList(words));
+            if (words .length == 0) {
+                mWordViewModel.deleteAll();
+            } else if (words.length == 1) {
+                mWordViewModel.deleteFuzzy(words[0]);
+            } else {
+                mWordViewModel.delete(Arrays.asList(words));
+            }
         });
 
         findViewById(R.id.fab_jump_other_process).setOnClickListener(view -> {
@@ -161,16 +167,16 @@ public class RoomActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
+            String reply = data.getStringExtra(NewWordActivity.EXTRA_REPLY);
+            boolean isBatchSave = data.getBooleanExtra(NewWordActivity.IS_BATCH_SAVE, false);
+            Word word = new Word(reply);
             Log.i(TAG, "[onActivityResult] word: " + word);
-//            mWordViewModel.insert(word);
-            for (int i = 0; i < 10000; i++) {
-                final int idx = i;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY) +"_" + idx);
-                        mWordViewModel.insert(word);
+            if (!isBatchSave) {
+                mWordViewModel.insert(word);
+            } else {
+                new Thread(() -> {
+                    for (int i = 0; i < 10; i++) {
+                        mWordViewModel.insert(new Word(reply + "_" + i));
                     }
                 }).start();
             }

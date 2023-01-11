@@ -8,12 +8,12 @@ import android.view.Choreographer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionInflater
 import com.demo.MainButtonModel
 import com.demo.MainButtonViewModel
 import com.demo.MainListAdapter
@@ -22,7 +22,6 @@ import com.demo.MainListAdapter.SpaceItemDecoration
 import com.demo.R
 import com.demo.ipc.ProcessUtil
 import com.demo.logger.MyLog
-import com.tencent.wink.apt.library.BindButtonTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -43,7 +42,7 @@ class MainFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
     private var mainListAdapter: MainListAdapter? = null
     private lateinit var mainButtonViewModel: MainButtonViewModel
-    
+
     private var mLastFrameNanos: Long = 0L
     private var isViewCreate = false
 
@@ -59,6 +58,8 @@ class MainFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        val inflater = TransitionInflater.from(requireContext())
+        exitTransition = inflater.inflateTransition(R.transition.fade)
     }
 
     override fun onCreateView(
@@ -81,12 +82,11 @@ class MainFragment : Fragment() {
         if (isViewCreate) {
             return
         }
-        BindButtonTools.bind(activity) // or ```val binding = MainActivity$ViewBinding() binding.bind(this)```
+//        BindButtonTools.bind(activity) // or ```val binding = MainActivity$ViewBinding() binding.bind(this)```
         initViewModel()
         initView()
-        preLoadSubProcess(context) // 预加载子进程
 //        initMonitor() // 卡顿监控
-        MainButtonModel.initData(mainButtonViewModel, activity as AppCompatActivity)
+        preLoadSubProcess(context) // 预加载子进程
         MyLog.d(TAG, "onViewCreated currentThread: " + Thread.currentThread().name)
     }
 
@@ -111,6 +111,9 @@ class MainFragment : Fragment() {
         mainButtonViewModel.mainButtonList.observe(viewLifecycleOwner) {
             mainListAdapter?.submitList(it)
         }
+
+        val mainButtonModel = MainButtonModel(this)
+        mainButtonViewModel.mainButtonList.postValue(mainButtonModel.buttons)
     }
 
     private fun preLoadSubProcess(context: Context?) {

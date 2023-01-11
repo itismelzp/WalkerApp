@@ -11,11 +11,11 @@
         android:interpolator="@anim/coui_open_slide_exit_translate_interpolator"
         android:toXDelta="-30%" />
     <alpha
-        android:duration="350"
+        android:duration="200"
         android:fillAfter="true"
         android:fillBefore="false"
         android:fillEnabled="true"
         android:fromAlpha="1.0"
         android:interpolator="@anim/coui_ease"
-        android:toAlpha="0.5" />
+        android:toAlpha="0" />
 </set>

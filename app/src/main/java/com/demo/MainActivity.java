@@ -2,15 +2,17 @@ package com.demo;
 
 import android.app.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.demo.fragment.GridFragment;
 import com.demo.fragment.MainFragment;
+import com.demo.logger.BaseActivity;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity implements GridFragment.OnActionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -22,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container,
-                        MainFragment.newInstance("hello world", "hello main fragment"), "mainFragment")
-//                .addToBackStack("mainFragment")
+                        MainFragment.newInstance("hello world", "hello main fragment"),
+                        "mainFragment")
                 .commit();
     }
 
@@ -58,4 +60,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onAction(@NonNull String msg) {
+        toast(msg);
+    }
 }

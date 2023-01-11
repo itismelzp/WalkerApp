@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.demo.animator.AnimatorActivity;
 import com.demo.apt.AptDemoActivity;
@@ -18,7 +18,7 @@ import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.ryg.ViewDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
-import com.demo.fragment.BlankFragment;
+import com.demo.fragment.GridFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
 import com.demo.rxjava.RxJavaActivity;
@@ -30,7 +30,6 @@ import com.demo.wink.WinkActivity;
 import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.dynamic.host.PluginManager;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -38,8 +37,6 @@ import java.util.List;
 public class MainButtonModel {
 
     private static final String TAG = "MainButtonModel";
-
-    private static WeakReference<AppCompatActivity> mActivityRef;
 
     private final static int SLIDE_RIGHT_ENTER_ANIMATION = R.anim.coui_open_slide_enter;
     private final static int SLIDE_LEFT_EXIT_ANIMATION = R.anim.coui_open_slide_exit;
@@ -52,9 +49,16 @@ public class MainButtonModel {
             SLIDE_RIGHT_EXIT_ANIMATION
     };
 
-    public static void initData(MainButtonViewModel mainButtonViewModel, AppCompatActivity activity) {
-        mActivityRef = new WeakReference<>(activity);
-        List<MainButton> buttons = new ArrayList<>();
+    private Fragment fragment;
+
+    private final List<MainButton> buttons = new ArrayList<>();
+
+    public MainButtonModel(Fragment fragment) {
+        this.fragment = fragment;
+        initData();
+    }
+
+    public void initData() {
         buttons.add(new MainButton("custom view", MainButtonType.TYPE_CUSTOM_VIEW, CustomViewActivity.class));
         buttons.add(new MainButton("custom shader", MainButtonType.TYPE_CUSTOM_VIEW, CustomShaderActivity.class));
         buttons.add(new MainButton("sloop custom view", MainButtonType.TYPE_CUSTOM_VIEW, CustomSloopMenuActivity.class));
@@ -77,7 +81,10 @@ public class MainButtonModel {
         buttons.add(new MainButton("fragment demo", fragmentClickListener));
 
         buttons.sort(Comparator.comparingInt(o -> o.type));
-        mainButtonViewModel.getMainButtonList().postValue(buttons);
+    }
+
+    public List<MainButton> getButtons() {
+        return buttons;
     }
 
     private static final MainButton.OnclickListener pluginClickListener = () -> {
@@ -117,34 +124,25 @@ public class MainButtonModel {
         });
     };
 
-    private static final MainButton.OnclickListener fragmentClickListener = () -> {
+    private final MainButton.OnclickListener fragmentClickListener = () -> {
 
-        if (getActivity() == null) {
-            return;
-        }
-        getActivity().getSupportFragmentManager()
+        // 注意:强烈建议对涉及多种动画类型的效果使用transitions，因为使用嵌套AnimationSet实例存在已知的问题。
+        fragment.getParentFragmentManager()
                 .beginTransaction()
 //                .setCustomAnimations(R.anim.cu_push_right_in, R.anim.cu_push_left_out,
 //                        R.anim.cu_push_right_in, R.anim.cu_push_left_out)
-                .setCustomAnimations(
-                        anim[0],
-                        anim[1],
-                        anim[2],
-                        anim[3]
-                )
+                .setReorderingAllowed(true)
+//                .setCustomAnimations(
+//                        R.anim.slide_in,  // enter
+//                        R.anim.fade_out  // exit
+//                        R.anim.fade_in,   // popEnter
+//                        R.anim.slide_out  // popExit
+//                )
 //                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.fragment_container,
-                        BlankFragment.newInstance("hello world", "hello fragment"),
-                        "blockFragment")
-                .addToBackStack("blockFragment")
+                        GridFragment.newInstance("hello world", "hello fragment"), "blockFragment")
+                .addToBackStack(null)
                 .commit();
     };
-
-    private static AppCompatActivity getActivity() {
-        if (mActivityRef == null || mActivityRef.get() == null) {
-            return null;
-        }
-        return mActivityRef.get();
-    }
 
 }

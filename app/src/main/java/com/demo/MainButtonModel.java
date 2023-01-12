@@ -99,12 +99,6 @@ public class MainButtonModel {
         // 要传入到插件里的参数
         bundle.putBundle("extra_to_plugin_bundle", new Bundle());
 
-        /**
-         * @param context context
-         * @param formId  标识本次请求的来源位置，用于区分入口
-         * @param bundle  参数列表, 建议在参数列表加入自己的验证
-         * @param callback 用于从PluginManager实现中返回View
-         */
         pluginManager.enter(MyApplication.getInstance(), FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
             @Override
             public void onShowLoadingView(View view) {
@@ -129,14 +123,12 @@ public class MainButtonModel {
         // 注意:强烈建议对涉及多种动画类型的效果使用transitions，因为使用嵌套AnimationSet实例存在已知的问题。
         fragment.getParentFragmentManager()
                 .beginTransaction()
-//                .setCustomAnimations(R.anim.cu_push_right_in, R.anim.cu_push_left_out,
-//                        R.anim.cu_push_right_in, R.anim.cu_push_left_out)
                 .setReorderingAllowed(true)
 //                .setCustomAnimations(
-//                        R.anim.slide_in,  // enter
-//                        R.anim.fade_out  // exit
-//                        R.anim.fade_in,   // popEnter
-//                        R.anim.slide_out  // popExit
+//                        R.anim.slide_in, // enter
+//                        R.anim.fade_out // exit
+//                        R.anim.fade_in, // popEnter
+//                        R.anim.slide_out // popExit
 //                )
 //                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.fragment_container,

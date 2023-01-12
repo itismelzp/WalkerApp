@@ -26,6 +26,20 @@ public class CanvasForPictureView extends View {
     private int mWidth, mHeight;
     private Picture mPicture = new Picture();
 
+    private Rect src = new Rect();
+    private Rect dst = new Rect();
+    private Paint textPaint = new Paint();
+    private Bitmap bitmap;
+
+    private float[] location = new float[]{
+            0, 0,       // 第一个字符位置
+            100, 100,   // 第二个字符位置
+            200, 0,   // 第三个字符位置
+            300, 100,   // ...
+            400, 0,
+            500, 100,
+    };
+
     public CanvasForPictureView(Context context) {
         this(context, null);
     }
@@ -33,7 +47,8 @@ public class CanvasForPictureView extends View {
     public CanvasForPictureView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-//        recording();
+
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.zhaoyun);
     }
 
     private void recording() {
@@ -64,32 +79,20 @@ public class CanvasForPictureView extends View {
         super.onDraw(canvas);
 //        mPicture.draw(canvas);
 //        canvas.drawPicture(mPicture, new RectF(0, 0, mPicture.getWidth(), mPicture.getHeight()));
-        canvas.translate(mWidth / 2, mHeight / 2);
-        Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.zhaoyun);
+        canvas.translate(mWidth / 2f, mHeight / 2f);
         bitmap = imageScale(bitmap, mWidth, mHeight);
 //        canvas.drawBitmap(bitmap, new Matrix(), new Paint());
-//        Rect src = new Rect(0, 0, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
-//        Rect dst = new Rect(0, 0, 200, 400);
-        Rect src = new Rect(0, 0, mWidth / 2, mHeight / 2);
-        Rect dst = new Rect(0,0,200,400);
+        src.set(0, 0, mWidth / 2, mHeight / 2);
+        dst.set(0,0,200,400);
 //        canvas.drawBitmap(bitmap, src, dst, null);
 
-
-        Paint textPaint = new Paint();
         textPaint.setColor(Color.BLACK);
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setTextSize(50);
 //        canvas.translate(mWidth / 2, mHeight / 2);
 //        canvas.drawText("ABCDEFG", 2,5,200, 500, textPaint);
 
-        canvas.drawPosText("ABCDEF", new float[]{
-                0, 0,       // 第一个字符位置
-                100, 100,   // 第二个字符位置
-                200, 0,   // 第三个字符位置
-                300, 100,   // ...
-                400, 0,
-                500, 100,
-        }, textPaint);
+        canvas.drawPosText("ABCDEF", location, textPaint);
 
     }
 

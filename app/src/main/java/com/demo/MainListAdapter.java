@@ -1,15 +1,19 @@
 package com.demo;
 
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.demo.customview.utils.ViewUtils;
+
+import java.util.List;
 
 public class MainListAdapter extends ListAdapter<MainButton, MainButtonViewHolder> {
 
@@ -29,7 +33,13 @@ public class MainListAdapter extends ListAdapter<MainButton, MainButtonViewHolde
         holder.bind(mainButton);
     }
 
-    public static class MainDiff extends DiffUtil.ItemCallback<MainButton> {
+    @Override
+    public void onBindViewHolder(@NonNull MainButtonViewHolder holder, int position,
+                                 @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    public static class MainDiffItemCallback extends DiffUtil.ItemCallback<MainButton> {
 
         @Override
         public boolean areItemsTheSame(@NonNull MainButton oldItem, @NonNull MainButton newItem) {
@@ -39,6 +49,19 @@ public class MainListAdapter extends ListAdapter<MainButton, MainButtonViewHolde
         @Override
         public boolean areContentsTheSame(@NonNull MainButton oldItem, @NonNull MainButton newItem) {
             return oldItem.name.equals(newItem.name);
+        }
+
+        @Nullable
+        @Override
+        public Object getChangePayload(@NonNull MainButton oldItem, @NonNull MainButton newItem) {
+            Bundle payload = new Bundle();
+            if (!oldItem.name.equals(newItem.name)) {
+                payload.putString("KEY_NAME", newItem.name);
+            }
+            if (payload.size() == 0) {
+                return null;
+            }
+            return payload;
         }
     }
 

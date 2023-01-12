@@ -12,14 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
 import com.demo.MainButtonModel
 import com.demo.MainButtonViewModel
 import com.demo.MainListAdapter
-import com.demo.MainListAdapter.MainDiff
+import com.demo.MainListAdapter.MainDiffItemCallback
 import com.demo.MainListAdapter.SpaceItemDecoration
 import com.demo.R
+import com.demo.databinding.FragmentMainBinding
 import com.demo.ipc.ProcessUtil
 import com.demo.logger.MyLog
 import kotlinx.coroutines.Dispatchers
@@ -37,9 +37,9 @@ private const val ARG_PARAM2 = "param2"
  */
 class MainFragment : Fragment() {
 
-    private var contentView: View? = null
+    private var _binding: FragmentMainBinding? = null
+    private val binding get() = _binding!!
 
-    private var recyclerView: RecyclerView? = null
     private var mainListAdapter: MainListAdapter? = null
     private lateinit var mainButtonViewModel: MainButtonViewModel
 
@@ -66,13 +66,14 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        MyLog.d(TAG, "onCreateView: $contentView")
-        // Inflate the layout for this fragment
-        return contentView?.apply {
+        MyLog.d(TAG, "onCreateView: $_binding")
+        return _binding?.let {
             isViewCreate = true
-        } ?: inflater.inflate(R.layout.fragment_main, container, false).apply {
-            this@MainFragment.contentView = this
+            it.root
+        } ?: FragmentMainBinding.inflate(inflater, container, false).let {
+            _binding = it
             isViewCreate = false
+            it.root
         }
     }
 
@@ -97,23 +98,27 @@ class MainFragment : Fragment() {
     }
 
     private fun initView() {
-        recyclerView = contentView?.findViewById(R.id.main_rv)
-        mainListAdapter = MainListAdapter(MainDiff())
-        recyclerView?.adapter = mainListAdapter
-        recyclerView?.layoutManager = GridLayoutManager(context, 2)
-//        recyclerView?.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-//        recyclerView?.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        recyclerView?.addItemDecoration(SpaceItemDecoration())
+        binding.mainRecyclerView.apply {
+            adapter = MainListAdapter(MainDiffItemCallback()).apply {
+                mainListAdapter = this
+            }
+            layoutManager = GridLayoutManager(context, 2)
+//            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+//            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            addItemDecoration(SpaceItemDecoration())
+        }
     }
 
     private fun initViewModel() {
-        mainButtonViewModel = ViewModelProvider(this)[MainButtonViewModel::class.java]
-        mainButtonViewModel.mainButtonList.observe(viewLifecycleOwner) {
-            mainListAdapter?.submitList(it)
+        ViewModelProvider(this)[MainButtonViewModel::class.java].apply {
+            mainButtonViewModel = this
+            mainButtonList.apply {
+                observe(viewLifecycleOwner) {
+                    mainListAdapter?.submitList(it)
+                }
+                postValue(MainButtonModel(this@MainFragment).buttons)
+            }
         }
-
-        val mainButtonModel = MainButtonModel(this)
-        mainButtonViewModel.mainButtonList.postValue(mainButtonModel.buttons)
     }
 
     private fun preLoadSubProcess(context: Context?) {

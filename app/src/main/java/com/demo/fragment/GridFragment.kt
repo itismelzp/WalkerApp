@@ -6,33 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
+import android.transition.TransitionInflater
 import android.widget.Toast
 import androidx.core.app.SharedElementCallback
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.transition.TransitionInflater
 import com.demo.R
-import com.demo.databinding.FragmentGridBinding
+import com.demo.databinding.MainFragmentGridBinding
 import com.demo.fragment.adapter.GridAdapter
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 /**
- * A simple [Fragment] subclass.
- * Use the [GridFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * A fragment for displaying a grid of images.
  */
 class GridFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
     private var param1: String? = null
     private var param2: String? = null
 
-    private var _binding: FragmentGridBinding? = null
+    private var _binding: MainFragmentGridBinding? = null
     private val binding get() = _binding!!
 
     private var listener: OnActionListener? = null
@@ -51,8 +47,8 @@ class GridFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        val inflater = TransitionInflater.from(requireContext())
-        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+//        val inflater = TransitionInflater.from(requireContext())
+//        enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
     override fun onCreateView(
@@ -60,7 +56,7 @@ class GridFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentGridBinding.inflate(inflater, container, false)
+        _binding = MainFragmentGridBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -87,14 +83,14 @@ class GridFragment : Fragment() {
             }
         }
 
-        binding.imageRecyclerView.adapter = GridAdapter(this)
+        binding.recyclerView.adapter = GridAdapter(this)
         prepareTransitions()
         postponeEnterTransition()
         scrollToPosition()
     }
 
     private fun scrollToPosition() {
-        binding.imageRecyclerView.apply {
+        binding.recyclerView.apply {
             addOnLayoutChangeListener(object : OnLayoutChangeListener {
                 override fun onLayoutChange(
                     v: View?,
@@ -128,7 +124,7 @@ class GridFragment : Fragment() {
                 sharedElements: MutableMap<String, View>
             ) {
                 val selectedViewHolder =
-                    binding.imageRecyclerView.findViewHolderForAdapterPosition(currentPosition)
+                    binding.recyclerView.findViewHolderForAdapterPosition(currentPosition)
                 selectedViewHolder?.let {
                     sharedElements[names[0]] =
                         selectedViewHolder.itemView.findViewById(R.id.card_image)
@@ -144,17 +140,9 @@ class GridFragment : Fragment() {
 
     companion object {
 
+        @JvmField
         var currentPosition = 0
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BlankFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             GridFragment().apply {

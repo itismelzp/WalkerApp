@@ -25,7 +25,7 @@ public class MainActivity extends BaseActivity implements GridFragment.OnActionL
                 .beginTransaction()
                 .add(R.id.fragment_container,
                         MainFragment.newInstance("hello world", "hello main fragment"),
-                        "mainFragment")
+                        MainFragment.class.getSimpleName())
                 .commit();
     }
 

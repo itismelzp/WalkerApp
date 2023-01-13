@@ -126,13 +126,13 @@ public class MainButtonModel {
                 .setReorderingAllowed(true)
 //                .setCustomAnimations(
 //                        R.anim.slide_in, // enter
-//                        R.anim.fade_out // exit
+//                        R.anim.fade_out, // exit
 //                        R.anim.fade_in, // popEnter
 //                        R.anim.slide_out // popExit
 //                )
 //                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.fragment_container,
-                        GridFragment.newInstance("hello world", "hello fragment"), "blockFragment")
+                        GridFragment.newInstance("hello world", "hello fragment"), GridFragment.class.getSimpleName())
                 .addToBackStack(null)
                 .commit();
     };

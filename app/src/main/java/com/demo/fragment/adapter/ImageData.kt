@@ -8,8 +8,9 @@ import com.demo.R
  * <p>
  * description
  */
-object ImageData {
+internal object ImageData {
 
+    @JvmField
     @DrawableRes
     val IMAGE_DRAWABLES = intArrayOf(
         R.drawable.animal_2024172,

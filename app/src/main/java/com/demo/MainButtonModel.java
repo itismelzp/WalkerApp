@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.demo.animator.AnimatorActivity;
 import com.demo.apt.AptDemoActivity;
@@ -78,7 +79,7 @@ public class MainButtonModel {
         buttons.add(new MainButton("ipc demo", IPCDemoActivity.class));
         buttons.add(new MainButton("logger demo", LoggerActivity.class));
         buttons.add(new MainButton("plugin demo", pluginClickListener));
-        buttons.add(new MainButton("fragment demo", fragmentClickListener));
+        buttons.add(new MainButton("fragment demo", MainButtonType.TYPE_SYSTEM_COMPONENT, fragmentClickListener));
 
         buttons.sort(Comparator.comparingInt(o -> o.type));
     }
@@ -124,13 +125,13 @@ public class MainButtonModel {
         fragment.getParentFragmentManager()
                 .beginTransaction()
                 .setReorderingAllowed(true)
-//                .setCustomAnimations(
+//                .setCustomAnimations( // 官方不推荐使用Animations，使用嵌套动画时有已知问题
 //                        R.anim.slide_in, // enter
 //                        R.anim.fade_out, // exit
 //                        R.anim.fade_in, // popEnter
 //                        R.anim.slide_out // popExit
 //                )
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE) // 推荐使用Transition
                 .replace(R.id.fragment_container,
                         GridFragment.newInstance("hello world", "hello fragment"), GridFragment.class.getSimpleName())
                 .addToBackStack(null)

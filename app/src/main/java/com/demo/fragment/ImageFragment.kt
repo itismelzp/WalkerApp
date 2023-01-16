@@ -20,7 +20,8 @@ import com.demo.databinding.FragmentImageBinding
  */
 class ImageFragment : Fragment() {
 
-    private lateinit var bindig: FragmentImageBinding
+    private var _binding: FragmentImageBinding? = null
+    val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,10 +29,10 @@ class ImageFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
 
-        bindig = FragmentImageBinding.inflate(inflater, container, false)
+        _binding = FragmentImageBinding.inflate(inflater, container, false)
 
         val imageRes = arguments?.getInt(KEY_IMAGE_RES)
-        bindig.image.transitionName = "$imageRes"
+        binding.image.transitionName = "$imageRes"
         Glide.with(this)
             .load(imageRes)
             .listener(object : RequestListener<Drawable> {
@@ -52,14 +53,15 @@ class ImageFragment : Fragment() {
                     dataSource: DataSource?,
                     isFirstResource: Boolean
                 ): Boolean {
+                    // parentFragment is ImagePagerFragment
                     parentFragment?.startPostponedEnterTransition()
                     return false
                 }
 
             })
-            .into(bindig.image)
+            .into(binding.image)
 
-        return bindig.root
+        return binding.root
     }
 
     companion object {

@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager
 import com.demo.R
 import com.demo.databinding.FragmentImagePagerBinding
 import com.demo.fragment.adapter.ImagePagerAdapter
+import com.demo.logger.MyLog
 
 
 /**
@@ -42,6 +43,7 @@ class ImagePagerFragment : Fragment() {
         if (savedInstanceState == null) {
             postponeEnterTransition()
         }
+        MyLog.i(TAG, "[onCreateView]")
         return binding.root
     }
 
@@ -50,25 +52,32 @@ class ImagePagerFragment : Fragment() {
             .inflateTransition(R.transition.image_shared_element_transition)
         sharedElementEnterTransition = transition
 
+        // This will be done when entering the ImagePagerFragment.
         setEnterSharedElementCallback(object : SharedElementCallback() {
             override fun onMapSharedElements(
                 names: MutableList<String>,
                 sharedElements: MutableMap<String, View>
             ) {
+                // 拿到当前viewPager页的视图
                 val currentFragment =
                     binding.viewPager.adapter?.instantiateItem(
                         binding.viewPager,
                         GridFragment.currentPosition
-                    ) as Fragment
-                val view = currentFragment.view
-                view?.let {
-                    sharedElements[names[0]] = view.findViewById(R.id.image)
-                }
+                    ) as ImageFragment
+                val binding = currentFragment.binding
+                sharedElements[names[0]] = binding.image
             }
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        MyLog.i(TAG, "[onDestroy]")
+    }
+
     companion object {
+
+        private const val TAG = "ImagePagerFragment"
 
         @JvmStatic
         fun newInstance() = ImagePagerFragment().apply {

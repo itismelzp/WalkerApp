@@ -62,6 +62,6 @@ public class MainActivity extends BaseActivity implements GridFragment.OnActionL
 
     @Override
     public void onAction(@NonNull String msg) {
-        toast(msg);
+        toast(TAG + "：" + msg);
     }
 }

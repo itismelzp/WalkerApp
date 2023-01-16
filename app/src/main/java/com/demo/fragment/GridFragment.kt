@@ -12,9 +12,14 @@ import androidx.core.app.SharedElementCallback
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.fragment.app.replace
+import androidx.lifecycle.lifecycleScope
 import com.demo.R
 import com.demo.databinding.MainFragmentGridBinding
 import com.demo.fragment.adapter.GridAdapter
+import com.demo.logger.MyLog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 private const val ARG_PARAM1 = "param1"
@@ -47,8 +52,9 @@ class GridFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-//        val inflater = TransitionInflater.from(requireContext())
-//        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+        MyLog.i(TAG, "[onCreate]")
     }
 
     override fun onCreateView(
@@ -58,11 +64,14 @@ class GridFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = MainFragmentGridBinding.inflate(inflater, container, false)
 
+        MyLog.i(TAG, "[onCreateView]")
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        MyLog.i(TAG, "[onViewCreated]")
 
         binding.blankTv.text = "$param1: $param2"
         binding.testBtn.setOnClickListener {
@@ -71,13 +80,15 @@ class GridFragment : Fragment() {
         }
         ViewCompat.setTransitionName(binding.sharedEleIv, "item_image")
         binding.sharedEleIv.setOnClickListener {
-            activity?.supportFragmentManager?.commit {
+            parentFragmentManager.commit {
                 setReorderingAllowed(true)
                 addSharedElement(binding.sharedEleIv, SharedElementFragment.HERO_IMAGE)
-                replace(
-                    R.id.fragment_container,
-                    SharedElementFragment.newInstance("hello world", "hello fragment"),
-                    "blockFragment"
+                replace<SharedElementFragment>(R.id.fragment_container,
+                    SharedElementFragment::class.simpleName,
+                    Bundle().apply {
+                        putString(ARG_PARAM1, "hello world")
+                        putString(ARG_PARAM2, "hello fragment")
+                    }
                 )
                 addToBackStack(null)
             }
@@ -98,15 +109,15 @@ class GridFragment : Fragment() {
                     oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int
                 ) {
                     removeOnLayoutChangeListener(this)
-                    val layoutManager = layoutManager
-                    val viewAtPosition =
-                        layoutManager?.findViewByPosition(currentPosition)
-                    if (viewAtPosition == null
-                        || layoutManager
-                            .isViewPartiallyVisible(viewAtPosition, false, true)
-                    ) {
-                        post {
-                            layoutManager?.scrollToPosition(currentPosition)
+
+                    layoutManager?.apply {
+                        val viewAtPosition = findViewByPosition(currentPosition)
+                        if (viewAtPosition == null
+                            || isViewPartiallyVisible(viewAtPosition, false, true)
+                        ) {
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                scrollToPosition(currentPosition)
+                            }
                         }
                     }
                 }
@@ -118,11 +129,13 @@ class GridFragment : Fragment() {
         exitTransition = TransitionInflater.from(requireContext())
             .inflateTransition(R.transition.grid_exit_transition)
 
+        // This will be done when exiting the GridFragment, and re-entering the GridFragment by popped back.
         setExitSharedElementCallback(object : SharedElementCallback() {
             override fun onMapSharedElements(
                 names: MutableList<String>,
                 sharedElements: MutableMap<String, View>
             ) {
+                MyLog.i(TAG, "[onMapSharedElements] name: ${names[0]}")
                 val selectedViewHolder =
                     binding.recyclerView.findViewHolderForAdapterPosition(currentPosition)
                 selectedViewHolder?.let {
@@ -136,9 +149,12 @@ class GridFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        MyLog.i(TAG, "[onDestroyView]")
     }
 
     companion object {
+
+        private const val TAG = "GridFragment"
 
         @JvmField
         var currentPosition = 0

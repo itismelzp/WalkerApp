@@ -35,6 +35,7 @@ class SharedElementFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        // 设置共享元素的进入转场动画，默认返回转场动画也使用这个动画
         sharedElementEnterTransition = TransitionInflater.from(requireContext())
             .inflateTransition(R.transition.shared_image)
     }

@@ -3,6 +3,7 @@ package com.demo.fragment
 import android.content.Context
 import android.os.Bundle
 import android.os.Looper
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.Choreographer
 import android.view.LayoutInflater
@@ -12,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.transition.TransitionInflater
 import com.demo.MainButtonModel
 import com.demo.MainButtonViewModel
 import com.demo.MainListAdapter

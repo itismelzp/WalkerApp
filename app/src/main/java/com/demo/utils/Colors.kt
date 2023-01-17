@@ -6,7 +6,7 @@ package com.demo.utils
  * <p>
  * description
  */
-object COLORS {
+object Colors {
 
     // https://zhuanlan.zhihu.com/p/586202432
     const val KLEIN_BLUE = 0xFF002FA7.toInt()

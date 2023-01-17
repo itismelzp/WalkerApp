@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @IntDef({
-        MainButtonType.TYPE_NONE,
         MainButtonType.TYPE_SYSTEM_VIEW,
         MainButtonType.TYPE_CUSTOM_VIEW,
         MainButtonType.TYPE_COMPILE,
@@ -20,7 +19,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface MainButtonType {
 
-    int TYPE_NONE = 0;
     int TYPE_SYSTEM_VIEW = 1;
     int TYPE_CUSTOM_VIEW = 2;
     int TYPE_SYSTEM_COMPONENT = 3;

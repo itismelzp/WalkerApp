@@ -1,11 +1,11 @@
 package com.demo;
 
-import com.demo.utils.COLORS;
+import com.demo.utils.Colors;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainButton {
+public class MainButton implements Comparable<MainButton> {
 
     public String name;
 
@@ -15,15 +15,17 @@ public class MainButton {
 
     public OnclickListener onclickListener;
 
+    public boolean isHide;
+
     private static final Map<Integer, Integer> COLOR_MAP = new HashMap<>();
 
     static {
-        COLOR_MAP.put(MainButtonType.TYPE_SYSTEM_VIEW, COLORS.FIRST_PAGE_ONE);
-        COLOR_MAP.put(MainButtonType.TYPE_CUSTOM_VIEW, COLORS.FIRST_PAGE_TWO);
-        COLOR_MAP.put(MainButtonType.TYPE_SYSTEM_COMPONENT, COLORS.FIRST_PAGE_THREE);
-        COLOR_MAP.put(MainButtonType.TYPE_COMPILE, COLORS.FIRST_PAGE_FOUR);
-        COLOR_MAP.put(MainButtonType.TYPE_STORAGE, COLORS.FIRST_PAGE_FIVE);
-        COLOR_MAP.put(MainButtonType.TYPE_OTHER, COLORS.THIRD_PAGE_ONE);
+        COLOR_MAP.put(MainButtonType.TYPE_SYSTEM_VIEW, Colors.FIRST_PAGE_ONE);
+        COLOR_MAP.put(MainButtonType.TYPE_CUSTOM_VIEW, Colors.FIRST_PAGE_TWO);
+        COLOR_MAP.put(MainButtonType.TYPE_SYSTEM_COMPONENT, Colors.FIRST_PAGE_THREE);
+        COLOR_MAP.put(MainButtonType.TYPE_COMPILE, Colors.FIRST_PAGE_FOUR);
+        COLOR_MAP.put(MainButtonType.TYPE_STORAGE, Colors.FIRST_PAGE_FIVE);
+        COLOR_MAP.put(MainButtonType.TYPE_OTHER, Colors.THIRD_PAGE_ONE);
     }
 
     public MainButton(String name, Class<?> jumpClass) {
@@ -51,9 +53,14 @@ public class MainButton {
     public int getColor() {
         Integer color = COLOR_MAP.get(type);
         if (color == null) {
-            return COLORS.THIRD_PAGE_ONE;
+            return Colors.THIRD_PAGE_ONE;
         }
         return color;
+    }
+
+    @Override
+    public int compareTo(MainButton o) {
+        return Integer.compare(this.type, o.type);
     }
 
     interface OnclickListener {

@@ -13,12 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.demo.MainButtonModel
-import com.demo.MainButtonViewModel
-import com.demo.MainListAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.demo.*
 import com.demo.MainListAdapter.MainDiffItemCallback
 import com.demo.MainListAdapter.SpaceItemDecoration
-import com.demo.R
 import com.demo.databinding.FragmentMainBinding
 import com.demo.ipc.ProcessUtil
 import com.demo.logger.MyLog
@@ -41,11 +40,13 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var mainListAdapter: MainListAdapter? = null
+    private var filterAdapter: FilterListAdapter? = null
     private lateinit var mainButtonViewModel: MainButtonViewModel
+    private lateinit var filterViewModel: FilterViewModel
+    private lateinit var mainButtonModel: MainButtonModel
 
     private var mLastFrameNanos: Long = 0L
     private var isViewCreate = false
-
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -87,7 +88,7 @@ class MainFragment : Fragment() {
         initViewModel()
         initView()
 //        initMonitor() // 卡顿监控
-        preLoadSubProcess(context) // 预加载子进程
+        preLoadSubProcess() // 预加载子进程
         MyLog.d(TAG, "onViewCreated currentThread: " + Thread.currentThread().name)
     }
 
@@ -97,7 +98,44 @@ class MainFragment : Fragment() {
         MyLog.d(TAG, "onDestroyView")
     }
 
+    private fun initViewModel() {
+        mainButtonModel = MainButtonModel(this@MainFragment)
+        ViewModelProvider(this)[MainButtonViewModel::class.java].apply {
+            mainButtonViewModel = this
+            mainButtonList.apply {
+                observe(viewLifecycleOwner) {
+                    mainListAdapter?.submitList(it?.toMutableList())
+                }
+                postValue(mainButtonModel.buttons)
+            }
+        }
+        ViewModelProvider(this)[FilterViewModel::class.java].apply {
+            filterViewModel = this
+            filterList.apply {
+                observe(viewLifecycleOwner) {
+                    filterAdapter?.submitList(it)
+                }
+                postValue(mainButtonModel.diffButtons)
+            }
+        }
+    }
+
     private fun initView() {
+        binding.filterRecyclerView.apply {
+            adapter =
+                FilterListAdapter(FilterListAdapter.ButtonFilterItemCallback()) { type, isCheck ->
+                    mainButtonViewModel.mainButtonList
+                        .postValue(
+                            mainButtonModel.apply {
+                                operateData(type, isCheck)
+                            }.buttons
+                        )
+                }.apply {
+                    filterAdapter = this
+                }
+            layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        }
+
         binding.mainRecyclerView.apply {
             adapter = MainListAdapter(MainDiffItemCallback()).apply {
                 mainListAdapter = this
@@ -109,19 +147,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun initViewModel() {
-        ViewModelProvider(this)[MainButtonViewModel::class.java].apply {
-            mainButtonViewModel = this
-            mainButtonList.apply {
-                observe(viewLifecycleOwner) {
-                    mainListAdapter?.submitList(it)
-                }
-                postValue(MainButtonModel(this@MainFragment).buttons)
-            }
-        }
-    }
-
-    private fun preLoadSubProcess(context: Context?) {
+    private fun preLoadSubProcess() {
         lifecycleScope.launch(Dispatchers.IO) {
             if (context == null || ProcessUtil.isSubProcessAlive(context)) {
                 return@launch

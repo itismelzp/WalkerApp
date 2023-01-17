@@ -22,6 +22,7 @@ import com.demo.customview.zhy.activity.CustomViewActivity;
 import com.demo.fragment.GridFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
+import com.demo.logger.MyLog;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
 import com.demo.storage.WinkKVDemoActivity;
@@ -33,7 +34,10 @@ import com.tencent.shadow.dynamic.host.PluginManager;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 public class MainButtonModel {
 
@@ -50,43 +54,10 @@ public class MainButtonModel {
             SLIDE_RIGHT_EXIT_ANIMATION
     };
 
-    private Fragment fragment;
+    private static Fragment fragment;
 
     private final List<MainButton> buttons = new ArrayList<>();
-
-    public MainButtonModel(Fragment fragment) {
-        this.fragment = fragment;
-        initData();
-    }
-
-    public void initData() {
-        buttons.add(new MainButton("custom view", MainButtonType.TYPE_CUSTOM_VIEW, CustomViewActivity.class));
-        buttons.add(new MainButton("custom shader", MainButtonType.TYPE_CUSTOM_VIEW, CustomShaderActivity.class));
-        buttons.add(new MainButton("sloop custom view", MainButtonType.TYPE_CUSTOM_VIEW, CustomSloopMenuActivity.class));
-        buttons.add(new MainButton("custom matrix view", MainButtonType.TYPE_CUSTOM_VIEW, CustomMatrixActivity.class));
-        buttons.add(new MainButton("aige custom view", MainButtonType.TYPE_CUSTOM_VIEW, AigeActivity.class));
-        buttons.add(new MainButton("btn list view demo", MainButtonType.TYPE_SYSTEM_VIEW, ListViewDemoActivity.class));
-        buttons.add(new MainButton("test recycleview", MainButtonType.TYPE_SYSTEM_VIEW, ScaleActivity.class));
-        buttons.add(new MainButton("shape background", MainButtonType.TYPE_CUSTOM_VIEW, ShapeBgActivity.class));
-        buttons.add(new MainButton("wink page", MainButtonType.TYPE_CUSTOM_VIEW, WinkActivity.class));
-        buttons.add(new MainButton("storage page", MainButtonType.TYPE_STORAGE, RoomActivity.class));
-        buttons.add(new MainButton("view 事件分发", ViewDispatchDemoActivity.class));
-        buttons.add(new MainButton("test apt demo", MainButtonType.TYPE_COMPILE, AptDemoActivity.class));
-        buttons.add(new MainButton("进度条滑动冲突", SlideConflictDemoActivity.class));
-        buttons.add(new MainButton("wink kv demo", MainButtonType.TYPE_STORAGE, WinkKVDemoActivity.class));
-        buttons.add(new MainButton("动画demo", MainButtonType.TYPE_SYSTEM_VIEW, AnimatorActivity.class));
-        buttons.add(new MainButton("rxjava demo", RxJavaActivity.class));
-        buttons.add(new MainButton("ipc demo", IPCDemoActivity.class));
-        buttons.add(new MainButton("logger demo", LoggerActivity.class));
-        buttons.add(new MainButton("plugin demo", pluginClickListener));
-        buttons.add(new MainButton("fragment demo", MainButtonType.TYPE_SYSTEM_COMPONENT, fragmentClickListener));
-
-        buttons.sort(Comparator.comparingInt(o -> o.type));
-    }
-
-    public List<MainButton> getButtons() {
-        return buttons;
-    }
+    private static final Map<Integer, List<MainButton>> typeMap = new HashMap<>();
 
     private static final MainButton.OnclickListener pluginClickListener = () -> {
         PluginManager pluginManager = MyApplication.getPluginManager();
@@ -119,7 +90,7 @@ public class MainButtonModel {
         });
     };
 
-    private final MainButton.OnclickListener fragmentClickListener = () -> {
+    private static final MainButton.OnclickListener fragmentClickListener = () -> {
 
         // 注意:强烈建议对涉及多种动画类型的效果使用transitions，因为使用嵌套AnimationSet实例存在已知的问题。
         fragment.getParentFragmentManager()
@@ -137,5 +108,103 @@ public class MainButtonModel {
                 .addToBackStack(null)
                 .commit();
     };
+
+    static {
+
+        List<MainButton> customViews = new ArrayList<>();
+        customViews.add(new MainButton("custom view", MainButtonType.TYPE_CUSTOM_VIEW, CustomViewActivity.class));
+        customViews.add(new MainButton("custom shader", MainButtonType.TYPE_CUSTOM_VIEW, CustomShaderActivity.class));
+        customViews.add(new MainButton("sloop custom view", MainButtonType.TYPE_CUSTOM_VIEW, CustomSloopMenuActivity.class));
+        customViews.add(new MainButton("custom matrix view", MainButtonType.TYPE_CUSTOM_VIEW, CustomMatrixActivity.class));
+        customViews.add(new MainButton("aige custom view", MainButtonType.TYPE_CUSTOM_VIEW, AigeActivity.class));
+        customViews.add(new MainButton("shape background", MainButtonType.TYPE_CUSTOM_VIEW, ShapeBgActivity.class));
+        customViews.add(new MainButton("wink page", MainButtonType.TYPE_CUSTOM_VIEW, WinkActivity.class));
+        typeMap.put(MainButtonType.TYPE_CUSTOM_VIEW, customViews);
+
+        List<MainButton> systemViews = new ArrayList<>();
+        systemViews.add(new MainButton("btn list view demo", MainButtonType.TYPE_SYSTEM_VIEW, ListViewDemoActivity.class));
+        systemViews.add(new MainButton("test recycleview", MainButtonType.TYPE_SYSTEM_VIEW, ScaleActivity.class));
+        systemViews.add(new MainButton("动画demo", MainButtonType.TYPE_SYSTEM_VIEW, AnimatorActivity.class));
+        typeMap.put(MainButtonType.TYPE_SYSTEM_VIEW, systemViews);
+
+        List<MainButton> systemComponents = new ArrayList<>();
+        systemComponents.add(new MainButton("fragment demo", MainButtonType.TYPE_SYSTEM_COMPONENT, fragmentClickListener));
+        typeMap.put(MainButtonType.TYPE_SYSTEM_COMPONENT, systemComponents);
+
+        List<MainButton> storage = new ArrayList<>();
+        storage.add(new MainButton("storage page", MainButtonType.TYPE_STORAGE, RoomActivity.class));
+        storage.add(new MainButton("wink kv demo", MainButtonType.TYPE_STORAGE, WinkKVDemoActivity.class));
+        typeMap.put(MainButtonType.TYPE_STORAGE, storage);
+
+        List<MainButton> compiler = new ArrayList<>();
+        compiler.add(new MainButton("test apt demo", MainButtonType.TYPE_COMPILE, AptDemoActivity.class));
+        typeMap.put(MainButtonType.TYPE_COMPILE, compiler);
+
+        List<MainButton> other = new ArrayList<>();
+        other.add(new MainButton("view 事件分发", ViewDispatchDemoActivity.class));
+        other.add(new MainButton("进度条滑动冲突", SlideConflictDemoActivity.class));
+        other.add(new MainButton("rxjava demo", RxJavaActivity.class));
+        other.add(new MainButton("ipc demo", IPCDemoActivity.class));
+        other.add(new MainButton("logger demo", LoggerActivity.class));
+        other.add(new MainButton("plugin demo", pluginClickListener));
+        typeMap.put(MainButtonType.TYPE_OTHER, other);
+    }
+
+    public MainButtonModel(Fragment fragment) {
+        MainButtonModel.fragment = fragment;
+        initData();
+    }
+
+    public void initData() {
+        if (typeMap.containsKey(MainButtonType.TYPE_CUSTOM_VIEW)) {
+            buttons.addAll(typeMap.get(MainButtonType.TYPE_CUSTOM_VIEW));
+        }
+        if (typeMap.containsKey(MainButtonType.TYPE_STORAGE)) {
+            buttons.addAll(typeMap.get(MainButtonType.TYPE_STORAGE));
+        }
+        if (typeMap.containsKey(MainButtonType.TYPE_COMPILE)) {
+            buttons.addAll(typeMap.get(MainButtonType.TYPE_COMPILE));
+        }
+        if (typeMap.containsKey(MainButtonType.TYPE_SYSTEM_VIEW)) {
+            buttons.addAll(typeMap.get(MainButtonType.TYPE_SYSTEM_VIEW));
+        }
+        if (typeMap.containsKey(MainButtonType.TYPE_OTHER)) {
+            buttons.addAll(typeMap.get(MainButtonType.TYPE_OTHER));
+        }
+        if (typeMap.containsKey(MainButtonType.TYPE_SYSTEM_COMPONENT)) {
+            buttons.addAll(typeMap.get(MainButtonType.TYPE_SYSTEM_COMPONENT));
+        }
+        buttons.sort(Comparator.comparingInt(o -> o.type));
+    }
+
+    public void operateData(@MainButtonType int type, boolean isCheck) {
+        if (isCheck) {
+            addData(type);
+        } else {
+            removeData(type);
+        }
+    }
+
+    public void addData(@MainButtonType int type) {
+        if (typeMap.containsKey(type)) {
+            buttons.addAll(typeMap.get(type));
+        }
+        buttons.sort(Comparator.comparingInt(o -> o.type));
+    }
+
+    public void removeData(@MainButtonType int type) {
+        if (typeMap.containsKey(type))  {
+            buttons.removeAll(typeMap.get(type));
+        }
+        buttons.sort(Comparator.comparingInt(o -> o.type));
+    }
+
+    public List<MainButton> getButtons() {
+        return buttons;
+    }
+
+    public List<MainButton> getDiffButtons() {
+        return new ArrayList<>(new TreeSet<>(buttons));
+    }
 
 }

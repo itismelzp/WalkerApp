@@ -17,10 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service
-            android:name=".coroutine.BaseService"
-            android:enabled="true"
-            android:exported="false" />
 
         <activity
             android:name=".logger.BaseActivity"
@@ -30,64 +26,22 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".MainActivity"
+            android:screenOrientation="fullSensor"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".logger.LoggerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-        <service
-            android:name=".ipc.aidl.MyRemoteAIDLService"
-            android:enabled="true"
-            android:exported="true" />
-
-        <activity
-            android:name=".customview.ryg.ViewDispatchDemoActivity"
-            android:exported="false" />
-
-        <service
-            android:name=".ipc.SubPreLoadService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":sub">
-            <intent-filter>
-                <action android:name="com.demo.ipc.SubPreLoadService" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".ipc.ashmem.MyAshmemService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.demo.ipc.ashmem.MyAshmemService" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".ipc.messenger.MessengerServer"
-            android:enabled="true"
-            android:exported="true"
-            android:label="myService">
-            <intent-filter>
-                <action android:name="android.intent.action.MESSENGER" />
-            </intent-filter>
-        </service>
-
-        <activity
-            android:name=".ipc.IPCDemoActivity"
-            android:exported="false"
-            android:process=":remote" />
-
-        <service
-            android:name=".ipc.aidl.MyAIDLService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="MyAIDLService">
-            <intent-filter>
-                <action android:name="com.demo.ipc.MyAIDLService" />
-            </intent-filter>
-        </service>
-
+        <activity android:name=".customview.ryg.ViewDispatchDemoActivity"/>
         <activity android:name=".rxjava.RxJavaActivity" />
         <activity android:name=".animator.AnimatorActivity" />
         <activity android:name=".customview.activity.SlideConflictDemoActivity" />
@@ -114,15 +68,54 @@
             android:screenOrientation="fullSensor" />
         <activity android:name=".customview.ryg.ViewEventDispatchDemoActivity" />
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait"
+            android:name=".ipc.IPCDemoActivity"
+            android:exported="false"
+            android:process=":remote" />
+
+        <!-- service -->
+        <service
+            android:name=".ipc.aidl.MyRemoteAIDLService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".coroutine.BaseService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".ipc.SubPreLoadService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":sub">
+            <intent-filter>
+                <action android:name="com.demo.ipc.SubPreLoadService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".ipc.ashmem.MyAshmemService"
+            android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="com.demo.ipc.ashmem.MyAshmemService" />
             </intent-filter>
-        </activity>
+        </service>
+        <service
+            android:name=".ipc.messenger.MessengerServer"
+            android:enabled="true"
+            android:exported="true"
+            android:label="myService">
+            <intent-filter>
+                <action android:name="android.intent.action.MESSENGER" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".ipc.aidl.MyAIDLService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="MyAIDLService">
+            <intent-filter>
+                <action android:name="com.demo.ipc.MyAIDLService" />
+            </intent-filter>
+        </service>
 
         <!-- for shadow -->
         <activity

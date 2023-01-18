@@ -54,7 +54,7 @@ public class MainButtonModel {
             SLIDE_RIGHT_EXIT_ANIMATION
     };
 
-    private static Fragment fragment;
+    private Fragment fragment;
 
     private final List<MainButton> buttons = new ArrayList<>();
     private static final Map<Integer, List<MainButton>> typeMap = new HashMap<>();
@@ -90,7 +90,7 @@ public class MainButtonModel {
         });
     };
 
-    private static final MainButton.OnclickListener fragmentClickListener = () -> {
+    private final MainButton.OnclickListener fragmentClickListener = () -> {
 
         // 注意:强烈建议对涉及多种动画类型的效果使用transitions，因为使用嵌套AnimationSet实例存在已知的问题。
         fragment.getParentFragmentManager()
@@ -109,8 +109,12 @@ public class MainButtonModel {
                 .commit();
     };
 
-    static {
+    public MainButtonModel(Fragment fragment) {
+        this.fragment = fragment;
+        initData();
+    }
 
+    private void initStaticData() {
         List<MainButton> customViews = new ArrayList<>();
         customViews.add(new MainButton("custom view", MainButtonType.TYPE_CUSTOM_VIEW, CustomViewActivity.class));
         customViews.add(new MainButton("custom shader", MainButtonType.TYPE_CUSTOM_VIEW, CustomShaderActivity.class));
@@ -150,12 +154,10 @@ public class MainButtonModel {
         typeMap.put(MainButtonType.TYPE_OTHER, other);
     }
 
-    public MainButtonModel(Fragment fragment) {
-        MainButtonModel.fragment = fragment;
-        initData();
-    }
 
     public void initData() {
+        initStaticData();
+
         if (typeMap.containsKey(MainButtonType.TYPE_CUSTOM_VIEW)) {
             buttons.addAll(typeMap.get(MainButtonType.TYPE_CUSTOM_VIEW));
         }
@@ -186,17 +188,23 @@ public class MainButtonModel {
     }
 
     public void addData(@MainButtonType int type) {
-        if (typeMap.containsKey(type)) {
-            buttons.addAll(typeMap.get(type));
+        List<MainButton> mainButtons = typeMap.get(type);
+        if (mainButtons == null || mainButtons.size() == 0) {
+            return;
         }
-        buttons.sort(Comparator.comparingInt(o -> o.type));
+        if (!hasDataByType(type)) {
+            buttons.addAll(mainButtons);
+        }
+        sort();
     }
 
     public void removeData(@MainButtonType int type) {
-        if (typeMap.containsKey(type))  {
-            buttons.removeAll(typeMap.get(type));
+        List<MainButton> mainButtons = typeMap.get(type);
+        if (mainButtons == null || mainButtons.size() == 0) {
+            return;
         }
-        buttons.sort(Comparator.comparingInt(o -> o.type));
+        buttons.removeAll(mainButtons);
+        sort();
     }
 
     public List<MainButton> getButtons() {
@@ -204,7 +212,29 @@ public class MainButtonModel {
     }
 
     public List<MainButton> getDiffButtons() {
-        return new ArrayList<>(new TreeSet<>(buttons));
+        List<MainButton> ret = new ArrayList<>();
+        TreeSet<Integer> types = new TreeSet<>(typeMap.keySet());
+        for (Integer type : types) {
+            List<MainButton> mainButtons = typeMap.get(type);
+            if (mainButtons == null || mainButtons.size() == 0) {
+                continue;
+            }
+            ret.add(mainButtons.get(0));
+        }
+        return ret;
+    }
+
+    private boolean hasDataByType(@MainButtonType int type) {
+        for (MainButton button : buttons) {
+            if (button.type == type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void sort() {
+        buttons.sort(Comparator.comparingInt(o -> o.type));
     }
 
 }

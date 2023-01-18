@@ -10,6 +10,7 @@ import android.os.Bundle;
 import com.demo.fragment.GridFragment;
 import com.demo.fragment.MainFragment;
 import com.demo.logger.BaseActivity;
+import com.demo.logger.MyLog;
 
 
 public class MainActivity extends BaseActivity implements GridFragment.OnActionListener {
@@ -21,12 +22,15 @@ public class MainActivity extends BaseActivity implements GridFragment.OnActionL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container,
-                        MainFragment.newInstance("hello world", "hello main fragment"),
-                        MainFragment.class.getSimpleName())
-                .commit();
+        MyLog.i(TAG, "[onCreate]");
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container,
+                            MainFragment.newInstance("hello world", "hello main fragment"),
+                            MainFragment.class.getSimpleName())
+                    .commit();
+        }
     }
 
     @Override

@@ -1,11 +1,7 @@
 package com.demo.fragment
 
-import android.content.Context
 import android.os.Bundle
-import android.os.Looper
 import android.transition.TransitionInflater
-import android.util.Log
-import android.view.Choreographer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,8 +41,9 @@ class MainFragment : Fragment() {
     private lateinit var filterViewModel: FilterViewModel
     private lateinit var mainButtonModel: MainButtonModel
 
-    private var mLastFrameNanos: Long = 0L
     private var isViewCreate = false
+
+    private val decoration = SpaceItemDecoration()
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -54,20 +51,22 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MyLog.d(TAG, "onCreate")
+        MyLog.d(TAG, "[onCreate]")
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
         val inflater = TransitionInflater.from(requireContext())
         exitTransition = inflater.inflateTransition(R.transition.fade)
+
+        mainButtonModel = MainButtonModel(this@MainFragment)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        MyLog.d(TAG, "onCreateView: $_binding")
+        MyLog.d(TAG, "[onCreateView] fragment: $this, binding: $_binding")
         return _binding?.let {
             isViewCreate = true
             it.root
@@ -81,30 +80,30 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (isViewCreate) {
-            return
-        }
+//        if (isViewCreate) {
+//            return
+//        }
 //        BindButtonTools.bind(activity) // or ```val binding = MainActivity$ViewBinding() binding.bind(this)```
         initViewModel()
         initView()
-//        initMonitor() // 卡顿监控
+//        MonitorUtil.initMonitor() // 卡顿监控
         preLoadSubProcess() // 预加载子进程
-        MyLog.d(TAG, "onViewCreated currentThread: " + Thread.currentThread().name)
+        MyLog.d(TAG, "[onViewCreated] currentThread: " + Thread.currentThread().name)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         ProcessUtil.stopSubProcessService(context)
-        MyLog.d(TAG, "onDestroyView")
+        MyLog.d(TAG, "[onDestroyView]")
     }
 
     private fun initViewModel() {
-        mainButtonModel = MainButtonModel(this@MainFragment)
+
         ViewModelProvider(this)[MainButtonViewModel::class.java].apply {
             mainButtonViewModel = this
             mainButtonList.apply {
                 observe(viewLifecycleOwner) {
-                    mainListAdapter?.submitList(it?.toMutableList())
+                    mainListAdapter?.submitList(it.toMutableList())
                 }
                 postValue(mainButtonModel.buttons)
             }
@@ -124,16 +123,15 @@ class MainFragment : Fragment() {
         binding.filterRecyclerView.apply {
             adapter =
                 FilterListAdapter(FilterListAdapter.ButtonFilterItemCallback()) { type, isCheck ->
-                    mainButtonViewModel.mainButtonList
-                        .postValue(
-                            mainButtonModel.apply {
-                                operateData(type, isCheck)
-                            }.buttons
-                        )
+                    mainButtonModel.operateData(type, isCheck)
+                    MyLog.i(TAG, "this@MainFragment: ${this@MainFragment}, viewLifecycleOwner: $viewLifecycleOwner")
+                    mainButtonViewModel.mainButtonList.postValue(mainButtonModel.buttons)
                 }.apply {
                     filterAdapter = this
                 }
             layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            removeItemDecoration(decoration)
+            addItemDecoration(decoration)
         }
 
         binding.mainRecyclerView.apply {
@@ -143,7 +141,8 @@ class MainFragment : Fragment() {
             layoutManager = GridLayoutManager(context, 2)
 //            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 //            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            addItemDecoration(SpaceItemDecoration())
+            removeItemDecoration(decoration)
+            addItemDecoration(decoration)
         }
     }
 
@@ -156,40 +155,9 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun initMonitor() {
-
-        // 1) Looper方案--BlockCanary
-        Looper.getMainLooper().setMessageLogging { s: String ->
-            // >>>>> Dispatching to
-            // <<<<< Finished to
-            Log.d(TAG, "[println] s: $s")
-        }
-
-        // 2) Choreographer方案--ArgusAPM、LogMonitor
-        Choreographer.getInstance().postFrameCallback(object : Choreographer.FrameCallback {
-            override fun doFrame(frameTimeNanos: Long) {
-                if (mLastFrameNanos == 0L) {
-                    mLastFrameNanos = frameTimeNanos
-                }
-                if (frameTimeNanos - mLastFrameNanos > 100) {
-                    //
-                }
-                Log.i(
-                    TAG,
-                    "[doFrame] time gap: " + (frameTimeNanos - mLastFrameNanos).toFloat() / NANO_UNIT + "ms"
-                )
-                mLastFrameNanos = frameTimeNanos
-                Choreographer.getInstance().postFrameCallback(this)
-            }
-        })
-
-        // 1) + 2)--Matrix
-    }
-
     companion object {
 
         private const val TAG = "MainFragment"
-        private const val NANO_UNIT = 1000000L
 
         /**
          * Use this factory method to create a new instance of

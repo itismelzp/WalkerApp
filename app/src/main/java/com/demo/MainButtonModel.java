@@ -21,7 +21,7 @@ import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
 import com.demo.fragment.BaseFragment;
 import com.demo.fragment.GridFragment;
-import com.demo.fragment.SlideShowFragment;
+import com.demo.fragment.ViewPagerCollectionFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
 import com.demo.rxjava.RxJavaActivity;
@@ -154,7 +154,7 @@ public class MainButtonModel {
         systemViews.add(new MainButton("btn list view demo", MainButtonType.TYPE_SYSTEM_VIEW, ListViewDemoActivity.class));
         systemViews.add(new MainButton("test recycleview", MainButtonType.TYPE_SYSTEM_VIEW, ScaleActivity.class));
         systemViews.add(new MainButton("动画demo", MainButtonType.TYPE_SYSTEM_VIEW, AnimatorActivity.class));
-        systemViews.add(new MainButton("轮播图demo", MainButtonType.TYPE_SYSTEM_VIEW, new FragmentOnclickListener(new SlideShowFragment())));
+        systemViews.add(new MainButton("轮播图demo", MainButtonType.TYPE_SYSTEM_VIEW, new FragmentOnclickListener(ViewPagerCollectionFragment.newInstance())));
         typeMap.put(MainButtonType.TYPE_SYSTEM_VIEW, systemViews);
 
         List<MainButton> systemComponents = new ArrayList<>();

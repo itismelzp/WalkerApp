@@ -24,10 +24,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [SlideShowFragment.newInstance] factory method to
+ * Use the [NormalViewPagerFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SlideShowFragment : BaseFragment() {
+class NormalViewPagerFragment : BaseFragment() {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -157,8 +157,11 @@ class SlideShowFragment : BaseFragment() {
         const val TAG = "SlideShowFragment"
 
         @JvmStatic
+        fun newInstance() = NormalViewPagerFragment()
+
+        @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            SlideShowFragment().apply {
+            NormalViewPagerFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -19,7 +19,10 @@ import com.demo.logger.MyLog
  * Use the [ImagePagerFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ImagePagerFragment : Fragment() {
+
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
+class ImagePagerFragment : BaseFragment() {
 
     private lateinit var binding: FragmentImagePagerBinding
 
@@ -58,6 +61,8 @@ class ImagePagerFragment : Fragment() {
                 names: MutableList<String>,
                 sharedElements: MutableMap<String, View>
             ) {
+
+                // TODO::改造成viewpager2后，这里(instantiateItem)的替换方案是个问题！！！
                 // 拿到当前viewPager页的视图
                 val currentFragment =
                     binding.viewPager.adapter?.instantiateItem(
@@ -83,6 +88,23 @@ class ImagePagerFragment : Fragment() {
         fun newInstance() = ImagePagerFragment().apply {
             arguments = Bundle().apply {}
         }
+
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            ImagePagerFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
+            }
+    }
+
+    override fun createFragment(): BaseFragment {
+        return newInstance()
+    }
+
+    override fun createFragment(arg1: String, arg2: String): BaseFragment {
+        return newInstance(arg1, arg2)
     }
 
 }

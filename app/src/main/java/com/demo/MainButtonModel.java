@@ -19,10 +19,11 @@ import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.ryg.ViewDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
+import com.demo.fragment.BaseFragment;
 import com.demo.fragment.GridFragment;
+import com.demo.fragment.SlideShowFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
-import com.demo.logger.MyLog;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
 import com.demo.storage.WinkKVDemoActivity;
@@ -109,6 +110,30 @@ public class MainButtonModel {
                 .commit();
     };
 
+    private class FragmentOnclickListener implements MainButton.OnclickListener {
+
+        private final BaseFragment targetFragment;
+
+        public FragmentOnclickListener(BaseFragment targetFragment) {
+            this.targetFragment = targetFragment;
+        }
+
+        @Override
+        public void onClickListener() {
+            // 注意:强烈建议对涉及多种动画类型的效果使用transitions，因为使用嵌套AnimationSet实例存在已知的问题。
+            fragment.getParentFragmentManager()
+                    .beginTransaction()
+                    .setReorderingAllowed(true)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE) // 推荐使用Transition
+                    .replace(R.id.fragment_container,
+                            targetFragment.createFragment("hello world", "hello fragment"),
+                            targetFragment.getClass().getSimpleName())
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
+
     public MainButtonModel(Fragment fragment) {
         this.fragment = fragment;
         initData();
@@ -129,10 +154,12 @@ public class MainButtonModel {
         systemViews.add(new MainButton("btn list view demo", MainButtonType.TYPE_SYSTEM_VIEW, ListViewDemoActivity.class));
         systemViews.add(new MainButton("test recycleview", MainButtonType.TYPE_SYSTEM_VIEW, ScaleActivity.class));
         systemViews.add(new MainButton("动画demo", MainButtonType.TYPE_SYSTEM_VIEW, AnimatorActivity.class));
+        systemViews.add(new MainButton("轮播图demo", MainButtonType.TYPE_SYSTEM_VIEW, new FragmentOnclickListener(new SlideShowFragment())));
         typeMap.put(MainButtonType.TYPE_SYSTEM_VIEW, systemViews);
 
         List<MainButton> systemComponents = new ArrayList<>();
         systemComponents.add(new MainButton("fragment demo", MainButtonType.TYPE_SYSTEM_COMPONENT, fragmentClickListener));
+        systemComponents.add(new MainButton("fragment demo2", MainButtonType.TYPE_SYSTEM_COMPONENT, new FragmentOnclickListener(new GridFragment())));
         typeMap.put(MainButtonType.TYPE_SYSTEM_COMPONENT, systemComponents);
 
         List<MainButton> storage = new ArrayList<>();

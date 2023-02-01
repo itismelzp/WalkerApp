@@ -28,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A fragment for displaying a grid of images.
  */
-class GridFragment : Fragment() {
+class GridFragment : BaseFragment() {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -37,6 +37,13 @@ class GridFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var listener: OnActionListener? = null
+    override fun createFragment(): BaseFragment {
+        return newInstance()
+    }
+
+    override fun createFragment(arg1: String, arg2: String): BaseFragment {
+        return newInstance(arg1, arg2)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -158,6 +165,11 @@ class GridFragment : Fragment() {
 
         @JvmField
         var currentPosition = 0
+
+        @JvmStatic
+        fun newInstance() = GridFragment().apply {
+            arguments = Bundle().apply {}
+        }
 
         @JvmStatic
         fun newInstance(param1: String, param2: String) =

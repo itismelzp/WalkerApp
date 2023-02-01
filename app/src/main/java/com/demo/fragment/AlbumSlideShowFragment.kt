@@ -1,18 +1,23 @@
 package com.demo.fragment
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.demo.R
+import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.FragmentAlbumSlideShowBinding
 import com.demo.logger.MyLog
+import kotlin.math.abs
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -34,9 +39,11 @@ class AlbumSlideShowFragment : BaseFragment() {
     private var selectedByGallery = false
     private var selectedByIndicator = false
 
-    private val isAutoPlay = true
+    private var isAutoPlay = false
     private val mHandler = Handler(Looper.getMainLooper())
     private val mRunnable = Runnable { this.handlePosition() }
+
+    private lateinit var mData: List<Int>
 
     override fun createFragment(arg1: String, arg2: String): BaseFragment {
         return newInstance("", "")
@@ -61,8 +68,23 @@ class AlbumSlideShowFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        initData()
         initViewPager()
+    }
+
+    private fun initData() {
+        mData = mutableListOf(
+            R.drawable.kpl_machao_01,
+            R.drawable.kpl_lvbu_01,
+            R.drawable.kpl_lvbu_02,
+            R.drawable.kpl_libai_01,
+            R.drawable.kpl_libai_02,
+            R.drawable.kpl_libai_03,
+            R.drawable.kpl_libai_04,
+            R.drawable.kpl_zhaoyun_01,
+            R.drawable.kpl_zhaoyun_02,
+            R.drawable.kpl_change_01
+        )
     }
 
     private fun initViewPager() {
@@ -74,8 +96,10 @@ class AlbumSlideShowFragment : BaseFragment() {
             recyclerView.apply {
                 clipToPadding = false
             }
-            adapter = Adapter(R.layout.item_slide_gallery_pages)
-            setPageTransformer(MarginPageTransformer(resources.getDimensionPixelOffset(R.dimen.page_margin)))
+            adapter = GalleryAdapter().apply {
+                data = mData
+            }
+            setPageTransformer(MarginPageTransformer(resources.getDimensionPixelOffset(R.dimen.spacer_small)))
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
@@ -85,6 +109,15 @@ class AlbumSlideShowFragment : BaseFragment() {
                     } else { // 2) gallery的被动滑动
                         selectedByGallery = false
                         selectedByIndicator = false
+                    }
+                }
+
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+                    when(state) {
+                        ViewPager2.SCROLL_STATE_IDLE -> resumeLoop()
+                        ViewPager2.SCROLL_STATE_DRAGGING -> pauseLoop()
+                        ViewPager2.SCROLL_STATE_SETTLING -> {}
                     }
                 }
             })
@@ -100,8 +133,16 @@ class AlbumSlideShowFragment : BaseFragment() {
                         resources.getDimensionPixelOffset(R.dimen.peekOffset) * 3
                 setPadding(padding, 0, padding, 0)
                 clipToPadding = false
+                addItemDecoration(SpaceItemDecoration())
             }
-            adapter = Adapter(R.layout.item_slide_indicator)
+            adapter = IndicatorAdapter().apply {
+                data = mData
+                pageClickListener = object : OnPageClickListener {
+                    override fun onPageClick(clickedView: View?, position: Int) {
+                        itemClick(position)
+                    }
+                }
+            }
             setPageTransformer(ZoomOutPageTransformer())
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
@@ -114,88 +155,202 @@ class AlbumSlideShowFragment : BaseFragment() {
                         selectedByGallery = false
                     }
                 }
+
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+                    when(state) {
+                        ViewPager2.SCROLL_STATE_IDLE -> resumeLoop()
+                        ViewPager2.SCROLL_STATE_DRAGGING -> pauseLoop()
+                        ViewPager2.SCROLL_STATE_SETTLING -> {}
+                    }
+                }
             })
         }
 
-        startLoop()
     }
 
     private fun startLoop() {
+        isAutoPlay = true
+        resumeLoop()
+    }
+
+    private fun pauseLoop() {
         if (isAutoPlay) {
+            mHandler.removeCallbacks(mRunnable)
+        }
+    }
+
+    private fun resumeLoop() {
+        if (isAutoPlay) {
+            mHandler.removeCallbacks(mRunnable)
             mHandler.postDelayed(mRunnable, INTERNAL)
         }
     }
 
-    private fun handlePosition() {
-        if (isAutoPlay && galleryVP.currentItem < 9) {
-            // 模拟其中一个viewpager滑动即可
-            selectedByIndicator = false
-            selectedByGallery = true
-            galleryVP.setCurrentItem(galleryVP.currentItem + 1, true)
-        }
-        mHandler.postDelayed(mRunnable, INTERNAL)
+    private fun stopLoop() {
+        pauseLoop()
+        isAutoPlay = false
     }
 
-    class ViewHolder(parent: ViewGroup, layoutId: Int) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-    )
+    private fun handlePosition() {
+        if (isAutoPlay) {
+            if (galleryVP.currentItem < mData.size - 1) {
+                // 模拟其中一个viewpager滑动即可
+                selectedByIndicator = false
+                selectedByGallery = true
+                galleryVP.setCurrentItem(galleryVP.currentItem + 1, true)
+            }
+            startLoop()
+        }
+    }
 
-    class Adapter(private val layoutId: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    override fun onStart() {
+        super.onStart()
+        startLoop()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopLoop()
+    }
+
+    interface OnPageClickListener {
+        fun onPageClick(clickedView: View?, position: Int)
+    }
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        constructor(parent: ViewGroup, layoutId: Int)
+                : this(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
+    }
+
+    class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        var data: List<Int> = mutableListOf()
 
         override fun getItemCount(): Int {
-            return 10
+            return data.size
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return ViewHolder(parent, layoutId)
+            val itemView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_slide_gallery_pages, parent, false)
+            return ViewHolder(itemView)
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             holder.itemView.tag = position
+            holder.itemView.findViewById<ImageView>(R.id.gallery_iv).setImageResource(data[position])
+        }
+    }
+
+    class IndicatorAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        var pageClickListener: OnPageClickListener? = null
+
+        var data: List<Int> = mutableListOf()
+
+        override fun getItemCount(): Int {
+            return data.size
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            val itemView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_slide_indicator, parent, false)
+            val viewHolder = ViewHolder(itemView)
+            itemView.setOnClickListener { v ->
+                pageClickListener?.onPageClick(v, viewHolder.adapterPosition)
+            }
+            return viewHolder
+        }
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            holder.itemView.tag = position
+            holder.itemView.findViewById<ImageView>(R.id.indicator_iv).setImageResource(data[position])
         }
     }
 
     class ZoomOutPageTransformer : ViewPager2.PageTransformer {
 
         override fun transformPage(view: View, position: Float) {
-            MyLog.i(TAG, "[transformPage] position: $position")
+//            MyLog.i(TAG, "[transformPage] position: $position")
             view.apply {
                 val pageWidth = width
                 val pageHeight = height
                 when {
                     position < -1 -> { // [-Infinity,-1)
                         // This page is way off-screen to the left.
-                        alpha = .5f
+                        alpha = MIN_ALPHA
                         scaleX = MIN_SCALE
-                        scaleY = MIN_SCALE
                     }
                     position <= 1 -> { // [-1,1]
-                        // Modify the default slide transition to shrink the page as well
-                        val scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position))
+                        // Modify the default slide transition to shrink the page as well.
+                        val scaleFactor = Math.max(MIN_SCALE, MAX_SCALE - abs(position)) // [1, 1.2]
                         val vertMargin = pageHeight * (1 - scaleFactor) / 2
                         val horzMargin = pageWidth * (1 - scaleFactor) / 2
-                        translationX = if (position < 0) {
-                            horzMargin - vertMargin / 2
-                        } else {
-                            horzMargin + vertMargin / 2
-                        }
+//                        translationX = if (position < 0) {
+//                            horzMargin - vertMargin / 2
+//                        } else {
+//                            horzMargin + vertMargin / 2
+//                        }
 
-                        // Scale the page down (between MIN_SCALE and 1)
+                        // Scale the page down (between MIN_SCALE and 1).
                         scaleX = scaleFactor
-                        scaleY = scaleFactor
 
                         // Fade the page relative to its size.
-                        alpha = (MIN_ALPHA +
-                                (((scaleFactor - MIN_SCALE) / (1 - MIN_SCALE)) * (1 - MIN_ALPHA)))
+                        alpha = MIN_ALPHA + ((scaleFactor - MIN_SCALE) / (MAX_SCALE - MIN_SCALE)) * (1 - MIN_ALPHA) // [0.5, 1]
+                        MyLog.i(TAG, "[transformPage] scaleX: $scaleX, alpha: $alpha")
                     }
                     else -> { // (1,+Infinity]
                         // This page is way off-screen to the right.
-                        alpha = .5f
+                        alpha = MIN_ALPHA
                         scaleX = MIN_SCALE
-                        scaleY = MIN_SCALE
                     }
                 }
             }
+        }
+    }
+
+    class SpaceItemDecoration : ItemDecoration {
+
+        private val leftSpace: Int
+        private val topSpace: Int
+        private val rightSpace: Int
+        private val bottomSpace: Int
+
+        private val defaultSpace = ViewUtils.dpToPx(2f)
+
+        constructor() {
+            leftSpace = defaultSpace
+            topSpace = ViewUtils.dpToPx(0f)
+            rightSpace = defaultSpace
+            bottomSpace = ViewUtils.dpToPx(0f)
+        }
+
+        constructor(space: Int) {
+            this.leftSpace = space
+            this.topSpace = space
+            this.rightSpace = space
+            this.bottomSpace = space
+        }
+
+        constructor(leftSpace: Int, topSpace: Int, rightSpace: Int, bottomSpace: Int) {
+            this.leftSpace = leftSpace
+            this.topSpace = topSpace
+            this.rightSpace = rightSpace
+            this.bottomSpace = bottomSpace
+        }
+
+        override fun getItemOffsets(
+            outRect: Rect, view: View,
+            parent: RecyclerView, state: RecyclerView.State
+        ) {
+            outRect.set(leftSpace, topSpace, rightSpace, bottomSpace)
+        }
+    }
+
+    private fun itemClick(position: Int) {
+        if (position != indicatorVP.currentItem) {
+            indicatorVP.setCurrentItem(position, true)
         }
     }
 
@@ -203,8 +358,10 @@ class AlbumSlideShowFragment : BaseFragment() {
 
         private const val TAG = "AlbumSlideShowFragment"
 
-        private const val MIN_SCALE = 0.85f
+        private const val MIN_SCALE = 1f
+        private const val MAX_SCALE = 1.2f
         private const val MIN_ALPHA = 0.5f
+
         private const val INTERNAL = 4000L
 
         @JvmStatic

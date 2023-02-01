@@ -87,8 +87,10 @@ class NormalViewPagerFragment : BaseFragment() {
             currentItem = 500
             //注册轮播图的滚动事件监听器
             registerOnPageChangeCallback(object : OnPageChangeCallback() {
+                // 每次滑动只回调1次（位置在滑动中间，即：动画 + onPageSelected + 动画）
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
+                    MyLog.i(TAG, "[onPageSelected] position: $position")
                     //轮播时，改变指示点
                     val current = position % 4
                     val last = lastPosition % 4
@@ -96,6 +98,55 @@ class NormalViewPagerFragment : BaseFragment() {
                         .setBackgroundResource(R.drawable.shape_dot_selected)
                     indicatorContainer.getChildAt(last).setBackgroundResource(R.drawable.shape_dot)
                     lastPosition = position
+                }
+
+                // 每次滑动只回调3次（滑动开始+onPageSelected回调前+滑动结束，即：1 -> 2 -> 0）
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+
+                    /**
+                     * Indicates that the ViewPager2 is in an idle, settled state. The current page
+                     * is fully in view and no animation is in progress.
+                     */
+                    val SCROLL_STATE_IDLE = 0
+
+                    /**
+                     * Indicates that the ViewPager2 is currently being dragged by the user, or programmatically
+                     * via fake drag functionality.
+                     */
+                    val SCROLL_STATE_DRAGGING = 1
+
+                    /**
+                     * Indicates that the ViewPager2 is in the process of settling to a final position.
+                     */
+                    val SCROLL_STATE_SETTLING = 2
+
+                    when (state) {
+                        // 开始滑动
+                        ViewPager2.SCROLL_STATE_DRAGGING -> MyLog.i(
+                            TAG,
+                            "[onPageScrollStateChanged] state: SCROLL_STATE_DRAGGING"
+                        )
+                        // 滑动到最终位置，即时动画还未结束
+                        ViewPager2.SCROLL_STATE_SETTLING -> MyLog.i(
+                            TAG,
+                            "[onPageScrollStateChanged] state: SCROLL_STATE_SETTLING"
+                        )
+                        // 滑动到最终位置，并且动画结束
+                        ViewPager2.SCROLL_STATE_IDLE -> MyLog.i(
+                            TAG,
+                            "[onPageScrollStateChanged] state: SCROLL_STATE_IDLE"
+                        )
+                    }
+                }
+
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) { // 每次滑动回调N次（穿插在onPageScrollStateChanged之间）
+                    super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                    MyLog.i(TAG, "[onPageScrolled] position: $position, positionOffset: $positionOffset, positionOffsetPixels: $positionOffsetPixels")
                 }
             })
         }
@@ -134,12 +185,12 @@ class NormalViewPagerFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        mHandler.postDelayed(runnable, 5000)
+//        mHandler.postDelayed(runnable, 5000)
     }
 
     override fun onPause() {
         super.onPause()
-        mHandler.removeCallbacks(runnable);
+        mHandler.removeCallbacks(runnable)
     }
 
     private val runnable: Runnable = object : Runnable {
@@ -154,7 +205,7 @@ class NormalViewPagerFragment : BaseFragment() {
 
     companion object {
 
-        const val TAG = "SlideShowFragment"
+        const val TAG = "NormalViewPagerFragment"
 
         @JvmStatic
         fun newInstance() = NormalViewPagerFragment()

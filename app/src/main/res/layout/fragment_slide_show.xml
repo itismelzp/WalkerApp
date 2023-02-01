@@ -15,10 +15,15 @@
             app:cardCornerRadius="10dp"
             app:cardElevation="0dp">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/slide_show_viewpager2"
+            <com.demo.fragment.NestedScrollableHost
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/slide_show_viewpager2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.demo.fragment.NestedScrollableHost>
 
         </androidx.cardview.widget.CardView>
 

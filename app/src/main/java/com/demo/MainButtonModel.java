@@ -154,7 +154,7 @@ public class MainButtonModel {
         systemViews.add(new MainButton("btn list view demo", MainButtonType.TYPE_SYSTEM_VIEW, ListViewDemoActivity.class));
         systemViews.add(new MainButton("test recycleview", MainButtonType.TYPE_SYSTEM_VIEW, ScaleActivity.class));
         systemViews.add(new MainButton("动画demo", MainButtonType.TYPE_SYSTEM_VIEW, AnimatorActivity.class));
-        systemViews.add(new MainButton("轮播图demo", MainButtonType.TYPE_SYSTEM_VIEW, new FragmentOnclickListener(ViewPagerCollectionFragment.newInstance())));
+        systemViews.add(new MainButton("ViewPager2 demo", MainButtonType.TYPE_SYSTEM_VIEW, new FragmentOnclickListener(ViewPagerCollectionFragment.newInstance())));
         typeMap.put(MainButtonType.TYPE_SYSTEM_VIEW, systemViews);
 
         List<MainButton> systemComponents = new ArrayList<>();

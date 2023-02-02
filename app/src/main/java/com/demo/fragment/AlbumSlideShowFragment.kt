@@ -4,11 +4,13 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewpager2.widget.MarginPageTransformer
@@ -17,6 +19,11 @@ import com.demo.R
 import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.FragmentAlbumSlideShowBinding
 import com.demo.logger.MyLog
+import com.demo.viewpager.CustomGsyVideo
+import com.demo.viewpager.MediaType
+import com.demo.viewpager.VideoBean
+import com.google.android.exoplayer2.upstream.RawResourceDataSource
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import kotlin.math.abs
 
 private const val ARG_PARAM1 = "param1"
@@ -27,7 +34,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AlbumSlideShowFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AlbumSlideShowFragment : BaseFragment() {
+class AlbumSlideShowFragment : BaseFragment(), View.OnClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -35,15 +42,19 @@ class AlbumSlideShowFragment : BaseFragment() {
     private lateinit var binding: FragmentAlbumSlideShowBinding
     private lateinit var galleryVP: ViewPager2
     private lateinit var indicatorVP: ViewPager2
+    private lateinit var galleryLayoutManager: LinearLayoutManager
 
     private var selectedByGallery = false
     private var selectedByIndicator = false
 
-    private var isAutoPlay = false
+    private var isGalleryAutoPlay = false
+    private var isGalleryPlaying = true
     private val mHandler = Handler(Looper.getMainLooper())
     private val mRunnable = Runnable { this.handlePosition() }
 
-    private lateinit var mData: List<Int>
+    private lateinit var mData: List<VideoBean>
+
+    private var position = 0
 
     override fun createFragment(arg1: String, arg2: String): BaseFragment {
         return newInstance("", "")
@@ -69,32 +80,38 @@ class AlbumSlideShowFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initData()
-        initViewPager()
+        initGallery()
+        initIndicator()
+
+        binding.controlPlayBtn.setOnClickListener(this)
     }
 
     private fun initData() {
         mData = mutableListOf(
-            R.drawable.kpl_machao_01,
-            R.drawable.kpl_lvbu_01,
-            R.drawable.kpl_lvbu_02,
-            R.drawable.kpl_libai_01,
-            R.drawable.kpl_libai_02,
-            R.drawable.kpl_libai_03,
-            R.drawable.kpl_libai_04,
-            R.drawable.kpl_zhaoyun_01,
-            R.drawable.kpl_zhaoyun_02,
-            R.drawable.kpl_change_01
+            VideoBean(R.drawable.kpl_machao_01, ""),
+            VideoBean(R.mipmap.img1, RawResourceDataSource.buildRawResourceUri(R.raw.video1).toString(), MediaType.VIDEO),
+            VideoBean(R.drawable.kpl_lvbu_01, ""),
+            VideoBean(R.mipmap.img2, RawResourceDataSource.buildRawResourceUri(R.raw.video2).toString(), MediaType.VIDEO),
+            VideoBean(R.drawable.kpl_lvbu_02, ""),
+            VideoBean(R.mipmap.img3, RawResourceDataSource.buildRawResourceUri(R.raw.video3).toString(), MediaType.VIDEO),
+            VideoBean(R.drawable.kpl_libai_01, ""),
+            VideoBean(R.drawable.kpl_libai_02, ""),
+            VideoBean(R.drawable.kpl_libai_03, ""),
+            VideoBean(R.drawable.kpl_libai_04, ""),
+            VideoBean(R.drawable.kpl_zhaoyun_01, ""),
+            VideoBean(R.drawable.kpl_zhaoyun_02, ""),
+            VideoBean(R.drawable.kpl_change_01, "")
         )
     }
 
-    private fun initViewPager() {
+    private fun initGallery() {
         binding.galleryViewPager.apply {
             galleryVP = this
             // Set offscreen page limit to at least 1, so adjacent pages are always laid out
             offscreenPageLimit = 1
-            val recyclerView = getChildAt(0) as RecyclerView
-            recyclerView.apply {
+            (getChildAt(0) as RecyclerView).apply {
                 clipToPadding = false
+                this@AlbumSlideShowFragment.galleryLayoutManager = layoutManager as LinearLayoutManager
             }
             adapter = GalleryAdapter().apply {
                 data = mData
@@ -110,6 +127,9 @@ class AlbumSlideShowFragment : BaseFragment() {
                         selectedByGallery = false
                         selectedByIndicator = false
                     }
+                    this@AlbumSlideShowFragment.position = position
+                    GSYVideoManager.releaseAllVideos()
+                    startVideo()
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
@@ -122,13 +142,14 @@ class AlbumSlideShowFragment : BaseFragment() {
                 }
             })
         }
+    }
 
+    private fun initIndicator() {
         binding.indicatorViewPager.apply {
             indicatorVP = this
             // Set offscreen page limit to at least 1, so adjacent pages are always laid out
             offscreenPageLimit = 7
-            val recyclerView = getChildAt(0) as RecyclerView
-            recyclerView.apply {
+            (getChildAt(0) as RecyclerView).apply {
                 val padding = resources.getDimensionPixelOffset(R.dimen.halfPageMargin) +
                         resources.getDimensionPixelOffset(R.dimen.peekOffset) * 3
                 setPadding(padding, 0, padding, 0)
@@ -166,34 +187,54 @@ class AlbumSlideShowFragment : BaseFragment() {
                 }
             })
         }
+    }
 
+    fun startVideo() {
+
+        if (mData[position].mediaType == MediaType.IMAGE) {
+            return
+        }
+
+        GSYVideoManager.releaseAllVideos()
+        Handler(Looper.getMainLooper()).postDelayed({
+            galleryLayoutManager.findViewByPosition(position)?.findViewById<CustomGsyVideo>(R.id.gsyVideo)
+                ?.apply {
+                    isLooping = false
+                    startPlayLogic()
+                    requestFocus()
+                    Log.i(TAG, "position: $position, la: $galleryLayoutManager, url: $url")
+                }
+        }, 100)
     }
 
     private fun startLoop() {
-        isAutoPlay = true
+        isGalleryAutoPlay = true
+        isGalleryPlaying = true
         resumeLoop()
     }
 
     private fun pauseLoop() {
-        if (isAutoPlay) {
+        if (isGalleryAutoPlay) {
             mHandler.removeCallbacks(mRunnable)
         }
+        isGalleryPlaying = false
     }
 
     private fun resumeLoop() {
-        if (isAutoPlay) {
+        if (isGalleryAutoPlay) {
             mHandler.removeCallbacks(mRunnable)
             mHandler.postDelayed(mRunnable, INTERNAL)
         }
+        isGalleryPlaying = true
     }
 
     private fun stopLoop() {
         pauseLoop()
-        isAutoPlay = false
+        isGalleryAutoPlay = false
     }
 
     private fun handlePosition() {
-        if (isAutoPlay) {
+        if (isGalleryAutoPlay) {
             if (galleryVP.currentItem < mData.size - 1) {
                 // 模拟其中一个viewpager滑动即可
                 selectedByIndicator = false
@@ -207,10 +248,24 @@ class AlbumSlideShowFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
         startLoop()
+//        if (this::galleryLayoutManager.isInitialized) {
+//            startVideo()
+//        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        GSYVideoManager.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        GSYVideoManager.onPause()
     }
 
     override fun onStop() {
         super.onStop()
+        GSYVideoManager.releaseAllVideos()
         stopLoop()
     }
 
@@ -225,7 +280,7 @@ class AlbumSlideShowFragment : BaseFragment() {
 
     class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-        var data: List<Int> = mutableListOf()
+        var data: List<VideoBean> = mutableListOf()
 
         override fun getItemCount(): Int {
             return data.size
@@ -239,7 +294,30 @@ class AlbumSlideShowFragment : BaseFragment() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             holder.itemView.tag = position
-            holder.itemView.findViewById<ImageView>(R.id.gallery_iv).setImageResource(data[position])
+            val bean = data[position]
+            val imageView = holder.itemView.findViewById<ImageView>(R.id.gallery_iv)
+            val videoView = holder.itemView.findViewById<CustomGsyVideo>(R.id.gsyVideo)
+            if (bean.mediaType == MediaType.IMAGE) {
+                videoView.visibility = View.GONE
+                imageView.apply {
+                    visibility = View.VISIBLE
+                    setImageResource(data[position].thumb)
+                }
+            } else {
+                imageView.visibility = View.GONE
+                val cache = !data[position].videoPath.contains("rawresource")
+                        && !data[position].videoPath.startsWith("android")
+                videoView.apply {
+                    visibility = View.VISIBLE
+                    setUp(data[position].videoPath, cache, "")
+                    thumbImageView = ImageView(context).apply {
+                        setImageResource(data[position].thumb)
+                        scaleType = ImageView.ScaleType.FIT_CENTER
+                    }
+                    playPosition = position
+                    isLooping = false
+                }
+            }
         }
     }
 
@@ -247,7 +325,7 @@ class AlbumSlideShowFragment : BaseFragment() {
 
         var pageClickListener: OnPageClickListener? = null
 
-        var data: List<Int> = mutableListOf()
+        var data: List<VideoBean> = mutableListOf()
 
         override fun getItemCount(): Int {
             return data.size
@@ -258,14 +336,15 @@ class AlbumSlideShowFragment : BaseFragment() {
                 .inflate(R.layout.item_slide_indicator, parent, false)
             val viewHolder = ViewHolder(itemView)
             itemView.setOnClickListener { v ->
-                pageClickListener?.onPageClick(v, viewHolder.adapterPosition)
+                pageClickListener?.onPageClick(v, viewHolder.bindingAdapterPosition)
             }
             return viewHolder
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             holder.itemView.tag = position
-            holder.itemView.findViewById<ImageView>(R.id.indicator_iv).setImageResource(data[position])
+            holder.itemView.findViewById<ImageView>(R.id.indicator_iv)
+                .setImageResource(data[position].thumb)
         }
     }
 
@@ -284,7 +363,7 @@ class AlbumSlideShowFragment : BaseFragment() {
                     }
                     position <= 1 -> { // [-1,1]
                         // Modify the default slide transition to shrink the page as well.
-                        val scaleFactor = Math.max(MIN_SCALE, MAX_SCALE - abs(position)) // [1, 1.2]
+                        val scaleFactor = MAX_SCALE - (MAX_SCALE - MIN_SCALE) * abs(position) // [1, 1.2]
                         val vertMargin = pageHeight * (1 - scaleFactor) / 2
                         val horzMargin = pageWidth * (1 - scaleFactor) / 2
 //                        translationX = if (position < 0) {
@@ -298,7 +377,7 @@ class AlbumSlideShowFragment : BaseFragment() {
 
                         // Fade the page relative to its size.
                         alpha = MIN_ALPHA + ((scaleFactor - MIN_SCALE) / (MAX_SCALE - MIN_SCALE)) * (1 - MIN_ALPHA) // [0.5, 1]
-                        MyLog.i(TAG, "[transformPage] scaleX: $scaleX, alpha: $alpha")
+                        MyLog.i(TAG, "[transformPage] pos: $position, scaleX: $scaleX, alpha: $alpha")
                     }
                     else -> { // (1,+Infinity]
                         // This page is way off-screen to the right.
@@ -360,7 +439,7 @@ class AlbumSlideShowFragment : BaseFragment() {
 
         private const val MIN_SCALE = 1f
         private const val MAX_SCALE = 1.2f
-        private const val MIN_ALPHA = 0.5f
+        private const val MIN_ALPHA = 0.65f
 
         private const val INTERNAL = 4000L
 
@@ -372,6 +451,18 @@ class AlbumSlideShowFragment : BaseFragment() {
             arguments = Bundle().apply {
                 putString(ARG_PARAM1, param1)
                 putString(ARG_PARAM2, param2)
+            }
+        }
+    }
+
+    override fun onClick(v: View) {
+        if (v.id == R.id.control_play_btn) {
+            if (isGalleryPlaying) {
+                pauseLoop()
+                binding.controlPlayBtn.text = "START"
+            } else {
+                startLoop()
+                binding.controlPlayBtn.text = "PAUSE"
             }
         }
     }

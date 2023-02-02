@@ -16,6 +16,9 @@ android {
         targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK_VERSION)
         versionCode 1
         versionName "1.0"
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -140,6 +143,19 @@ dependencies {
     // Shadow Transform后业务代码会有一部分实际引用runtime中的类
     // 如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
     compileOnly "com.tencent.shadow.core:runtime:$shadow_version"
+
+    // -- 视频库 --（https://github.com/CarGuo/GSYVideoPlayer）
+    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.3.4-release-jitpack'
+    //是否需要ExoPlayer模式
+    implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-exo2:v8.3.4-release-jitpack'
+    //是否需要AliPlayer模式
+    implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-aliplay:8.3.4-release-jitpack'
+    //根据你的需求ijk模式的so
+//    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64:v8.3.4-release-jitpack'
+    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv7a:v8.3.4-release-jitpack'
+//    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv5:v8.3.4-release-jitpack'
+//    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86:v8.3.4-release-jitpack'
+//    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x64:v8.3.4-release-jitpack'
 
     // test
     testImplementation "junit:junit:$rootProject.junitVersion"

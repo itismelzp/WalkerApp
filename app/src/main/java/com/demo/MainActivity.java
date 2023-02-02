@@ -23,7 +23,7 @@ public class MainActivity extends BaseActivity implements GridFragment.OnActionL
         setContentView(R.layout.activity_main);
 
         MyLog.i(TAG, "[onCreate]");
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null) { // 防止屏幕旋转时多次创建页面
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_container,

@@ -10,6 +10,11 @@ import com.demo.customview.utils.ViewUtils;
 import com.demo.ipc.ProcessUtil;
 import com.demo.logger.LogUtil;
 import com.demo.logger.MyLog;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.cache.CacheFactory;
+import com.shuyu.gsyvideoplayer.player.PlayerFactory;
+import com.shuyu.gsyvideoplayer.utils.Debuger;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.tencent.shadow.sample.introduce_shadow_lib.AndroidLoggerFactory;
 
 import com.tencent.shadow.sample.introduce_shadow_lib.FixedPathPmUpdater;
@@ -25,6 +30,9 @@ import com.walker.analytics.sdk.SensorsDataAPI;
 
 import java.io.File;
 import java.util.concurrent.Future;
+
+import tv.danmaku.ijk.media.exo2.Exo2PlayerManager;
+import tv.danmaku.ijk.media.exo2.ExoPlayerCacheManager;
 
 /**
  * Created by walkerzpli on 2020/9/23.
@@ -54,6 +62,8 @@ public class MyApplication extends Application {
 
         MyLog.init(new LogUtil.TimberLog());
         onApplicationCreate(this);
+
+        initVideoSdk();
     }
 
     public static Context getInstance() {
@@ -89,6 +99,14 @@ public class MyApplication extends Application {
             }
         }
         sPluginManager = new DynamicPluginManager(fixedPathPmUpdater);
+    }
+
+    private void initVideoSdk() {
+        GSYVideoManager.instance().enableRawPlay(this);
+        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
+        CacheFactory.setCacheManager(ExoPlayerCacheManager.class);
+        GSYVideoType.enableMediaCodec();
+        Debuger.enable();
     }
 
 }

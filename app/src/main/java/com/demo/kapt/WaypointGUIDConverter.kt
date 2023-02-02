@@ -11,20 +11,20 @@ import com.google.protobuf.InvalidProtocolBufferException
  */
 class WaypointGUIDConverter : IAutelConverter<MissionWaypointGUIDBean, MissionWaypointGUID> {
 
-     fun fromJsonStr(str: String): MissionWaypointGUIDBean? {
+    fun fromJsonStr(str: String): MissionWaypointGUIDBean? {
         return Gson().fromJson(str, MissionWaypointGUIDBean::class.java)
     }
 
-     fun getJsonStr(): String? {
+    fun getJsonStr(): String? {
         return Gson().toJson(MissionWaypointGUIDBean(guid = 123456789))
     }
 
-     fun setValueFromBean(bean: MissionWaypointGUIDBean) {
+    fun setValueFromBean(bean: MissionWaypointGUIDBean) {
         val builder = MissionWaypointGUID()
         builder.guid = bean.guid
     }
 
-     private fun getBeanFromMessage(bean: MissionWaypointGUID): MissionWaypointGUIDBean? {
+    private fun getBeanFromMessage(bean: MissionWaypointGUID): MissionWaypointGUIDBean? {
         val retBean = MissionWaypointGUIDBean()
 //        ReflectUtil.convertFromMessage(retBean, bean, retBean.javaClass, bean.javaClass)
         return retBean

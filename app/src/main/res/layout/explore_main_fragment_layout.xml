@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/explorer_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:overScrollMode="always"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/explorer_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/base_explorer_container_padding_top"
+            android:paddingBottom="@dimen/base_explorer_container_padding_bottom">
+
+            <com.oplus.gallery.explorepage.view.ExplorerItemLayout
+                android:id="@+id/explorer_memories_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/main_explorer_fragment_memories_container_margin_top"
+                android:orientation="@integer/base_explorer_memories_set_list_orientation"
+                app:gap="@dimen/base_album_set_fragment_item_view_horizontal_gap"
+                app:layout_constraintTop_toTopOf="parent"
+                app:leftTitle="@string/main_album_group_recommend_memories_title"
+                app:maxCount="@integer/base_memories_set_list_column"
+                app:rightTitle="@string/main_show_all_title" />
+
+            <com.oplus.gallery.explorepage.view.ExplorerCardLayout
+                android:id="@+id/explorer_person_location_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:gap="@dimen/base_album_set_fragment_item_view_horizontal_gap"
+                app:layout_constraintTop_toBottomOf="@id/explorer_memories_container"
+                app:leftTitle="@string/main_album_group_title_intelligent"
+                app:maxCount="@integer/base_album_set_list_column"
+                app:rightTitleVisibility="gone" />
+
+            <com.oplus.gallery.explorepage.view.ExplorerCardLayout
+                android:id="@+id/explorer_label_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/main_explorer_fragment_label_album_container_margin_top"
+                android:orientation="horizontal"
+                app:gap="@dimen/base_album_set_fragment_item_view_horizontal_gap"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/explorer_person_location_container"
+                app:leftTitle="@string/main_album_group_recommend_label_title"
+                app:maxCount="@integer/base_album_set_list_column"
+                app:rightTitle="@string/main_show_all_title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</LinearLayout>

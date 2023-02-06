@@ -118,4 +118,59 @@
         <attr name="android:galleryItemBackground" />
     </declare-styleable>
 
+    <declare-styleable name="ExplorerCardLayout">
+        <attr name="leftTitle" format="string|reference" />
+        <attr name="rightTitle" format="string|reference" />
+        <attr name="rightTitleVisibility" format="enum">
+            <!-- Visible on screen; the default value. -->
+            <enum name="visible" value="0" />
+            <!-- Not displayed, but taken into account during layout (space is left for it). -->
+            <enum name="invisible" value="1" />
+            <!-- Completely hidden, as if the view had not been added. -->
+            <enum name="gone" value="2" />
+        </attr>
+        <attr name="gap" format="dimension|reference" />
+        <attr name="maxCount" format="integer|reference" />
+        <attr name="android:orientation"/>
+    </declare-styleable>
+
+    <declare-styleable name="ExplorerItemLayout">
+        <attr name="leftText" format="string|reference" />
+        <attr name="rightText" format="string|reference" />
+        <attr name="rightTextVisibility" format="enum">
+            <!-- Visible on screen; the default value. -->
+            <enum name="visible" value="0" />
+            <!-- Not displayed, but taken into account during layout (space is left for it). -->
+            <enum name="invisible" value="1" />
+            <!-- Completely hidden, as if the view had not been added. -->
+            <enum name="gone" value="2" />
+        </attr>
+        <attr name="itemGap" format="dimension|reference" />
+        <attr name="maxCnt" format="integer|reference" />
+        <attr name="android:orientation"/>
+    </declare-styleable>
+
+    <declare-styleable name="GravityFrameLayout">
+        <attr name="horizontalGravityPercent" format="float|reference" />
+        <attr name="verticalGravityPercent" format="float|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="EmptyPageView">
+        <attr name="animRawRes" format="reference" />
+        <attr name="animRawResDark" format="reference" />
+        <attr name="iconRes" format="reference" />
+        <attr name="title" format="string|reference" />
+        <attr name="subtitle" format="string|reference" />
+        <attr name="subtitleVisible" format="boolean" />
+        <attr name="buttonText" format="string|reference" />
+        <attr name="buttonVisible" format="boolean" />
+        <attr name="darkMode" format="boolean" />
+    </declare-styleable>
+
+    <style name="CastListDialog" parent="@style/DefaultBottomSheetDialog" tools:ignore="PrivateResource,ResourceName">
+        <item name="gColorDisabledNeutral" tools:ignore="PrivateResource">@color/couiBlueTintControlDisabled</item>
+        <item name="gColorPressBackground" tools:ignore="PrivateResource">@color/couiBlueTintControlPressed</item>
+        <item name="gColorPrimary" tools:ignore="PrivateResource">@color/couiBlueTintControlNormal</item>
+    </style>
+
 </resources>

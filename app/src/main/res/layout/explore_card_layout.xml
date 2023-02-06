@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <RelativeLayout
+        android:id="@+id/main_single_column_container_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="12dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:id="@+id/main_left_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center_vertical|start"
+            android:maxLines="2"
+            android:paddingEnd="16dp"
+            android:text="精彩回忆"
+            android:textAlignment="viewStart" />
+
+        <TextView
+            android:id="@+id/main_right_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:background="@drawable/main_explorer_arrow_ripple_bg"
+            android:ellipsize="end"
+            android:gravity="center_vertical|end"
+            android:maxLines="2"
+            android:paddingVertical="4dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="7dp"
+            android:text="View All"
+            android:textAlignment="viewEnd"
+            app:drawableEndCompat="@drawable/common_icon_arrow" />
+    </RelativeLayout>
+
+    <com.demo.album.SingleLineLayout
+        android:id="@+id/main_single_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="24dp"
+        app:layout_constraintTop_toBottomOf="@id/main_single_column_container_title" />
+</merge>

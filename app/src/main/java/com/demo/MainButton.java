@@ -13,7 +13,7 @@ public class MainButton implements Comparable<MainButton> {
 
     public Class<?> jumpClass;
 
-    public OnclickListener onclickListener;
+    public OnClickListener onclickListener;
 
     public boolean isHide;
 
@@ -39,12 +39,12 @@ public class MainButton implements Comparable<MainButton> {
         this.jumpClass = jumpClass;
     }
 
-    public MainButton(String name, OnclickListener onclickListener) {
+    public MainButton(String name, OnClickListener onclickListener) {
         this.name = name;
         this.onclickListener = onclickListener;
     }
 
-    public MainButton(String name, int type, OnclickListener onclickListener) {
+    public MainButton(String name, int type, OnClickListener onclickListener) {
         this.name = name;
         this.type = type;
         this.onclickListener = onclickListener;
@@ -63,7 +63,7 @@ public class MainButton implements Comparable<MainButton> {
         return Integer.compare(this.type, o.type);
     }
 
-    interface OnclickListener {
+    public interface OnClickListener {
         void onClickListener();
     }
 }

@@ -3,12 +3,13 @@ package com.demo;
 import static com.demo.constant.Constant.FROM_ID_START_ACTIVITY;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewbinding.ViewBinding;
 
+//import com.demo.album.OppoGalleryFragment;
 import com.demo.animator.AnimatorActivity;
 import com.demo.apt.AptDemoActivity;
 import com.demo.customview.activity.CustomMatrixActivity;
@@ -24,6 +25,8 @@ import com.demo.fragment.GridFragment;
 import com.demo.fragment.ViewPagerCollectionFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
+import com.demo.logger.MyLog;
+import com.demo.plugin.PluginClickListener;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
 import com.demo.storage.WinkKVDemoActivity;
@@ -60,7 +63,7 @@ public class MainButtonModel {
     private final List<MainButton> buttons = new ArrayList<>();
     private static final Map<Integer, List<MainButton>> typeMap = new HashMap<>();
 
-    private static final MainButton.OnclickListener pluginClickListener = () -> {
+    private static final MainButton.OnClickListener pluginClickListener = () -> {
         PluginManager pluginManager = MyApplication.getPluginManager();
         Bundle bundle = new Bundle();
         // 插件 zip，这几个参数也都可以不传，直接在 PluginManager 中硬编码
@@ -75,23 +78,23 @@ public class MainButtonModel {
         pluginManager.enter(MyApplication.getInstance(), FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
             @Override
             public void onShowLoadingView(View view) {
-                Log.i(TAG, "[onShowLoadingView]");
+                MyLog.i(TAG, "[onShowLoadingView]");
             }
 
             @Override
             public void onCloseLoadingView() {
-                Log.i(TAG, "[onCloseLoadingView]");
+                MyLog.i(TAG, "[onCloseLoadingView]");
             }
 
             @Override
             public void onEnterComplete() {
                 // 启动成功
-                Log.i(TAG, "[onEnterComplete]");
+                MyLog.i(TAG, "[onEnterComplete]");
             }
         });
     };
 
-    private final MainButton.OnclickListener fragmentClickListener = () -> {
+    private final MainButton.OnClickListener fragmentClickListener = () -> {
 
         // 注意:强烈建议对涉及多种动画类型的效果使用transitions，因为使用嵌套AnimationSet实例存在已知的问题。
         fragment.getParentFragmentManager()
@@ -110,11 +113,11 @@ public class MainButtonModel {
                 .commit();
     };
 
-    private class FragmentOnclickListener implements MainButton.OnclickListener {
+    private class FragmentOnclickListener implements MainButton.OnClickListener {
 
-        private final BaseFragment targetFragment;
+        private final BaseFragment<? extends ViewBinding> targetFragment;
 
-        public FragmentOnclickListener(BaseFragment targetFragment) {
+        public FragmentOnclickListener(BaseFragment<? extends ViewBinding> targetFragment) {
             this.targetFragment = targetFragment;
         }
 
@@ -126,7 +129,7 @@ public class MainButtonModel {
                     .setReorderingAllowed(true)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE) // 推荐使用Transition
                     .replace(R.id.fragment_container,
-                            targetFragment.createFragment("hello world", "hello fragment"),
+                            targetFragment,
                             targetFragment.getClass().getSimpleName())
                     .addToBackStack(null)
                     .commit();
@@ -148,18 +151,19 @@ public class MainButtonModel {
         customViews.add(new MainButton("aige custom view", MainButtonType.TYPE_CUSTOM_VIEW, AigeActivity.class));
         customViews.add(new MainButton("shape background", MainButtonType.TYPE_CUSTOM_VIEW, ShapeBgActivity.class));
         customViews.add(new MainButton("wink page", MainButtonType.TYPE_CUSTOM_VIEW, WinkActivity.class));
+//        customViews.add(new MainButton("explorer demo", MainButtonType.TYPE_CUSTOM_VIEW, bindFragmentListener(OppoGalleryFragment.newInstance())));
         typeMap.put(MainButtonType.TYPE_CUSTOM_VIEW, customViews);
 
         List<MainButton> systemViews = new ArrayList<>();
         systemViews.add(new MainButton("btn list view demo", MainButtonType.TYPE_SYSTEM_VIEW, ListViewDemoActivity.class));
         systemViews.add(new MainButton("test recycleview", MainButtonType.TYPE_SYSTEM_VIEW, ScaleActivity.class));
         systemViews.add(new MainButton("动画demo", MainButtonType.TYPE_SYSTEM_VIEW, AnimatorActivity.class));
-        systemViews.add(new MainButton("ViewPager2 demo", MainButtonType.TYPE_SYSTEM_VIEW, new FragmentOnclickListener(ViewPagerCollectionFragment.newInstance())));
+        systemViews.add(new MainButton("ViewPager2 demo", MainButtonType.TYPE_SYSTEM_VIEW, bindFragmentListener(ViewPagerCollectionFragment.newInstance())));
         typeMap.put(MainButtonType.TYPE_SYSTEM_VIEW, systemViews);
 
         List<MainButton> systemComponents = new ArrayList<>();
         systemComponents.add(new MainButton("fragment demo", MainButtonType.TYPE_SYSTEM_COMPONENT, fragmentClickListener));
-        systemComponents.add(new MainButton("fragment demo2", MainButtonType.TYPE_SYSTEM_COMPONENT, new FragmentOnclickListener(new GridFragment())));
+        systemComponents.add(new MainButton("fragment demo2", MainButtonType.TYPE_SYSTEM_COMPONENT, bindFragmentListener(new GridFragment())));
         typeMap.put(MainButtonType.TYPE_SYSTEM_COMPONENT, systemComponents);
 
         List<MainButton> storage = new ArrayList<>();
@@ -262,6 +266,11 @@ public class MainButtonModel {
 
     private void sort() {
         buttons.sort(Comparator.comparingInt(o -> o.type));
+    }
+
+
+    private FragmentOnclickListener bindFragmentListener(BaseFragment<? extends ViewBinding> fragment) {
+        return new FragmentOnclickListener(fragment);
     }
 
 }

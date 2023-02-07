@@ -20,15 +20,15 @@ object MessageTypeConstant {
 //    )
     const val MISSION_WAYPOINT_ENTER_MSG                  = "enterMission"     //进入航点任务功能，对应消息结构：无
 
-    @AutelKey(
-        keyType = "WaypointMissionKey",
-        keyName = "keyExit",
-        componentType = ComponentType.MISSION,
-        canGet = true,
-        canAction = true,
-        paramBean = Void::class,
-        resultBean = MissionWaypointGUIDBean::class,
-    )
+//    @AutelKey(
+//        keyType = "WaypointMissionKey",
+//        keyName = "keyExit",
+//        componentType = ComponentType.MISSION,
+//        canGet = true,
+//        canAction = true,
+//        paramBean = Void::class,
+//        resultBean = MissionWaypointGUIDBean::class,
+//    )
     const val MISSION_WAYPOINT_EXIT_MSG                   = "exitMission"     //退出航点任务，对应消息结构：无
 
 //    @AutelKey(

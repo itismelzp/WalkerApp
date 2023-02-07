@@ -10,23 +10,23 @@ import kotlinx.coroutines.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-
-class LoggerActivity : BaseActivity() {
+class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
     private lateinit var logger: MyLog.ILog
-
-    private lateinit var binding: ActivityLoggerLayoutBinding
 
     companion object {
         private const val TAG = "LoggerActivity"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityLoggerLayoutBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun initBaseData(savedInstanceState: Bundle?) {
+        super.initBaseData(savedInstanceState)
         requestPermission()
         initLog()
+    }
+
+    override fun initBaseViews() {
+        super.initBaseViews()
+
 
         binding.btnPing.setOnClickListener {
             lifecycleScope.launch {
@@ -40,6 +40,8 @@ class LoggerActivity : BaseActivity() {
             }
         }
     }
+
+    override fun getViewBinding() = ActivityLoggerLayoutBinding.inflate(layoutInflater)
 
     @UiThread
     private fun toastPintMsg(msg: String) {

@@ -27,7 +27,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [NormalViewPagerFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class NormalViewPagerFragment : BaseFragment() {
+class NormalViewPagerFragment : BaseFragment<FragmentSlideShowBinding>() {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -38,14 +38,11 @@ class NormalViewPagerFragment : BaseFragment() {
     lateinit var indicatorContainer: LinearLayout //填充指示点的容器
     private val mHandler: Handler = Handler()
 
-    private var _binding: FragmentSlideShowBinding? = null
-    private val binding get() = _binding!!
-
-    override fun createFragment(): BaseFragment {
+    override fun createFragment(): BaseFragment<FragmentSlideShowBinding> {
         return newInstance("", "")
     }
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment {
+    override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentSlideShowBinding> {
         return newInstance(arg1, arg2)
     }
 
@@ -57,15 +54,10 @@ class NormalViewPagerFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSlideShowBinding.inflate(inflater, container, false)
-
-        MyLog.i(TAG, "[onCreateView]")
-        return binding.root
-    }
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ) = FragmentSlideShowBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

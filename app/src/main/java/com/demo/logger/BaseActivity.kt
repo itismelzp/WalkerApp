@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Environment
 import android.provider.Settings
@@ -12,13 +13,31 @@ import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.viewbinding.ViewBinding
 import com.demo.MyApplication
 
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
+
+    private lateinit var _binding: T
+    protected val binding get() = _binding;
 
     companion object {
         const val REQUEST_CODE = 0
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        _binding = getViewBinding()
+        setContentView(_binding.root)
+
+        initBaseData(savedInstanceState)
+        initBaseViews()
+    }
+
+    protected abstract fun getViewBinding(): T
+
+    open fun initBaseData(savedInstanceState: Bundle?) {}
+    open fun initBaseViews() {}
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -7,13 +7,14 @@ import androidx.annotation.NonNull;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.demo.databinding.ActivityMainBinding;
 import com.demo.fragment.GridFragment;
 import com.demo.fragment.MainFragment;
 import com.demo.logger.BaseActivity;
 import com.demo.logger.MyLog;
 
 
-public class MainActivity extends BaseActivity implements GridFragment.OnActionListener {
+public class MainActivity extends BaseActivity<ActivityMainBinding> implements GridFragment.OnActionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -67,5 +68,11 @@ public class MainActivity extends BaseActivity implements GridFragment.OnActionL
     @Override
     public void onAction(@NonNull String msg) {
         toast(TAG + "：" + msg);
+    }
+
+    @NonNull
+    @Override
+    protected ActivityMainBinding getViewBinding() {
+        return ActivityMainBinding.inflate(getLayoutInflater());
     }
 }

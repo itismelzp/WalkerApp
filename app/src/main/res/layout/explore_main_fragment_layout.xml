@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,44 +18,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="@dimen/base_explorer_container_padding_top"
-            android:paddingBottom="@dimen/base_explorer_container_padding_bottom">
+            android:paddingTop="10dp"
+            android:paddingBottom="32dp">
 
-            <com.oplus.gallery.explorepage.view.ExplorerItemLayout
+            <com.demo.album.ExplorerItemLayout
                 android:id="@+id/explorer_memories_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/main_explorer_fragment_memories_container_margin_top"
-                android:orientation="@integer/base_explorer_memories_set_list_orientation"
-                app:gap="@dimen/base_album_set_fragment_item_view_horizontal_gap"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                app:gap="8dp"
                 app:layout_constraintTop_toTopOf="parent"
-                app:leftTitle="@string/main_album_group_recommend_memories_title"
-                app:maxCount="@integer/base_memories_set_list_column"
-                app:rightTitle="@string/main_show_all_title" />
+                app:leftTitle="Memories"
+                app:maxCount="3"
+                app:rightTitle="View All" />
 
-            <com.oplus.gallery.explorepage.view.ExplorerCardLayout
+            <com.demo.album.ExplorerCardLayout
                 android:id="@+id/explorer_person_location_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:gap="@dimen/base_album_set_fragment_item_view_horizontal_gap"
+                app:gap="8dp"
                 app:layout_constraintTop_toBottomOf="@id/explorer_memories_container"
-                app:leftTitle="@string/main_album_group_title_intelligent"
-                app:maxCount="@integer/base_album_set_list_column"
+                app:leftTitle="People Place"
+                app:maxCount="3"
                 app:rightTitleVisibility="gone" />
 
-            <com.oplus.gallery.explorepage.view.ExplorerCardLayout
+            <com.demo.album.ExplorerCardLayout
                 android:id="@+id/explorer_label_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/main_explorer_fragment_label_album_container_margin_top"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
-                app:gap="@dimen/base_album_set_fragment_item_view_horizontal_gap"
+                app:gap="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/explorer_person_location_container"
-                app:leftTitle="@string/main_album_group_recommend_label_title"
-                app:maxCount="@integer/base_album_set_list_column"
-                app:rightTitle="@string/main_show_all_title" />
+                app:leftTitle="Subject"
+                app:maxCount="3"
+                app:rightTitle="View All" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

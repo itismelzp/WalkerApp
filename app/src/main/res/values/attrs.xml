@@ -27,7 +27,6 @@
     <!--for feed tail-->
     <attr name="leftIcon" format="reference" />
     <attr name="leftIconSize" format="dimension" />
-    <attr name="rightText" format="string" />
     <attr name="rightIcon" format="reference" />
     <attr name="rightIconSize" format="dimension" />
     <attr name="background" format="reference" />
@@ -166,11 +165,5 @@
         <attr name="buttonVisible" format="boolean" />
         <attr name="darkMode" format="boolean" />
     </declare-styleable>
-
-    <style name="CastListDialog" parent="@style/DefaultBottomSheetDialog" tools:ignore="PrivateResource,ResourceName">
-        <item name="gColorDisabledNeutral" tools:ignore="PrivateResource">@color/couiBlueTintControlDisabled</item>
-        <item name="gColorPressBackground" tools:ignore="PrivateResource">@color/couiBlueTintControlPressed</item>
-        <item name="gColorPrimary" tools:ignore="PrivateResource">@color/couiBlueTintControlNormal</item>
-    </style>
 
 </resources>

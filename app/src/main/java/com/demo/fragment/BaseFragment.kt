@@ -1,6 +1,11 @@
 package com.demo.fragment
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 
 /**
  * Created by lizhiping on 2023/1/30.
@@ -8,12 +13,43 @@ import androidx.fragment.app.Fragment
  * description
  */
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment<T : ViewBinding> : Fragment() {
 
-    open fun createFragment() : BaseFragment {
+    /**
+     * 这里会发现Fragment和Activity的封装方式不一样，没有用lateinit。
+     * 因为binding变量只有在onCreateView与onDestroyView才是可用的，
+     * 而fragment的生命周期和activity的不同，fragment可以超出其视图的生命周期，
+     * 比如fragment hide的时候，如果不将这里置为空，有可能引起内存泄漏。
+     * 所以我们要在onCreateView中创建，onDestroyView置空。
+     */
+    private var _binding: T? = null
+    protected val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = getViewBinding(inflater, container)
+        initBaseData(savedInstanceState)
+        initBaseViews(savedInstanceState)
+        return binding.root
+    }
+
+    protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): T
+
+    open fun createFragment(): BaseFragment<T> {
         return createFragment("", "")
     }
 
-    abstract fun createFragment(arg1: String, arg2: String) : BaseFragment
+    open fun initBaseData(savedInstanceState: Bundle?) {}
+    open fun initBaseViews(savedInstanceState: Bundle?) {}
+
+    abstract fun createFragment(arg1: String, arg2: String): BaseFragment<T>
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

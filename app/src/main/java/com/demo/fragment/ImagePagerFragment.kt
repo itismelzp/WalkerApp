@@ -22,16 +22,15 @@ import com.demo.logger.MyLog
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-class ImagePagerFragment : BaseFragment() {
+class ImagePagerFragment : BaseFragment<FragmentImagePagerBinding>() {
 
-    private lateinit var binding: FragmentImagePagerBinding
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ) = FragmentImagePagerBinding.inflate(inflater, container, false)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        binding = FragmentImagePagerBinding.inflate(inflater, container, false)
+    override fun initBaseViews(savedInstanceState: Bundle?) {
+        super.initBaseViews(savedInstanceState)
         binding.viewPager.apply {
             adapter = ImagePagerAdapter(this@ImagePagerFragment)
             currentItem = GridFragment.currentPosition
@@ -47,7 +46,6 @@ class ImagePagerFragment : BaseFragment() {
             postponeEnterTransition()
         }
         MyLog.i(TAG, "[onCreateView]")
-        return binding.root
     }
 
     private fun prepareSharedElementTransition() {
@@ -99,11 +97,11 @@ class ImagePagerFragment : BaseFragment() {
             }
     }
 
-    override fun createFragment(): BaseFragment {
+    override fun createFragment(): BaseFragment<FragmentImagePagerBinding> {
         return newInstance()
     }
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment {
+    override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentImagePagerBinding> {
         return newInstance(arg1, arg2)
     }
 

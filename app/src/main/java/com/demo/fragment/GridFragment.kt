@@ -28,20 +28,17 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A fragment for displaying a grid of images.
  */
-class GridFragment : BaseFragment() {
+class GridFragment : BaseFragment<MainFragmentGridBinding>() {
 
     private var param1: String? = null
     private var param2: String? = null
 
-    private var _binding: MainFragmentGridBinding? = null
-    private val binding get() = _binding!!
-
     private var listener: OnActionListener? = null
-    override fun createFragment(): BaseFragment {
+    override fun createFragment(): BaseFragment<MainFragmentGridBinding> {
         return newInstance()
     }
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment {
+    override fun createFragment(arg1: String, arg2: String): BaseFragment<MainFragmentGridBinding> {
         return newInstance(arg1, arg2)
     }
 
@@ -64,16 +61,10 @@ class GridFragment : BaseFragment() {
         MyLog.i(TAG, "[onCreate]")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        _binding = MainFragmentGridBinding.inflate(inflater, container, false)
-
-        MyLog.i(TAG, "[onCreateView]")
-        return binding.root
-    }
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ) = MainFragmentGridBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -155,7 +146,6 @@ class GridFragment : BaseFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         MyLog.i(TAG, "[onDestroyView]")
     }
 

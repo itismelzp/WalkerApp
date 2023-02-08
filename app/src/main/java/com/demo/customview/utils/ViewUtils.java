@@ -206,6 +206,10 @@ public class ViewUtils {
         return Math.round(dp * getDensity());
     }
 
+    public static int dpToPx(int dp) {
+        return dpToPx((float) dp);
+    }
+
     public static int getStatusBarHeight(Context context) {
         int result = 0;
         Resources resources = context.getResources();

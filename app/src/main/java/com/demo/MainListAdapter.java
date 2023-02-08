@@ -1,17 +1,12 @@
 package com.demo;
 
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.demo.customview.utils.ViewUtils;
 
 import java.util.List;
 
@@ -62,25 +57,6 @@ public class MainListAdapter extends ListAdapter<MainButton, MainButtonViewHolde
                 return null;
             }
             return payload;
-        }
-    }
-
-    public static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
-
-        private final int space;
-
-        public SpaceItemDecoration() {
-            space = ViewUtils.dpToPx(2);
-        }
-
-        public SpaceItemDecoration(int space) {
-            this.space = space;
-        }
-
-        @Override
-        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
-                                   @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-            outRect.set(space, space, space, space);
         }
     }
 

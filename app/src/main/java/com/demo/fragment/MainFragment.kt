@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.*
 import com.demo.MainListAdapter.MainDiffItemCallback
-import com.demo.MainListAdapter.SpaceItemDecoration
+import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.FragmentMainBinding
 import com.demo.ipc.ProcessUtil
 import com.demo.logger.MyLog
@@ -43,7 +43,7 @@ class MainFragment : Fragment() {
 
     private var isViewCreate = false
 
-    private val decoration = SpaceItemDecoration()
+    private val decoration = SpaceItemDecoration(ViewUtils.dpToPx(2))
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null

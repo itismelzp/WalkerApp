@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.demo.R
+import com.demo.SpaceItemDecoration
 import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.FragmentAlbumSlideShowBinding
 import com.demo.logger.MyLog
@@ -381,44 +382,6 @@ class AlbumSlideShowFragment : BaseFragment<FragmentAlbumSlideShowBinding>(), Vi
                     }
                 }
             }
-        }
-    }
-
-    class SpaceItemDecoration : ItemDecoration {
-
-        private val leftSpace: Int
-        private val topSpace: Int
-        private val rightSpace: Int
-        private val bottomSpace: Int
-
-        private val defaultSpace = ViewUtils.dpToPx(2f)
-
-        constructor() {
-            leftSpace = defaultSpace
-            topSpace = ViewUtils.dpToPx(0f)
-            rightSpace = defaultSpace
-            bottomSpace = ViewUtils.dpToPx(0f)
-        }
-
-        constructor(space: Int) {
-            this.leftSpace = space
-            this.topSpace = space
-            this.rightSpace = space
-            this.bottomSpace = space
-        }
-
-        constructor(leftSpace: Int, topSpace: Int, rightSpace: Int, bottomSpace: Int) {
-            this.leftSpace = leftSpace
-            this.topSpace = topSpace
-            this.rightSpace = rightSpace
-            this.bottomSpace = bottomSpace
-        }
-
-        override fun getItemOffsets(
-            outRect: Rect, view: View,
-            parent: RecyclerView, state: RecyclerView.State
-        ) {
-            outRect.set(leftSpace, topSpace, rightSpace, bottomSpace)
         }
     }
 

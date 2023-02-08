@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewbinding.ViewBinding;
 
-//import com.demo.album.OppoGalleryFragment;
+import com.demo.album.OppoGalleryFragment;
 import com.demo.animator.AnimatorActivity;
 import com.demo.apt.AptDemoActivity;
 import com.demo.customview.activity.CustomMatrixActivity;
@@ -94,25 +94,6 @@ public class MainButtonModel {
         });
     };
 
-    private final MainButton.OnClickListener fragmentClickListener = () -> {
-
-        // 注意:强烈建议对涉及多种动画类型的效果使用transitions，因为使用嵌套AnimationSet实例存在已知的问题。
-        fragment.getParentFragmentManager()
-                .beginTransaction()
-                .setReorderingAllowed(true)
-//                .setCustomAnimations( // 官方不推荐使用Animations，使用嵌套动画时有已知问题
-//                        R.anim.slide_in, // enter
-//                        R.anim.fade_out, // exit
-//                        R.anim.fade_in, // popEnter
-//                        R.anim.slide_out // popExit
-//                )
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE) // 推荐使用Transition
-                .replace(R.id.fragment_container,
-                        GridFragment.newInstance("hello world", "hello fragment"), GridFragment.class.getSimpleName())
-                .addToBackStack(null)
-                .commit();
-    };
-
     private class FragmentOnclickListener implements MainButton.OnClickListener {
 
         private final BaseFragment<? extends ViewBinding> targetFragment;
@@ -127,6 +108,12 @@ public class MainButtonModel {
             fragment.getParentFragmentManager()
                     .beginTransaction()
                     .setReorderingAllowed(true)
+//                    .setCustomAnimations( // 官方不推荐使用Animations，使用嵌套动画时有已知问题
+//                            R.anim.slide_in, // enter
+//                            R.anim.fade_out, // exit
+//                            R.anim.fade_in, // popEnter
+//                            R.anim.slide_out // popExit
+//                    )
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE) // 推荐使用Transition
                     .replace(R.id.fragment_container,
                             targetFragment,
@@ -151,7 +138,7 @@ public class MainButtonModel {
         customViews.add(new MainButton("aige custom view", MainButtonType.TYPE_CUSTOM_VIEW, AigeActivity.class));
         customViews.add(new MainButton("shape background", MainButtonType.TYPE_CUSTOM_VIEW, ShapeBgActivity.class));
         customViews.add(new MainButton("wink page", MainButtonType.TYPE_CUSTOM_VIEW, WinkActivity.class));
-//        customViews.add(new MainButton("explorer demo", MainButtonType.TYPE_CUSTOM_VIEW, bindFragmentListener(OppoGalleryFragment.newInstance())));
+        customViews.add(new MainButton("explorer demo", MainButtonType.TYPE_CUSTOM_VIEW, bindFragmentListener(OppoGalleryFragment.newInstance())));
         typeMap.put(MainButtonType.TYPE_CUSTOM_VIEW, customViews);
 
         List<MainButton> systemViews = new ArrayList<>();
@@ -162,8 +149,7 @@ public class MainButtonModel {
         typeMap.put(MainButtonType.TYPE_SYSTEM_VIEW, systemViews);
 
         List<MainButton> systemComponents = new ArrayList<>();
-        systemComponents.add(new MainButton("fragment demo", MainButtonType.TYPE_SYSTEM_COMPONENT, fragmentClickListener));
-        systemComponents.add(new MainButton("fragment demo2", MainButtonType.TYPE_SYSTEM_COMPONENT, bindFragmentListener(new GridFragment())));
+        systemComponents.add(new MainButton("fragment demo", MainButtonType.TYPE_SYSTEM_COMPONENT, bindFragmentListener(new GridFragment())));
         typeMap.put(MainButtonType.TYPE_SYSTEM_COMPONENT, systemComponents);
 
         List<MainButton> storage = new ArrayList<>();

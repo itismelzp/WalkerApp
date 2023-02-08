@@ -133,7 +133,7 @@
         <attr name="android:orientation"/>
     </declare-styleable>
 
-    <declare-styleable name="ExplorerItemLayout">
+    <declare-styleable name="ExplorerBlockLayout">
         <attr name="leftText" format="string|reference" />
         <attr name="rightText" format="string|reference" />
         <attr name="rightTextVisibility" format="enum">
@@ -165,5 +165,8 @@
         <attr name="buttonVisible" format="boolean" />
         <attr name="darkMode" format="boolean" />
     </declare-styleable>
+
+    <attr name="gColorPrimaryNeutral" format="color|reference" />
+    <attr name="gColorSecondNeutral" format="color|reference" />
 
 </resources>

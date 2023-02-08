@@ -11,10 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="12dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:gravity="center_vertical" >
+        android:layout_marginEnd="24dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/main_left_title"
@@ -26,8 +24,10 @@
             android:gravity="center_vertical|start"
             android:maxLines="2"
             android:paddingEnd="16dp"
-            android:text="People &amp; Place"
-            android:textAlignment="viewStart" />
+            android:text="精彩回忆"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/gTextAppearanceButton"
+            android:textColor="#D9000000" />
 
         <TextView
             android:id="@+id/main_right_title"
@@ -44,6 +44,7 @@
             android:paddingEnd="7dp"
             android:text="View All"
             android:textAlignment="viewEnd"
+            android:textAppearance="@style/gTextAppearanceBody"
             app:drawableEndCompat="@drawable/common_icon_arrow" />
     </RelativeLayout>
 
@@ -51,8 +52,17 @@
         android:id="@+id/main_single_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
-        android:layout_marginHorizontal="24dp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/main_single_column_container_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/main_single_column_container_title" />
+
 </merge>

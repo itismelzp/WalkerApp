@@ -95,24 +95,6 @@ class NormalViewPagerFragment : BaseFragment<FragmentSlideShowBinding>() {
                 // 每次滑动只回调3次（滑动开始+onPageSelected回调前+滑动结束，即：1 -> 2 -> 0）
                 override fun onPageScrollStateChanged(state: Int) {
                     super.onPageScrollStateChanged(state)
-
-                    /**
-                     * Indicates that the ViewPager2 is in an idle, settled state. The current page
-                     * is fully in view and no animation is in progress.
-                     */
-                    val SCROLL_STATE_IDLE = 0
-
-                    /**
-                     * Indicates that the ViewPager2 is currently being dragged by the user, or programmatically
-                     * via fake drag functionality.
-                     */
-                    val SCROLL_STATE_DRAGGING = 1
-
-                    /**
-                     * Indicates that the ViewPager2 is in the process of settling to a final position.
-                     */
-                    val SCROLL_STATE_SETTLING = 2
-
                     when (state) {
                         // 开始滑动
                         ViewPager2.SCROLL_STATE_DRAGGING -> MyLog.i(

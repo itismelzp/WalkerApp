@@ -169,4 +169,6 @@
     <attr name="gColorPrimaryNeutral" format="color|reference" />
     <attr name="gColorSecondNeutral" format="color|reference" />
 
+    <attr name="gColorBackgroundWithCard" format="color|reference" />
+
 </resources>

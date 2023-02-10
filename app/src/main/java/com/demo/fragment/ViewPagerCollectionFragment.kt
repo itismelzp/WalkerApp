@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.demo.album.OppoGalleryFragment
 import com.demo.databinding.FragmentViewPager2DemoBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -25,7 +26,8 @@ class ViewPagerCollectionFragment : BaseFragment<FragmentViewPager2DemoBinding>(
 
     private var pageList = mutableListOf(
         AlbumSlideShowFragment.newInstance(),
-        NormalViewPagerFragment.newInstance()
+        NormalViewPagerFragment.newInstance(),
+        OppoGalleryFragment.newInstance()
     )
 
     override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentViewPager2DemoBinding> {

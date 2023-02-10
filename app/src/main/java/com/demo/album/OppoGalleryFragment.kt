@@ -3,6 +3,7 @@ package com.demo.album
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,7 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
 
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)
+        viewModel = ViewModelProvider(this)[OppoGalleryViewModel::class.java]
         explorerViewModel = ViewModelProvider(this)[ExplorerViewModel::class.java]
     }
 
@@ -78,7 +80,17 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
     private fun initMemoriesContainer() {
         memoriesContainer = binding.explorerMemoriesContainer
         memoriesContainer.tvRightTitle.setOnClickListener {
-
+            parentFragmentManager
+                .beginTransaction()
+                .setReorderingAllowed(true)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE) // 推荐使用Transition
+                .replace(
+                    R.id.fragment_container,
+                    MemoriesAlbumSetFragment.newInstance(),
+                    MemoriesAlbumSetFragment.Companion::class.java.simpleName
+                )
+                .addToBackStack(null)
+                .commit()
         }
         memoriesContainer.slSingleLine.onItemClick = rtn@{ index ->
 //            val viewData = explorerViewModel.queryMemoryViewData(index) ?: return@rtn
@@ -91,7 +103,9 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
                         ViewUtils.dpToPx(4f),
                         ViewUtils.dpToPx(0f),
                         ViewUtils.dpToPx(4f),
-                        ViewUtils.dpToPx(0f)
+                        ViewUtils.dpToPx(0f),
+                        firstSpace = ViewUtils.dpToPx(24f),
+                        lastSpace = ViewUtils.dpToPx(24f)
                     )
                 )
             }
@@ -121,11 +135,5 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
         inflater: LayoutInflater,
         container: ViewGroup?
     ) = ExploreMainFragmentLayoutBinding.inflate(inflater, container, false)
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this)[OppoGalleryViewModel::class.java]
-
-    }
 
 }

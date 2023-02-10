@@ -1,6 +1,9 @@
 package com.demo.fragment
 
-import android.graphics.Rect
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,15 +12,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.demo.R
 import com.demo.SpaceItemDecoration
-import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.FragmentAlbumSlideShowBinding
 import com.demo.logger.MyLog
 import com.demo.viewpager.CustomGsyVideo
@@ -26,6 +28,7 @@ import com.demo.viewpager.VideoBean
 import com.google.android.exoplayer2.upstream.RawResourceDataSource
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import kotlin.math.abs
+
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -79,7 +82,8 @@ class AlbumSlideShowFragment : BaseFragment<FragmentAlbumSlideShowBinding>(), Vi
         initGallery()
         initIndicator()
 
-        binding.controlPlayBtn.setOnClickListener(this)
+//        binding.controlPlayBtn.setOnClickListener(this)
+        binding.slideShowPlayIv.setOnClickListener(this)
     }
 
     private fun initData() {
@@ -414,14 +418,28 @@ class AlbumSlideShowFragment : BaseFragment<FragmentAlbumSlideShowBinding>(), Vi
     }
 
     override fun onClick(v: View) {
-        if (v.id == R.id.control_play_btn) {
+        if (v.id == R.id.slide_show_play_iv) {
             if (isGalleryPlaying) {
                 pauseLoop()
-                binding.controlPlayBtn.text = "START"
+                binding.slideShowPlayIv.setImageResource(R.drawable.slide_show_clock)
             } else {
                 startLoop()
-                binding.controlPlayBtn.text = "PAUSE"
+                binding.slideShowPlayIv.setImageDrawable(getRotateBitmap(R.drawable.slide_show_clock, 90f))
             }
         }
     }
+
+    private fun getRotateBitmap(@DrawableRes resId: Int, degree: Float): BitmapDrawable {
+        val bitmapOrg: Bitmap = BitmapFactory.decodeResource(resources, resId)
+        val width: Int = bitmapOrg.width
+        val height: Int = bitmapOrg.height
+        val matrix = Matrix()
+        matrix.postRotate(degree)
+        val resizedBitmap: Bitmap = Bitmap.createBitmap(
+            bitmapOrg, 0, 0,
+            width, height, matrix, true
+        )
+        return BitmapDrawable(resources, resizedBitmap)
+    }
+
 }

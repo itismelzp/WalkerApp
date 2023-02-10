@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.demo.MyApplication
 import com.demo.R
+import com.demo.datecenter.ImageDataProvider
 import kotlinx.coroutines.*
 
 class ExplorerViewModel(application: Application) : AndroidViewModel(application),
@@ -16,7 +17,7 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
 
     companion object {
         private const val LOCATION_THUMB_COUNT = 4
-        private const val MEMORIES_THUMB_COUNT = 5
+        private const val MEMORIES_THUMB_COUNT = 3
         private const val LABEL_THUMB_COUNT = 10
     }
 
@@ -27,6 +28,7 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
     val memoriesBindingData = ExplorerBlockLiveBindingData()
 
     val multiBlockLiveData = MutableLiveData<MutableList<AlbumBindingData>>()
+    val multiAllBlockLiveData = MutableLiveData<MutableList<AlbumBindingData>>()
 
     fun loadData() {
         loadLabelData()
@@ -58,7 +60,8 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
 
         viewModelScope.launch(Dispatchers.IO) {
             loadMemoryData1()
-//            loadMemoryData2()
+            loadMemoryData2()
+//            loadMemoryData()
         }
     }
 
@@ -68,12 +71,13 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
 
     private fun loadMemoryData1() {
         val viewData = mutableListOf<AlbumBindingData>()
-        for (index in 0 until MEMORIES_THUMB_COUNT) {
+
+        ImageDataProvider.getImages(MEMORIES_THUMB_COUNT).forEachIndexed { index, resId ->
             viewData.add(
                 AlbumBindingData(
                     ResourcesCompat.getDrawable(
                         MyApplication.getInstance().resources,
-                        R.drawable.zhaoyun,
+                        resId,
                         null
                     ), "幸福时刻$index", "2021-2012年", false
                 )
@@ -84,6 +88,24 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun loadMemoryData2() {
+        val viewData = mutableListOf<AlbumBindingData>()
+
+        ImageDataProvider.getImages(MEMORIES_THUMB_COUNT * 4).forEachIndexed { index, resId ->
+            viewData.add(
+                AlbumBindingData(
+                    ResourcesCompat.getDrawable(
+                        MyApplication.getInstance().resources,
+                        resId,
+                        null
+                    ), "幸福时刻$index", "2021-2012年", false
+                )
+            )
+        }
+
+        multiAllBlockLiveData.postValue(viewData)
+    }
+
+    private fun loadMemory() {
         // memories
         loadAlbumSetModelData(
             maxReloadCount = MEMORIES_THUMB_COUNT,

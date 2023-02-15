@@ -10,14 +10,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.ExploreMemoriesAlbumSetList2Binding
 import com.demo.fragment.BaseFragment
+import com.demo.logger.MyLog
 
 class MemoriesAlbumSetFragment : BaseFragment<ExploreMemoriesAlbumSetList2Binding>() {
 
     private lateinit var explorerViewModel: ExplorerViewModel
-    private lateinit var mChoiceNessMemoriesAdapter: MemoriesListAdapter
-    private lateinit var mAllMemoriesAdapter: MemoriesListAdapter
+
+    private lateinit var mChoiceNessMemoriesAdapter: MemoriesChoisenessListAdapter
+    private lateinit var mAllMemoriesAdapter: MemoriesAllListAdapter
 
     companion object {
+
+        private const val TAG = "MemoriesAlbumSetFragmen"
+
+        const val SPAN_COUNT = 2
         fun newInstance() = MemoriesAlbumSetFragment()
     }
 
@@ -52,10 +58,10 @@ class MemoriesAlbumSetFragment : BaseFragment<ExploreMemoriesAlbumSetList2Bindin
 
     private fun initChoiceNessMemoriesRV() {
         binding.memoriesChoicenessRv.apply {
-            adapter = MemoriesListAdapter(MemoriesListAdapter.MainDiffItemCallback()).apply {
+            adapter = MemoriesChoisenessListAdapter(MemoriesChoisenessListAdapter.MainDiffItemCallback()).apply {
                 mChoiceNessMemoriesAdapter = this
                 addItemDecoration(
-                    MemoriesListAdapter.SpaceItemDecoration(
+                    SpaceItemDecoration(
                         ViewUtils.dpToPx(0f),
                         ViewUtils.dpToPx(4f),
                         ViewUtils.dpToPx(0f),
@@ -66,28 +72,25 @@ class MemoriesAlbumSetFragment : BaseFragment<ExploreMemoriesAlbumSetList2Bindin
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         }
 
-        explorerViewModel.multiBlockLiveData.observe(viewLifecycleOwner) {
+        explorerViewModel.multiChoiceNessBlockLiveData.observe(viewLifecycleOwner) {
+            MyLog.i(TAG, "[initChoiceNessMemoriesRV] mChoiceNessMemoriesAdapter.size: ${it.size}")
             mChoiceNessMemoriesAdapter.submitList(it)
         }
     }
 
     private fun initAllMemoriesRV() {
         binding.memoriesAllRv.apply {
-            adapter = MemoriesListAdapter(MemoriesListAdapter.MainDiffItemCallback()).apply {
+            adapter = MemoriesAllListAdapter(MemoriesAllListAdapter.MainDiffItemCallback()).apply {
                 mAllMemoriesAdapter = this
                 addItemDecoration(
-                    MemoriesListAdapter.SpaceItemDecoration(
-                        ViewUtils.dpToPx(4f),
-                        ViewUtils.dpToPx(4f),
-                        ViewUtils.dpToPx(4f),
-                        ViewUtils.dpToPx(4f)
-                    )
+                    MemoriesAllListAdapter.GridSpacingItemDecoration(SPAN_COUNT, ViewUtils.dpToPx(8f), false)
                 )
             }
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = GridLayoutManager(context, SPAN_COUNT)
         }
 
         explorerViewModel.multiAllBlockLiveData.observe(viewLifecycleOwner) {
+            MyLog.i(TAG, "[initAllMemoriesRV] multiAllBlockLiveData.size: ${it.size}")
             mAllMemoriesAdapter.submitList(it)
         }
 

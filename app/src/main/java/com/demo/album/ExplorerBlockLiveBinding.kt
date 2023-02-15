@@ -21,8 +21,6 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import com.demo.MainButton
 import com.demo.album.binding.IDataBinding
 import com.demo.album.binding.ILiveDataBinding
 import com.demo.album.binding.MultiLiveData
@@ -61,7 +59,7 @@ class ExplorerBlockLiveBinding(
         multiLiveData.addSource(data.datas) {
             Log.i(TAG, "view.rvGallery: ${data.datas}")
             view.rvGallery.also { singleLine ->
-                (singleLine.adapter as MemoriesListAdapter).submitList(it)
+                (singleLine.adapter as MemoriesChoisenessListAdapter).submitList(it)
             }
         }
         multiLiveData.observe(lifecycleOwner)

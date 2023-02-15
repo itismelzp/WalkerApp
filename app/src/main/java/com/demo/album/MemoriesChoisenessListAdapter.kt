@@ -10,14 +10,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.R
 import com.demo.customview.utils.ViewUtils
+import com.demo.logger.MyLog
 
 /**
  * Created by lizhiping on 2023/2/7.
  * <p>
  * description
  */
-class MemoriesListAdapter(diffCallback: DiffUtil.ItemCallback<AlbumBindingData>) :
-    ListAdapter<AlbumBindingData, MemoriesListAdapter.MemoriesViewHolder>(diffCallback) {
+class MemoriesChoisenessListAdapter(diffCallback: DiffUtil.ItemCallback<AlbumBindingData>) :
+    ListAdapter<AlbumBindingData, MemoriesChoisenessListAdapter.MemoriesViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MemoriesViewHolder.create(parent)
 
@@ -40,7 +41,7 @@ class MemoriesListAdapter(diffCallback: DiffUtil.ItemCallback<AlbumBindingData>)
 
         companion object {
             fun create(parent: ViewGroup): MemoriesViewHolder =
-                MemoriesViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.explore_memories_album_set_block, parent, false))
+                MemoriesViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.explore_memories_choice_ness_block, parent, false))
         }
 
         fun bind(data: AlbumBindingData) {
@@ -54,14 +55,22 @@ class MemoriesListAdapter(diffCallback: DiffUtil.ItemCallback<AlbumBindingData>)
     class MainDiffItemCallback : DiffUtil.ItemCallback<AlbumBindingData>() {
 
         override fun areItemsTheSame(oldItem: AlbumBindingData, newItem: AlbumBindingData): Boolean {
-            return oldItem === newItem
+            val areItemsTheSame = oldItem === newItem
+            MyLog.i(TAG, "areItemsTheSame: $areItemsTheSame")
+            return areItemsTheSame
         }
 
         override fun areContentsTheSame(oldItem: AlbumBindingData, newItem: AlbumBindingData): Boolean {
-            return TextUtils.equals(oldItem.title, newItem.title) &&
+            val areContentsTheSame = TextUtils.equals(oldItem.title, newItem.title) &&
                     TextUtils.equals(oldItem.subTitle, newItem.subTitle)
+            MyLog.i(TAG, "areContentsTheSame: $areContentsTheSame")
+            return areContentsTheSame
         }
 
+    }
+
+    companion object {
+        private const val TAG = "MemoriesChoisenessListA"
     }
 
 }

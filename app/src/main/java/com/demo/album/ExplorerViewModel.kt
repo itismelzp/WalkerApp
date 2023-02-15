@@ -17,7 +17,8 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
 
     companion object {
         private const val LOCATION_THUMB_COUNT = 4
-        private const val MEMORIES_THUMB_COUNT = 3
+        private const val MEMORIES_THUMB_COUNT = 4
+        private const val MEMORIES_ALL_THUMB_COUNT = MEMORIES_THUMB_COUNT * 3
         private const val LABEL_THUMB_COUNT = 10
     }
 
@@ -27,7 +28,7 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
     val labelBindingData = ExplorerCardLiveBindingData()
     val memoriesBindingData = ExplorerBlockLiveBindingData()
 
-    val multiBlockLiveData = MutableLiveData<MutableList<AlbumBindingData>>()
+    val multiChoiceNessBlockLiveData = MutableLiveData<MutableList<AlbumBindingData>>()
     val multiAllBlockLiveData = MutableLiveData<MutableList<AlbumBindingData>>()
 
     fun loadData() {
@@ -59,8 +60,8 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
     private fun loadMemoryData() {
 
         viewModelScope.launch(Dispatchers.IO) {
-            loadMemoryData1()
-            loadMemoryData2()
+            loadChoicenessMemoryData()
+            loadAllMemoryData()
 //            loadMemoryData()
         }
     }
@@ -69,10 +70,10 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
         return labelViewDataArrays.getOrNull(index)
     }
 
-    private fun loadMemoryData1() {
+    private fun loadChoicenessMemoryData() {
         val viewData = mutableListOf<AlbumBindingData>()
 
-        ImageDataProvider.getImages(MEMORIES_THUMB_COUNT).forEachIndexed { index, resId ->
+        ImageDataProvider.getRepeatableImages(MEMORIES_THUMB_COUNT).forEachIndexed { index, resId ->
             viewData.add(
                 AlbumBindingData(
                     ResourcesCompat.getDrawable(
@@ -84,13 +85,13 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
             )
         }
 
-        multiBlockLiveData.postValue(viewData)
+        multiChoiceNessBlockLiveData.postValue(viewData)
     }
 
-    private fun loadMemoryData2() {
+    private fun loadAllMemoryData() {
         val viewData = mutableListOf<AlbumBindingData>()
 
-        ImageDataProvider.getImages(MEMORIES_THUMB_COUNT * 4).forEachIndexed { index, resId ->
+        ImageDataProvider.getRepeatableImages(MEMORIES_ALL_THUMB_COUNT).forEachIndexed { index, resId ->
             viewData.add(
                 AlbumBindingData(
                     ResourcesCompat.getDrawable(

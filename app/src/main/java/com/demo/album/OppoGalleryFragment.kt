@@ -105,7 +105,7 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
             adapter = MemoriesListAdapter(MemoriesListAdapter.MainDiffItemCallback()).apply {
                 mAdapter = this
                 addItemDecoration(
-                    MemoriesListAdapter.SpaceItemDecoration(
+                    SpaceItemDecoration(
                         ViewUtils.dpToPx(4f),
                         ViewUtils.dpToPx(0f),
                         ViewUtils.dpToPx(4f),
@@ -118,7 +118,7 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
             layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         }
 
-        explorerViewModel.multiBlockLiveData.observe(viewLifecycleOwner) {
+        explorerViewModel.multiChoiceNessBlockLiveData.observe(viewLifecycleOwner) {
             mAdapter.submitList(it)
         }
 

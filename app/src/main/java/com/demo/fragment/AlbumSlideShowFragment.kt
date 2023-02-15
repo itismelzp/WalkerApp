@@ -73,8 +73,9 @@ class AlbumSlideShowFragment : BaseFragment<FragmentAlbumSlideShowBinding>(), Vi
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentAlbumSlideShowBinding.inflate(inflater, container, false)
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ) = FragmentAlbumSlideShowBinding.inflate(inflater, container, attachToRoot)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

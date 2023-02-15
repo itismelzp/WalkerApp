@@ -17,7 +17,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity
+            android:name=".appbar.ScrollingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".logger.BaseActivity"
             android:exported="false">
@@ -27,10 +31,11 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="fullSensor"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -41,7 +46,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".customview.ryg.ViewDispatchDemoActivity"/>
+        <activity android:name=".customview.ryg.ViewDispatchDemoActivity" />
         <activity android:name=".rxjava.RxJavaActivity" />
         <activity android:name=".animator.AnimatorActivity" />
         <activity android:name=".customview.activity.SlideConflictDemoActivity" />

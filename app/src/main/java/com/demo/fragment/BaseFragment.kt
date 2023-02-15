@@ -1,11 +1,13 @@
 package com.demo.fragment
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.demo.R
 
 /**
  * Created by lizhiping on 2023/1/30.
@@ -25,6 +27,21 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     private var _binding: T? = null
     protected val binding get() = _binding!!
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+//        setTransition()
+    }
+
+    open fun setTransition() {
+        enterTransition =
+            TransitionInflater.from(requireContext()).inflateTransition(getEnterTransitionRes())
+        exitTransition =
+            TransitionInflater.from(requireContext()).inflateTransition(getExitTransitionRes())
+    }
+
+    open fun getEnterTransitionRes(): Int = R.transition.slide_right
+    open fun getExitTransitionRes(): Int = R.transition.grid_exit_transition
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +53,11 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         return binding.root
     }
 
-    protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): T
+    protected abstract fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean = false
+    ): T
 
     open fun createFragment(): BaseFragment<T> {
         return createFragment("", "")

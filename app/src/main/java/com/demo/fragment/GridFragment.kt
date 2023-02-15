@@ -10,7 +10,6 @@ import android.transition.TransitionInflater
 import android.widget.Toast
 import androidx.core.app.SharedElementCallback
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.lifecycleScope
@@ -63,8 +62,9 @@ class GridFragment : BaseFragment<MainFragmentGridBinding>() {
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = MainFragmentGridBinding.inflate(inflater, container, false)
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ) = MainFragmentGridBinding.inflate(inflater, container, attachToRoot)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

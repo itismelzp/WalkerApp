@@ -29,6 +29,12 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
 
     private lateinit var viewModel: OppoGalleryViewModel
 
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ) = ExploreMainFragmentLayoutBinding.inflate(inflater, container, attachToRoot)
+
     override fun createFragment(arg1: String, arg2: String): BaseFragment<ExploreMainFragmentLayoutBinding> {
         return newInstance()
     }
@@ -130,10 +136,5 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
 //            bind(viewLifecycleOwner, explorerViewModel.memoriesBindingData)
 //        }
     }
-
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = ExploreMainFragmentLayoutBinding.inflate(inflater, container, false)
 
 }

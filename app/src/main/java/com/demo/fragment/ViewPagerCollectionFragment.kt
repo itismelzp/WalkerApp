@@ -44,14 +44,16 @@ class ViewPagerCollectionFragment : BaseFragment<FragmentViewPager2DemoBinding>(
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
-    ) =  FragmentViewPager2DemoBinding.inflate(inflater, container, false)
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ) =  FragmentViewPager2DemoBinding.inflate(inflater, container, attachToRoot)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val viewPager = binding.viewPager.apply {
             adapter = DemoCollectionAdapter(this@ViewPagerCollectionFragment, pageList)
+            isSaveEnabled = false // 解决Fragment嵌套崩溃问题
         }
         val tabLayout = binding.tabLayout
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->

@@ -8,6 +8,8 @@
         android:id="@+id/main_item_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:stateListAnimator="@xml/animate_scale"
         app:layout_constraintTop_toTopOf="parent" />
 

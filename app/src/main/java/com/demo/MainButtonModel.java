@@ -11,6 +11,7 @@ import androidx.viewbinding.ViewBinding;
 
 import com.demo.album.OppoGalleryFragment;
 import com.demo.animator.AnimatorActivity;
+import com.demo.appbar.ScrollingActivity;
 import com.demo.apt.AptDemoActivity;
 import com.demo.customview.activity.CustomMatrixActivity;
 import com.demo.customview.activity.CustomShaderActivity;
@@ -21,12 +22,12 @@ import com.demo.customview.ryg.ViewDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
 import com.demo.fragment.BaseFragment;
+import com.demo.fragment.CoordinatorLayoutFragment;
 import com.demo.fragment.GridFragment;
 import com.demo.fragment.ViewPagerCollectionFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
 import com.demo.logger.MyLog;
-import com.demo.plugin.PluginClickListener;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
 import com.demo.storage.WinkKVDemoActivity;
@@ -58,7 +59,7 @@ public class MainButtonModel {
             SLIDE_RIGHT_EXIT_ANIMATION
     };
 
-    private Fragment fragment;
+    private final Fragment fragment;
 
     private final List<MainButton> buttons = new ArrayList<>();
     private static final Map<Integer, List<MainButton>> typeMap = new HashMap<>();
@@ -138,7 +139,7 @@ public class MainButtonModel {
         customViews.add(new MainButton("aige custom view", MainButtonType.TYPE_CUSTOM_VIEW, AigeActivity.class));
         customViews.add(new MainButton("shape background", MainButtonType.TYPE_CUSTOM_VIEW, ShapeBgActivity.class));
         customViews.add(new MainButton("wink page", MainButtonType.TYPE_CUSTOM_VIEW, WinkActivity.class));
-        customViews.add(new MainButton("explorer demo", MainButtonType.TYPE_CUSTOM_VIEW, bindFragmentListener(OppoGalleryFragment.newInstance())));
+        customViews.add(new MainButton("相册demo", MainButtonType.TYPE_CUSTOM_VIEW, bindFragmentListener(OppoGalleryFragment.newInstance())));
         typeMap.put(MainButtonType.TYPE_CUSTOM_VIEW, customViews);
 
         List<MainButton> systemViews = new ArrayList<>();
@@ -146,6 +147,8 @@ public class MainButtonModel {
         systemViews.add(new MainButton("test recycleview", MainButtonType.TYPE_SYSTEM_VIEW, ScaleActivity.class));
         systemViews.add(new MainButton("动画demo", MainButtonType.TYPE_SYSTEM_VIEW, AnimatorActivity.class));
         systemViews.add(new MainButton("ViewPager2 demo", MainButtonType.TYPE_SYSTEM_VIEW, bindFragmentListener(ViewPagerCollectionFragment.newInstance())));
+        systemViews.add(new MainButton("CoordinatorLayout demo", MainButtonType.TYPE_SYSTEM_VIEW, bindFragmentListener(CoordinatorLayoutFragment.newInstance())));
+        systemViews.add(new MainButton("AppBar", MainButtonType.TYPE_SYSTEM_VIEW, ScrollingActivity.class));
         typeMap.put(MainButtonType.TYPE_SYSTEM_VIEW, systemViews);
 
         List<MainButton> systemComponents = new ArrayList<>();
@@ -153,7 +156,7 @@ public class MainButtonModel {
         typeMap.put(MainButtonType.TYPE_SYSTEM_COMPONENT, systemComponents);
 
         List<MainButton> storage = new ArrayList<>();
-        storage.add(new MainButton("storage page", MainButtonType.TYPE_STORAGE, RoomActivity.class));
+        storage.add(new MainButton("存储页", MainButtonType.TYPE_STORAGE, RoomActivity.class));
         storage.add(new MainButton("wink kv demo", MainButtonType.TYPE_STORAGE, WinkKVDemoActivity.class));
         typeMap.put(MainButtonType.TYPE_STORAGE, storage);
 
@@ -162,38 +165,32 @@ public class MainButtonModel {
         typeMap.put(MainButtonType.TYPE_COMPILE, compiler);
 
         List<MainButton> other = new ArrayList<>();
-        other.add(new MainButton("view 事件分发", ViewDispatchDemoActivity.class));
+        other.add(new MainButton("View事件分发", ViewDispatchDemoActivity.class));
         other.add(new MainButton("进度条滑动冲突", SlideConflictDemoActivity.class));
         other.add(new MainButton("rxjava demo", RxJavaActivity.class));
-        other.add(new MainButton("ipc demo", IPCDemoActivity.class));
-        other.add(new MainButton("logger demo", LoggerActivity.class));
-        other.add(new MainButton("plugin demo", pluginClickListener));
+        other.add(new MainButton("进程通信demo", IPCDemoActivity.class));
+        other.add(new MainButton("日志demo", LoggerActivity.class));
+        other.add(new MainButton("插件demo", pluginClickListener));
         typeMap.put(MainButtonType.TYPE_OTHER, other);
     }
 
 
     public void initData() {
         initStaticData();
-
-        if (typeMap.containsKey(MainButtonType.TYPE_CUSTOM_VIEW)) {
-            buttons.addAll(typeMap.get(MainButtonType.TYPE_CUSTOM_VIEW));
-        }
-        if (typeMap.containsKey(MainButtonType.TYPE_STORAGE)) {
-            buttons.addAll(typeMap.get(MainButtonType.TYPE_STORAGE));
-        }
-        if (typeMap.containsKey(MainButtonType.TYPE_COMPILE)) {
-            buttons.addAll(typeMap.get(MainButtonType.TYPE_COMPILE));
-        }
-        if (typeMap.containsKey(MainButtonType.TYPE_SYSTEM_VIEW)) {
-            buttons.addAll(typeMap.get(MainButtonType.TYPE_SYSTEM_VIEW));
-        }
-        if (typeMap.containsKey(MainButtonType.TYPE_OTHER)) {
-            buttons.addAll(typeMap.get(MainButtonType.TYPE_OTHER));
-        }
-        if (typeMap.containsKey(MainButtonType.TYPE_SYSTEM_COMPONENT)) {
-            buttons.addAll(typeMap.get(MainButtonType.TYPE_SYSTEM_COMPONENT));
-        }
+        initDataByType(MainButtonType.TYPE_CUSTOM_VIEW);
+        initDataByType(MainButtonType.TYPE_STORAGE);
+        initDataByType(MainButtonType.TYPE_COMPILE);
+        initDataByType(MainButtonType.TYPE_SYSTEM_VIEW);
+        initDataByType(MainButtonType.TYPE_OTHER);
+        initDataByType(MainButtonType.TYPE_SYSTEM_COMPONENT);
         buttons.sort(Comparator.comparingInt(o -> o.type));
+    }
+
+    private void initDataByType(@MainButtonType int buttonType) {
+        List<MainButton> mainButtons = typeMap.get(buttonType);
+        if (mainButtons != null && mainButtons.size() > 0) {
+            buttons.addAll(mainButtons);
+        }
     }
 
     public void operateData(@MainButtonType int type, boolean isCheck) {

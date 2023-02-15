@@ -56,8 +56,9 @@ class NormalViewPagerFragment : BaseFragment<FragmentSlideShowBinding>() {
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentSlideShowBinding.inflate(inflater, container, false)
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ) = FragmentSlideShowBinding.inflate(inflater, container, attachToRoot)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

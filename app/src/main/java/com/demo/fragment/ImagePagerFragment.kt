@@ -24,11 +24,6 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 class ImagePagerFragment : BaseFragment<FragmentImagePagerBinding>() {
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentImagePagerBinding.inflate(inflater, container, false)
-
     override fun initBaseViews(savedInstanceState: Bundle?) {
         super.initBaseViews(savedInstanceState)
         binding.viewPager.apply {
@@ -96,6 +91,12 @@ class ImagePagerFragment : BaseFragment<FragmentImagePagerBinding>() {
                 }
             }
     }
+
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ) = FragmentImagePagerBinding.inflate(inflater, container, attachToRoot)
 
     override fun createFragment(): BaseFragment<FragmentImagePagerBinding> {
         return newInstance()

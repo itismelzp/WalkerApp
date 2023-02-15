@@ -25,8 +25,9 @@ class MemoriesAlbumSetFragment : BaseFragment<ExploreMemoriesAlbumSetList2Bindin
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = ExploreMemoriesAlbumSetList2Binding.inflate(inflater, container, false)
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ) = ExploreMemoriesAlbumSetList2Binding.inflate(inflater, container, attachToRoot)
 
     override fun createFragment(
         arg1: String,

@@ -5,6 +5,7 @@ import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -28,10 +29,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MainFragment : Fragment() {
-
-    private var _binding: FragmentMainBinding? = null
-    private val binding get() = _binding!!
+class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     private var mainListAdapter: MainListAdapter? = null
     private var filterAdapter: FilterListAdapter? = null
@@ -75,9 +73,20 @@ class MainFragment : Fragment() {
         }
     }
 
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ) = FragmentMainBinding.inflate(inflater, container, attachToRoot)
+
+    override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentMainBinding> {
+        return newInstance("", "")
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        initSystemBar()
 //        if (isViewCreate) {
 //            return
 //        }
@@ -93,6 +102,14 @@ class MainFragment : Fragment() {
         super.onDestroyView()
         ProcessUtil.stopSubProcessService(context)
         MyLog.d(TAG, "[onDestroyView]")
+    }
+
+    private fun initSystemBar() {
+        binding.statusBarFix.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewUtils.getStatusBarHeight(activity)
+        )
+        binding.statusBarFix.setBackgroundColor(resources.getColor(R.color.colorWhite, null));
     }
 
     private fun initViewModel() {

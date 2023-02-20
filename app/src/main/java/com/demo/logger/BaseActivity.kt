@@ -31,13 +31,13 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
         setContentView(_binding.root)
 
         initBaseData(savedInstanceState)
-        initBaseViews()
+        initBaseViews(savedInstanceState)
     }
 
     protected abstract fun getViewBinding(): T
 
     open fun initBaseData(savedInstanceState: Bundle?) {}
-    open fun initBaseViews() {}
+    open fun initBaseViews(savedInstanceState: Bundle?) {}
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

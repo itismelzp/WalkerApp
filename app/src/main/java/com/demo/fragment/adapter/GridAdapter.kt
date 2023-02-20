@@ -97,8 +97,8 @@ class GridAdapter(
         }
 
         fun bind() {
-            setImage(adapterPosition)
-            image.transitionName = "${IMAGE_DRAWABLES[adapterPosition]}"
+            setImage(absoluteAdapterPosition)
+            image.transitionName = "${IMAGE_DRAWABLES[absoluteAdapterPosition]}"
         }
 
         private fun setImage(adapterPosition: Int) {
@@ -130,7 +130,7 @@ class GridAdapter(
         }
 
         override fun onClick(v: View) {
-            viewHolderListener.onItemClicked(v, adapterPosition)
+            viewHolderListener.onItemClicked(v, absoluteAdapterPosition)
         }
 
     }

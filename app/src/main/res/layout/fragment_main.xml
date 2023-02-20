@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".fragment.MainFragment">
 
+    <View
+        android:id="@+id/status_bar_fix"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorWhite"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filter_recycler_view"
         android:layout_width="0dp"
@@ -15,7 +24,7 @@
         app:layout_constraintBottom_toTopOf="@id/guide_line"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/status_bar_fix" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_line"

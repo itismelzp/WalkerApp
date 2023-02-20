@@ -24,7 +24,7 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
      * 比如fragment hide的时候，如果不将这里置为空，有可能引起内存泄漏。
      * 所以我们要在onCreateView中创建，onDestroyView置空。
      */
-    private var _binding: T? = null
+    protected var _binding: T? = null
     protected val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {

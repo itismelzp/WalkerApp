@@ -27,6 +27,7 @@ import com.demo.fragment.GridFragment;
 import com.demo.fragment.ViewPagerCollectionFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
+import com.demo.logger.LoggerFragment;
 import com.demo.logger.MyLog;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
@@ -170,6 +171,7 @@ public class MainButtonModel {
         other.add(new MainButton("rxjava demo", RxJavaActivity.class));
         other.add(new MainButton("进程通信demo", IPCDemoActivity.class));
         other.add(new MainButton("日志demo", LoggerActivity.class));
+//        other.add(new MainButton("日志demo2", bindFragmentListener(LoggerFragment.newInstance())));
         other.add(new MainButton("插件demo", pluginClickListener));
         typeMap.put(MainButtonType.TYPE_OTHER, other);
     }

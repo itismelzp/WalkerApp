@@ -23,6 +23,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements G
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        StatusBarUtil.transparencyBar(this);
+
         MyLog.i(TAG, "[onCreate]");
         if (savedInstanceState == null) { // 防止屏幕旋转时多次创建页面
             getSupportFragmentManager()

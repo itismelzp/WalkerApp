@@ -1,21 +1,53 @@
 package com.demo.logger
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.demo.MyApplication
 import com.demo.databinding.ActivityLoggerLayoutBinding
+import com.demo.fragment.BaseFragment
 import kotlinx.coroutines.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
+class LoggerFragment : BaseFragment<ActivityLoggerLayoutBinding>() {
 
     private lateinit var logger: MyLog.ILog
 
     companion object {
         private const val TAG = "LoggerActivity"
+
+        @JvmStatic
+        fun newInstance(): LoggerFragment {
+            return LoggerFragment()
+        }
+    }
+
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ) = ActivityLoggerLayoutBinding.inflate(layoutInflater, container, attachToRoot)
+
+    override fun createFragment(
+        arg1: String,
+        arg2: String
+    ): BaseFragment<ActivityLoggerLayoutBinding> {
+        return createFragment()
     }
 
     override fun initBaseData(savedInstanceState: Bundle?) {
@@ -39,11 +71,49 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
     }
 
-    override fun getViewBinding() = ActivityLoggerLayoutBinding.inflate(layoutInflater)
-
     @UiThread
     private fun toastPintMsg(msg: String) {
         toast(msg)
+    }
+
+    protected fun requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // 先判断有没有权限
+            if (!Environment.isExternalStorageManager()) {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                intent.data = Uri.parse("package:" + MyApplication.getInstance().packageName)
+                startActivityForResult(intent, BaseActivity.REQUEST_CODE)
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // 先判断有没有权限
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                toast("存储权限获取成功")
+            } else {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ),
+                    BaseActivity.REQUEST_CODE
+                )
+            }
+        } else {
+            toast("存储权限获取成功")
+        }
+    }
+
+    @UiThread
+    private fun toast(text: String?) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -151,6 +221,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         if (!canUse) {
             return
         }
-        logger = LogUtil.MarslogLog(this)
+        logger = LogUtil.MarslogLog(requireContext())
     }
+
 }

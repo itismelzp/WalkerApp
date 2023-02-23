@@ -1,4 +1,4 @@
-package com.demo.utils
+package com.demo.constant
 
 
 /**
@@ -8,7 +8,7 @@ package com.demo.utils
  */
 object Colors {
 
-    // https://zhuanlan.zhihu.com/p/586202432
+    // https://zhuanlan.zhihu.com/p/586202432(世界十大著名颜色)
     const val KLEIN_BLUE = 0xFF002FA7.toInt()
     const val TIFFANY_BLUE = 0xFF81D8CF.toInt()
     const val PRUSSIAN_BLUE = 0xFF003152.toInt()

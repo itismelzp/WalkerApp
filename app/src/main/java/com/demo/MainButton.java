@@ -1,6 +1,7 @@
 package com.demo;
 
-import com.demo.utils.Colors;
+import com.demo.constant.ButtonTypeName;
+import com.demo.constant.Colors;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +12,16 @@ public class MainButton implements Comparable<MainButton> {
 
     public int type = MainButtonType.TYPE_OTHER;
 
+    public String typeName;
+
     public Class<?> jumpClass;
 
-    public OnClickListener onclickListener;
+    public OnClickListener clickListener;
 
     public boolean isHide;
 
     private static final Map<Integer, Integer> COLOR_MAP = new HashMap<>();
+    private static final Map<Integer, String> TYPE_NAME_MAP = new HashMap<>();
 
     static {
         COLOR_MAP.put(MainButtonType.TYPE_SYSTEM_VIEW, Colors.FIRST_PAGE_ONE);
@@ -26,28 +30,35 @@ public class MainButton implements Comparable<MainButton> {
         COLOR_MAP.put(MainButtonType.TYPE_COMPILE, Colors.FIRST_PAGE_FOUR);
         COLOR_MAP.put(MainButtonType.TYPE_STORAGE, Colors.FIRST_PAGE_FIVE);
         COLOR_MAP.put(MainButtonType.TYPE_OTHER, Colors.THIRD_PAGE_ONE);
+
+        TYPE_NAME_MAP.put(MainButtonType.TYPE_SYSTEM_VIEW, ButtonTypeName.SYSTEM_VIEW);
+        TYPE_NAME_MAP.put(MainButtonType.TYPE_CUSTOM_VIEW, ButtonTypeName.CUSTOM_VIEW);
+        TYPE_NAME_MAP.put(MainButtonType.TYPE_SYSTEM_COMPONENT, ButtonTypeName.SYSTEM_COMPONENT);
+        TYPE_NAME_MAP.put(MainButtonType.TYPE_COMPILE, ButtonTypeName.COMPILE);
+        TYPE_NAME_MAP.put(MainButtonType.TYPE_STORAGE, ButtonTypeName.STORAGE);
+        TYPE_NAME_MAP.put(MainButtonType.TYPE_OTHER, ButtonTypeName.OTHER);
     }
 
     public MainButton(String name, Class<?> jumpClass) {
-        this.name = name;
-        this.jumpClass = jumpClass;
+        this(name, MainButtonType.TYPE_OTHER, jumpClass);
     }
 
     public MainButton(String name, int type, Class<?> jumpClass) {
         this.name = name;
         this.type = type;
         this.jumpClass = jumpClass;
+        this.typeName = TYPE_NAME_MAP.get(type);
     }
 
-    public MainButton(String name, OnClickListener onclickListener) {
-        this.name = name;
-        this.onclickListener = onclickListener;
+    public MainButton(String name, OnClickListener clickListener) {
+        this(name, MainButtonType.TYPE_OTHER, clickListener);
     }
 
-    public MainButton(String name, int type, OnClickListener onclickListener) {
+    public MainButton(String name, int type, OnClickListener clickListener) {
         this.name = name;
         this.type = type;
-        this.onclickListener = onclickListener;
+        this.clickListener = clickListener;
+        this.typeName = TYPE_NAME_MAP.get(type);
     }
 
     public int getColor() {
@@ -66,4 +77,51 @@ public class MainButton implements Comparable<MainButton> {
     public interface OnClickListener {
         void onClickListener();
     }
+
+    public static class Builder {
+
+        private String name;
+
+        private int type = MainButtonType.TYPE_OTHER;
+
+        private Class<?> jumpClass;
+
+        private OnClickListener clickListener;
+
+        public Builder() {
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setType(@MainButtonType int type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder setJumpClass(Class<?> jumpClass) {
+            this.jumpClass = jumpClass;
+            return this;
+        }
+
+        public Builder setOnClickListener(OnClickListener clickListener) {
+            this.clickListener = clickListener;
+            return this;
+        }
+
+        public MainButton build() {
+            if (jumpClass == null && clickListener == null) {
+                throw new UnsupportedOperationException(
+                        "at least set one of jumpClass or clickListener.");
+            } else if (clickListener != null) {
+                return new MainButton(name, type, clickListener);
+            } else {
+                return new MainButton(name, type, jumpClass);
+            }
+        }
+
+    }
+
 }

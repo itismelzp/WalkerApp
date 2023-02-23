@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -17,9 +18,11 @@ class FilterViewHolder(
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val checkBox: CheckBox
+    private val filterTitle: TextView
 
     init {
         checkBox = itemView.findViewById(R.id.filter_cb)
+        filterTitle = itemView.findViewById(R.id.filter_title)
     }
 
     fun bind(mainButton: MainButton) {
@@ -29,6 +32,7 @@ class FilterViewHolder(
             mainButton.isHide = !isChecked
             checkedCallback(mainButton.type, isChecked)
         }
+        filterTitle.text = mainButton.typeName
     }
 
     companion object {

@@ -27,11 +27,11 @@ import com.demo.fragment.GridFragment;
 import com.demo.fragment.ViewPagerCollectionFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
-import com.demo.logger.LoggerFragment;
 import com.demo.logger.MyLog;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
 import com.demo.storage.WinkKVDemoActivity;
+import com.demo.syscomponent.ProviderFragment;
 import com.demo.widget.activity.ScaleActivity;
 import com.demo.widget.activity.ShapeBgActivity;
 import com.demo.wink.WinkActivity;
@@ -154,6 +154,13 @@ public class MainButtonModel {
 
         List<MainButton> systemComponents = new ArrayList<>();
         systemComponents.add(new MainButton("fragment demo", MainButtonType.TYPE_SYSTEM_COMPONENT, bindFragmentListener(new GridFragment())));
+        systemComponents.add(
+                new MainButton.Builder()
+                        .setName("Provider")
+                        .setType(MainButtonType.TYPE_SYSTEM_COMPONENT)
+                        .setOnClickListener(bindFragmentListener(ProviderFragment.newInstance()))
+                        .build()
+        );
         typeMap.put(MainButtonType.TYPE_SYSTEM_COMPONENT, systemComponents);
 
         List<MainButton> storage = new ArrayList<>();

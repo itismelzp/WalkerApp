@@ -17,13 +17,8 @@ class FilterViewHolder(
     private val checkedCallback: (type: Int, isChecked: Boolean) -> Unit?
 ) : RecyclerView.ViewHolder(itemView) {
 
-    private val checkBox: CheckBox
-    private val filterTitle: TextView
-
-    init {
-        checkBox = itemView.findViewById(R.id.filter_cb)
-        filterTitle = itemView.findViewById(R.id.filter_title)
-    }
+    private val checkBox = itemView.findViewById<CheckBox>(R.id.filter_cb)
+    private val filterTitle = itemView.findViewById<TextView>(R.id.filter_title)
 
     fun bind(mainButton: MainButton) {
         checkBox.isChecked = !mainButton.isHide

@@ -27,9 +27,7 @@ public class MainButtonViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(MainButton mainButton) {
         button.setText(mainButton.name);
-        if (mainButton.getColor() != -1) {
-            button.setBackgroundColor(mainButton.getColor());
-        }
+        button.setBackgroundColor(mainButton.getColor());
 
         if (mainButton.clickListener != null) {
             button.setOnClickListener(v -> mainButton.clickListener.onClickListener());

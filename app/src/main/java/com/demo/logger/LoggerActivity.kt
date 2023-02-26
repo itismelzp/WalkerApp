@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.lifecycleScope
+import com.demo.R
 import com.demo.databinding.ActivityLoggerLayoutBinding
+import com.demo.utils.DeviceIdUtil
 import kotlinx.coroutines.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -37,6 +39,8 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                 toastPintMsg(result)
             }
         }
+
+        binding.btnDeviceId.text = getString(R.string.device_id, DeviceIdUtil.getDeviceId(this))
     }
 
     override fun getViewBinding() = ActivityLoggerLayoutBinding.inflate(layoutInflater)

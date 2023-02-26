@@ -7,10 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-    <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
-
-<!--    <uses-permission android:name="com.demo.syscomponent" android:protectionLevel="normal"/>-->
 
     <application
         android:name=".MyApplication"
@@ -21,11 +18,40 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider
+            android:name=".syscomponent.RecentSearchProvider"
+            android:authorities="@string/recentSearchProvider"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".syscomponent.SearchOtherActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".syscomponent.SearchableActivity" />
+        </activity>
+        <activity
+            android:name=".syscomponent.SearchableActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+        <provider
             android:name=".syscomponent.MyProvider"
             android:authorities="com.demo.syscomponent.myprovider"
             android:enabled="true"
-            android:process=":provider"
-            android:permission="com.demo.syscomponent" />
+            android:permission="com.demo.syscomponent"
+            android:process=":provider" />
+
         <activity
             android:name=".appbar.ScrollingActivity"
             android:exported="false"
@@ -86,7 +112,6 @@
             android:exported="false"
             android:process=":remote" />
 
-        <!-- service -->
         <service
             android:name=".ipc.aidl.MyRemoteAIDLService"
             android:enabled="true"
@@ -156,13 +181,14 @@
             android:process=":plugin"
             android:screenOrientation="portrait"
             android:theme="@style/PluginContainerActivity" />
+
         <provider
             android:name="com.tencent.shadow.core.runtime.container.PluginContainerContentProvider"
             android:authorities="${applicationId}.contentprovider.authority.dynamic" />
+
         <service
             android:name="com.tencent.shadow.sample.introduce_shadow_lib.MainPluginProcessService"
             android:process=":plugin" />
-
     </application>
 
 </manifest>

@@ -46,7 +46,7 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = getViewBinding(inflater, container)
         initBaseData(savedInstanceState)
         initBaseViews(savedInstanceState)

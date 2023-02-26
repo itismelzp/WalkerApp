@@ -122,6 +122,10 @@
     <string name="title_activity_scrolling" translatable="false">ScrollingActivity</string>
     <string name="action_settings" translatable="false">Settings</string>
 
-    <string name="device_id" translatable="false">"deviceId: %s"</string>
+    <string name="device_id" translatable="false">deviceId: %s</string>
+    <string name="search_hint" translatable="false">Search something</string>
+    <string name="title_activity_search" translatable="false">SearchActivity</string>
+    <string name="recentSearchProvider" translatable="false">com.demo.syscomponent.recentsearchprovider</string>
+
 
 </resources>

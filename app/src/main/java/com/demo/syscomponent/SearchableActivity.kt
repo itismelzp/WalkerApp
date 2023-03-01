@@ -102,9 +102,7 @@ class SearchableActivity : BaseActivity<LayoutSearchActivityBinding>() {
         }
 
         if (Intent.ACTION_SEARCH == intent.action) {
-
             intent.getStringExtra(SearchManager.QUERY)?.also { query ->
-
                 if (query.isEmpty()) {
                     return
                 }
@@ -113,11 +111,9 @@ class SearchableActivity : BaseActivity<LayoutSearchActivityBinding>() {
                     RecentSearchProvider.AUTHORITY,
                     RecentSearchProvider.MODE
                 ).saveRecentQuery(query, "history $query")
-
                 if (!newIntent) {
                     lastQueryValue = query
                 }
-
                 doMySearch(query)
             }
         }

@@ -20,22 +20,22 @@ object DeviceIdUtil {
         val serial = serial
         val uuid = deviceUUID
 
-        //附加imei
+        // 附加imei
         if (imei.isNotEmpty()) {
             sbDeviceId.append(imei)
             sbDeviceId.append("|")
         }
-        //附加androidId
+        // 附加androidId
         if (androidId.isNotEmpty()) {
             sbDeviceId.append(androidId)
             sbDeviceId.append("|")
         }
-        //附加serial
+        // 附加serial
         if (serial != null && serial.isNotEmpty()) {
             sbDeviceId.append(serial)
             sbDeviceId.append("|")
         }
-        //附加uuid
+        // 附加uuid
         if (uuid.isNotEmpty()) {
             sbDeviceId.append(uuid)
         }
@@ -44,7 +44,7 @@ object DeviceIdUtil {
                 val hash = getHashByString(sbDeviceId.toString())
                 val sha1 = bytesToHex(hash)
                 if (sha1.isNotEmpty()) {
-                    //返回最终的DeviceId
+                    // 返回最终的DeviceId
                     return sha1
                 }
             } catch (e: Exception) {

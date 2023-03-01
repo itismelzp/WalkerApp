@@ -16,8 +16,9 @@ class MyProvider : ContentProvider() {
 
         private const val TAG = "MyProvider"
 
-        const val SCHEME = "content://"
+        private const val SCHEME = "content://"
         const val AUTHORITY = "com.demo.syscomponent.myprovider"
+        const val BASE_URI = "$SCHEME$AUTHORITY"
         const val USER_CODE = 1
         const val JOB_CODE = 2
     }
@@ -39,13 +40,13 @@ class MyProvider : ContentProvider() {
         db = mDBHelper.writableDatabase
 
         // 初始化两个表的数据(先清空两个表,再各加入一个记录)
-        db.execSQL("delete from ${DBHelper.USER_TABLE_NAME}");
-        db.execSQL("insert into ${DBHelper.USER_TABLE_NAME} values(1,'Carson');");
-        db.execSQL("insert into ${DBHelper.USER_TABLE_NAME} values(2,'Kobe');");
+        db.execSQL("delete from ${DBHelper.USER_TABLE_NAME}")
+        db.execSQL("insert into ${DBHelper.USER_TABLE_NAME} values(1,'Carson');")
+        db.execSQL("insert into ${DBHelper.USER_TABLE_NAME} values(2,'Kobe');")
 
-        db.execSQL("delete from ${DBHelper.JOB_TABLE_NAME}");
-        db.execSQL("insert into ${DBHelper.JOB_TABLE_NAME} values(1,'Android');");
-        db.execSQL("insert into ${DBHelper.JOB_TABLE_NAME} values(2,'iOS');");
+        db.execSQL("delete from ${DBHelper.JOB_TABLE_NAME}")
+        db.execSQL("insert into ${DBHelper.JOB_TABLE_NAME} values(1,'Android');")
+        db.execSQL("insert into ${DBHelper.JOB_TABLE_NAME} values(2,'iOS');")
 
         MyLog.i(TAG, "[onCreate] ${ProcessUtil.getCurProcessLog()}")
 
@@ -53,9 +54,9 @@ class MyProvider : ContentProvider() {
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        val cnt = db.delete(getTableName(uri), selection, selectionArgs)
-        notify(uri)
-        return cnt
+        return db.delete(getTableName(uri), selection, selectionArgs).also {
+            notify(uri)
+        }
     }
 
     override fun getType(uri: Uri): String? {

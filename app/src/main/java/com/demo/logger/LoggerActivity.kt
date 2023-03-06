@@ -7,8 +7,14 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.lifecycleScope
 import com.demo.R
 import com.demo.databinding.ActivityLoggerLayoutBinding
+import com.demo.network.MediaFileMetaDataManager
+import com.demo.network.model.*
 import com.demo.utils.DeviceIdUtil
+import com.google.gson.Gson
 import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -19,6 +25,9 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     companion object {
         private const val TAG = "LoggerActivity"
     }
+
+
+
 
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)
@@ -41,6 +50,44 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
 
         binding.btnDeviceId.text = getString(R.string.device_id, DeviceIdUtil.getDeviceId(this))
+
+        binding.btnMediaMetaUpload.setOnClickListener {
+            lifecycleScope.launch {
+                val metaData = Gson().fromJson(DataCreator.META_DATA, MediaFileMetaDataRequest::class.java)
+                MyLog.i(TAG, "metaData: ${Gson().toJson(metaData)}")
+                MediaFileMetaDataManager.INSTANCE.uploadMetaData(metaData, object : Callback<MetaDataResponse> {
+                    override fun onResponse(call: Call<MetaDataResponse>, response: Response<MetaDataResponse>) {
+                        MyLog.d(TAG, "[onResponse] code: ${response.code()}")
+                        toast("[onResponse] code: ${response.code()}")
+                    }
+
+                    override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
+                        MyLog.d(TAG, "[onFailure] t: $t")
+                        toast("[onFailure] t: $t")
+                    }
+                })
+            }
+        }
+
+        binding.btnFaceMetaUpload.setOnClickListener {
+            lifecycleScope.launch {
+                val metaData = Gson().fromJson(DataCreator.FACE_DATA, FaceScanMetaDataRequest::class.java)
+                MyLog.i(TAG, "metaData: ${Gson().toJson(metaData)}")
+                MediaFileMetaDataManager.INSTANCE.uploadMetaData(metaData, object : Callback<MetaDataResponse> {
+                    override fun onResponse(call: Call<MetaDataResponse>, response: Response<MetaDataResponse>) {
+                        MyLog.d(TAG, "[onResponse] code: ${response.code()}")
+                        toast("[onResponse] code: ${response.code()}")
+                    }
+
+                    override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
+                        MyLog.d(TAG, "[onFailure] t: $t")
+                        toast("[onFailure] t: $t")
+                    }
+                })
+            }
+        }
+
+        MyLog.i(TAG, "deviceId: ${DeviceIdUtil.getDeviceId(this)}")
     }
 
     override fun getViewBinding() = ActivityLoggerLayoutBinding.inflate(layoutInflater)

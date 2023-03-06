@@ -24,4 +24,21 @@
         android:textIsSelectable="true"
         tools:text="deviceId: xxxx" />
 
+    <Button
+        android:id="@+id/btn_media_meta_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="upload file media data" />
+
+    <Button
+        android:id="@+id/btn_face_meta_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="upload file face data" />
+
+    <TextView
+        android:id="@+id/tv_media_meta_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

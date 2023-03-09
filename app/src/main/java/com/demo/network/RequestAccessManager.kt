@@ -1,6 +1,10 @@
 package com.demo.network
 
-import com.demo.network.model.*
+import com.demo.network.model.FaceScanMetaDataRequest
+import com.demo.network.model.MediaFileMetaDataRequest
+import com.demo.network.model.MetaDataResponse
+import com.demo.network.model.SearchRequest
+import com.demo.network.model.SearchResultResponse
 import okhttp3.OkHttpClient
 import retrofit2.Callback
 import retrofit2.Retrofit
@@ -15,28 +19,35 @@ import java.util.concurrent.TimeUnit
  * <p>
  * description
  */
-class MediaFileMetaDataManager {
+class RequestAccessManager {
 
     companion object {
         private const val TAG = "MetaDataManager"
-        private const val BASE_URL = "http://dy-qa-cn.heytapmobi.com"
+        private const val META_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
+        private const val SEARCH_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
+//        private const val SEARCH_BASE_URL = "https://search-album-cn.oppomobile.com"
+//        private const val SEARCH_BASE_URL = "https://search-album-cn.oppomobile.com/api/v1/album-000001/search?query=123&max_hits=2000&src=all"
 
         private const val CONNECT_TIME_OUT = 30L
         private const val READ_TIME_OUT = 60L
         private const val WRITE_TIME_OUT = 90L
 
         val INSTANCE by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            MediaFileMetaDataManager()
+            RequestAccessManager()
         }
     }
 
     private val metaDataService: MetaDataService
+    private val searchService: SearchService
     private val retrofit: Retrofit
+    private val searchRetrofit: Retrofit
 
     init {
         val okHttpClient = initHttpClient()
-        retrofit = initRetrofit(okHttpClient)
+        retrofit = initRetrofit(okHttpClient, META_BASE_URL)
+        searchRetrofit = initRetrofit(okHttpClient, SEARCH_BASE_URL)
         metaDataService = retrofit.create(MetaDataService::class.java)
+        searchService = searchRetrofit.create(SearchService::class.java)
     }
 
     private fun initHttpClient(): OkHttpClient {
@@ -47,9 +58,9 @@ class MediaFileMetaDataManager {
             .build()
     }
 
-    private fun initRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    private fun initRetrofit(okHttpClient: OkHttpClient, url: String): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(url)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addCallAdapterFactory(Java8CallAdapterFactory.create())
             .addCallAdapterFactory(GuavaCallAdapterFactory.create())
@@ -68,6 +79,14 @@ class MediaFileMetaDataManager {
     fun uploadMetaData(metaData: FaceScanMetaDataRequest, callback: Callback<MetaDataResponse>) {
         val call = metaDataService.uploadMetaData(metaData)
         call.enqueue(callback)
+    }
+
+    fun search(request: SearchRequest, callBack: Callback<SearchResultResponse>) {
+        searchService.search(
+            request.query,
+            request.maxHits,
+            request.src
+        ).enqueue(callBack)
     }
 
 }

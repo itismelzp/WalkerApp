@@ -5,5 +5,8 @@ package com.demo.network.model
  * <p>
  * description
  */
-class SearchResultRequest {
-}
+data class SearchRequest(
+    var query: String,
+    var maxHits: Int,
+    var src: String
+)

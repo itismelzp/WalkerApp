@@ -36,6 +36,18 @@
         android:layout_height="wrap_content"
         android:text="upload file face data" />
 
+    <Button
+        android:id="@+id/btn_search_result_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="search result data" />
+
+    <Button
+        android:id="@+id/btn_test_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test data" />
+
     <TextView
         android:id="@+id/tv_media_meta_upload"
         android:layout_width="match_parent"

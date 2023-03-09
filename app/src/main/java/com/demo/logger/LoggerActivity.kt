@@ -2,21 +2,29 @@ package com.demo.logger
 
 import android.os.Bundle
 import android.util.Log
-import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.lifecycleScope
 import com.demo.R
 import com.demo.databinding.ActivityLoggerLayoutBinding
-import com.demo.network.MediaFileMetaDataManager
-import com.demo.network.model.*
+import com.demo.network.RequestAccessManager
+import com.demo.network.model.DataCreator
+import com.demo.network.model.FaceScanMetaDataRequest
+import com.demo.network.model.MediaFileMetaDataRequest
+import com.demo.network.model.MetaDataResponse
+import com.demo.network.model.Person
+import com.demo.network.model.SearchRequest
+import com.demo.network.model.SearchResultResponse
+import com.demo.network.model.TestData
 import com.demo.utils.DeviceIdUtil
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.lang.reflect.Type
 
 class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
@@ -25,9 +33,6 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     companion object {
         private const val TAG = "LoggerActivity"
     }
-
-
-
 
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)
@@ -45,7 +50,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 //                    ping("127.0.0.1")
                     ping(ip)
                 }
-                toastPintMsg(result)
+                toast(result)
             }
         }
 
@@ -53,12 +58,12 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
         binding.btnMediaMetaUpload.setOnClickListener {
             lifecycleScope.launch {
-                val metaData = Gson().fromJson(DataCreator.META_DATA, MediaFileMetaDataRequest::class.java)
+                val metaData = Gson().fromJson(DataCreator.MEDIA_META_DATA, MediaFileMetaDataRequest::class.java)
                 MyLog.i(TAG, "metaData: ${Gson().toJson(metaData)}")
-                MediaFileMetaDataManager.INSTANCE.uploadMetaData(metaData, object : Callback<MetaDataResponse> {
+                RequestAccessManager.INSTANCE.uploadMetaData(metaData, object : Callback<MetaDataResponse> {
                     override fun onResponse(call: Call<MetaDataResponse>, response: Response<MetaDataResponse>) {
-                        MyLog.d(TAG, "[onResponse] code: ${response.code()}")
-                        toast("[onResponse] code: ${response.code()}")
+                        MyLog.d(TAG, "[onResponse] code: ${response.code()}, data: ${response.body()}")
+                        toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
                     }
 
                     override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
@@ -71,12 +76,13 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
         binding.btnFaceMetaUpload.setOnClickListener {
             lifecycleScope.launch {
-                val metaData = Gson().fromJson(DataCreator.FACE_DATA, FaceScanMetaDataRequest::class.java)
+                val metaData = Gson().fromJson(DataCreator.FACE_META_DATA, FaceScanMetaDataRequest::class.java)
                 MyLog.i(TAG, "metaData: ${Gson().toJson(metaData)}")
-                MediaFileMetaDataManager.INSTANCE.uploadMetaData(metaData, object : Callback<MetaDataResponse> {
+                toast("metaData: ${Gson().toJson(metaData)}")
+                RequestAccessManager.INSTANCE.uploadMetaData(metaData, object : Callback<MetaDataResponse> {
                     override fun onResponse(call: Call<MetaDataResponse>, response: Response<MetaDataResponse>) {
-                        MyLog.d(TAG, "[onResponse] code: ${response.code()}")
-                        toast("[onResponse] code: ${response.code()}")
+                        MyLog.d(TAG, "[onResponse] code: ${response.code()}, data: ${response.body()}")
+                        toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
                     }
 
                     override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
@@ -87,15 +93,38 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             }
         }
 
+        binding.btnSearchResultData.setOnClickListener {
+//            val searchResultResponse = Gson().fromJson(DataCreator.SEARCH_RESULT_DATA, SearchResultResponse::class.java)
+//            MyLog.i(TAG, "searchResultResponse: $searchResultResponse")
+            RequestAccessManager.INSTANCE.search(SearchRequest("123", 2000, "all"), object : Callback<SearchResultResponse> {
+                override fun onResponse(call: Call<SearchResultResponse>, response: Response<SearchResultResponse>) {
+                    MyLog.d(TAG, "[onResponse] code: ${response.code()}, data: ${response.body()}")
+                    toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
+                }
+
+                override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
+                    MyLog.e(TAG, "[onFailure] t: $t")
+                    toast("[onFailure] t: $t")
+                }
+            })
+        }
+
+        binding.btnTestData.setOnClickListener {
+            val testdata = Gson().fromJson(DataCreator.TEST_DATA, TestData::class.java)
+            MyLog.i(TAG, "testdata: $testdata")
+
+            val data = testdata.data
+            val type: Type = object : TypeToken<Map<String, Person>>() {}.type
+            val map: Map<String, Person> = Gson().fromJson(data, type)
+            MyLog.i(TAG, "map: $map")
+
+            map.forEach { (digit, person) -> MyLog.i(TAG, "$digit: $person") }
+        }
+
         MyLog.i(TAG, "deviceId: ${DeviceIdUtil.getDeviceId(this)}")
     }
 
     override fun getViewBinding() = ActivityLoggerLayoutBinding.inflate(layoutInflater)
-
-    @UiThread
-    private fun toastPintMsg(msg: String) {
-        toast(msg)
-    }
 
     /**
      * Ping命令格式为：ping -c 1 -w 5 ip

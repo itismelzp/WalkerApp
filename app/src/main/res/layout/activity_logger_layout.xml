@@ -1,56 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".logger.LoggerActivity">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_ping"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ping" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".logger.LoggerActivity">
 
-    <TextView
-        android:id="@+id/tv_log_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btn_ping"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ping" />
 
-    <TextView
-        android:id="@+id/btn_device_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textIsSelectable="true"
-        tools:text="deviceId: xxxx" />
+        <TextView
+            android:id="@+id/tv_log_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/btn_media_meta_upload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="upload file media data" />
+        <TextView
+            android:id="@+id/btn_device_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            tools:text="deviceId: xxxx" />
 
-    <Button
-        android:id="@+id/btn_face_meta_upload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="upload file face data" />
+        <Button
+            android:id="@+id/btn_media_meta_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="upload file media data" />
 
-    <Button
-        android:id="@+id/btn_search_result_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="search result data" />
+        <Button
+            android:id="@+id/btn_face_meta_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="upload file face data" />
 
-    <Button
-        android:id="@+id/btn_test_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test data" />
 
-    <TextView
-        android:id="@+id/tv_media_meta_upload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-</LinearLayout>
+            <EditText
+                android:id="@+id/search_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="123" />
+
+            <Button
+                android:id="@+id/btn_search_result_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="search" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/coroutine_search_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="123" />
+
+            <Button
+                android:id="@+id/btn_coroutine_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="协程search" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_test_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test data" />
+
+        <TextView
+            android:id="@+id/tv_media_meta_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/resut_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</ScrollView>

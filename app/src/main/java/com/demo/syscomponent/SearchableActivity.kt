@@ -11,6 +11,12 @@ import androidx.appcompat.widget.SearchView
 import com.demo.R
 import com.demo.databinding.LayoutSearchActivityBinding
 import com.demo.logger.BaseActivity
+import com.demo.network.RequestAccessManager
+import com.demo.network.model.SearchRequest
+import com.demo.network.model.SearchResultResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 /**
@@ -120,8 +126,38 @@ class SearchableActivity : BaseActivity<LayoutSearchActivityBinding>() {
     }
 
     private fun doMySearch(query: String) {
+
+        RequestAccessManager.INSTANCE.search(SearchRequest(query, 200, "all"), object :
+            Callback<SearchResultResponse> {
+            override fun onResponse(
+                call: Call<SearchResultResponse>,
+                response: Response<SearchResultResponse>
+            ) {
+                response.body()
+            }
+
+            override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
+
+            }
+        })
+
         val filterData = originData.filter { it.contains(query) } as ArrayList<String>
         textDataAdapter.setNewData(filterData)
+    }
+
+    private fun mergeResult(localData: List<String>, cloudData: List<String>): List<String> {
+
+        if (localData == null && cloudData == null) {
+            return listOf()
+        }
+
+        if (localData == null) {
+            return cloudData
+        }
+        if (cloudData == null) {
+            return localData
+        }
+        return localData + cloudData
     }
 
 }

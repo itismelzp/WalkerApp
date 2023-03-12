@@ -5,6 +5,9 @@ import com.demo.network.model.MediaFileMetaDataRequest
 import com.demo.network.model.MetaDataResponse
 import com.demo.network.model.SearchRequest
 import com.demo.network.model.SearchResultResponse
+import com.demo.network.service.MetaDataService
+import com.demo.network.service.SearchService
+import com.demo.network.utils.GsonUtil
 import okhttp3.OkHttpClient
 import retrofit2.Callback
 import retrofit2.Retrofit
@@ -25,6 +28,7 @@ class RequestAccessManager {
         private const val TAG = "MetaDataManager"
         private const val META_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
         private const val SEARCH_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
+
 //        private const val SEARCH_BASE_URL = "https://search-album-cn.oppomobile.com"
 //        private const val SEARCH_BASE_URL = "https://search-album-cn.oppomobile.com/api/v1/album-000001/search?query=123&max_hits=2000&src=all"
 
@@ -64,8 +68,7 @@ class RequestAccessManager {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addCallAdapterFactory(Java8CallAdapterFactory.create())
             .addCallAdapterFactory(GuavaCallAdapterFactory.create())
-//            .addConverterFactory(NullOnEmptyConverterFactory())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(GsonUtil.getGson()))
             .client(okHttpClient)
             .build()
     }
@@ -87,6 +90,14 @@ class RequestAccessManager {
             request.maxHits,
             request.src
         ).enqueue(callBack)
+    }
+
+    suspend fun coroutineSearch(request: SearchRequest): SearchResultResponse {
+        return searchService.coroutineSearch(
+            request.query,
+            request.maxHits,
+            request.src
+        )
     }
 
 }

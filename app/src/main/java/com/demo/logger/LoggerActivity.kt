@@ -1,6 +1,7 @@
 package com.demo.logger
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +16,7 @@ import com.demo.network.model.Person
 import com.demo.network.model.SearchRequest
 import com.demo.network.model.SearchResultResponse
 import com.demo.network.model.TestData
+import com.demo.network.utils.GsonUtil
 import com.demo.utils.DeviceIdUtil
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -59,7 +61,11 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         binding.btnMediaMetaUpload.setOnClickListener {
             lifecycleScope.launch {
                 val metaData = Gson().fromJson(DataCreator.MEDIA_META_DATA, MediaFileMetaDataRequest::class.java)
-                MyLog.i(TAG, "metaData: ${Gson().toJson(metaData)}")
+                metaData.mediaFileMetaDatas[0].latitude = Double.NaN
+                if (metaData.mediaFileMetaDatas[0].latitude!!.isNaN()) {
+//                    metaData.mediaFileMetaDatas[0].latitude = null
+                }
+                MyLog.i(TAG, "metaData: ${GsonUtil.getGson().toJson(metaData)}")
                 RequestAccessManager.INSTANCE.uploadMetaData(metaData, object : Callback<MetaDataResponse> {
                     override fun onResponse(call: Call<MetaDataResponse>, response: Response<MetaDataResponse>) {
                         MyLog.d(TAG, "[onResponse] code: ${response.code()}, data: ${response.body()}")
@@ -94,19 +100,67 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
 
         binding.btnSearchResultData.setOnClickListener {
+//            MyLog.i(TAG, "SEARCH_RESULT_DATA: ${DataCreator.SEARCH_RESULT_DATA}")
 //            val searchResultResponse = Gson().fromJson(DataCreator.SEARCH_RESULT_DATA, SearchResultResponse::class.java)
 //            MyLog.i(TAG, "searchResultResponse: $searchResultResponse")
-            RequestAccessManager.INSTANCE.search(SearchRequest("123", 2000, "all"), object : Callback<SearchResultResponse> {
+
+            val searchBtn = binding.searchEt
+            val request = SearchRequest(
+                if (!TextUtils.isEmpty(searchBtn.text.toString()))
+                    searchBtn.text.toString()
+                else
+                    searchBtn.hint.toString(),
+                2000,
+                "all"
+            )
+
+            RequestAccessManager.INSTANCE.search(request, object : Callback<SearchResultResponse> {
                 override fun onResponse(call: Call<SearchResultResponse>, response: Response<SearchResultResponse>) {
-                    MyLog.d(TAG, "[onResponse] code: ${response.code()}, data: ${response.body()}")
-                    toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
+
+                    val searchResultResponse = response.body()
+                    val dataSize = searchResultResponse?.aggregations?.data?.size ?: 0
+
+                    val result = "【request: $request】\n[onResponse] code: ${response.code()} size: $dataSize\ndata: $searchResultResponse"
+                    MyLog.d(TAG, result)
+//                    toast(result)
+                    binding.resutTv.text = result
                 }
 
                 override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
-                    MyLog.e(TAG, "[onFailure] t: $t")
-                    toast("[onFailure] t: $t")
+                    val result ="[onFailure] t: $t"
+                    MyLog.e(TAG, result)
+//                    toast(result)
+                    binding.resutTv.text = result
                 }
             })
+        }
+
+        binding.btnCoroutineSearch.setOnClickListener {
+//            MyLog.i(TAG, "SEARCH_RESULT_DATA: ${DataCreator.SEARCH_RESULT_DATA}")
+//            val responseJason =
+//                Gson().fromJson(DataCreator.SEARCH_RESULT_DATA, SearchResultResponse::class.java)
+//            MyLog.i(TAG, "searchResultResponse: $responseJason")
+
+            val searchBtn = binding.btnCoroutineSearch
+            val request = SearchRequest(
+                if (!TextUtils.isEmpty(searchBtn.text.toString()))
+                    searchBtn.text.toString()
+                else
+                    searchBtn.hint.toString(),
+                2000,
+                "all"
+            )
+            mainScope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    val searchResultResponse =
+                        RequestAccessManager.INSTANCE.coroutineSearch(request)
+                    val dataSize = searchResultResponse.aggregations.data.size
+                    return@withContext "【request: $request】\n[onResponse] size: $dataSize\ndata: $searchResultResponse"
+                }
+
+                MyLog.d(TAG, result)
+                binding.resutTv.text = result
+            }
         }
 
         binding.btnTestData.setOnClickListener {

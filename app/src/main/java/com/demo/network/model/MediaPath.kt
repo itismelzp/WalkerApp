@@ -8,15 +8,10 @@ import com.google.gson.annotations.SerializedName
  * description
  */
 data class MediaPath(
-    var day: Int,
-    var latitude: Double,
-    var longitude: Double,
-    var month: Int,
-    var name: String,
-    @SerializedName("thumb_url")
-    var thumbUrl: String,
-    var timestamp: Long,
-    var type_: List<Int>,
-    var url: String,
-    var year: Int
+    var dataTaken: Long,
+    var mediaId: Int,
+    var mediaPath: String,
+    var name: List<String>,
+    @SerializedName("type_")
+    var type: List<Int>,
 )

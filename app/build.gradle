@@ -5,6 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
     id 'kotlin-kapt' // 引入kapt后apt就不生效了？？
+//    id 'com.dorongold.gradle.tasktree.TaskTreePlugin'
 }
 
 android {

@@ -1,4 +1,4 @@
-package com.demo.network
+package com.demo.network.service
 
 import com.demo.network.model.FaceScanMetaDataRequest
 import com.demo.network.model.MediaFileMetaDataRequest

@@ -151,7 +151,7 @@ public class MainButtonModel {
         systemViews.add(new MainButton("ViewPager2 demo", MainButtonType.TYPE_SYSTEM_VIEW, bindFragmentListener(ViewPagerCollectionFragment.newInstance())));
         systemViews.add(new MainButton("CoordinatorLayout demo", MainButtonType.TYPE_SYSTEM_VIEW, bindFragmentListener(CoordinatorLayoutFragment.newInstance())));
         systemViews.add(new MainButton("AppBar", MainButtonType.TYPE_SYSTEM_VIEW, ScrollingActivity.class));
-        systemViews.add(new MainButton("Search component", MainButtonType.TYPE_SYSTEM_VIEW, SearchOtherActivity.class));
+        systemViews.add(new MainButton("搜索组件", MainButtonType.TYPE_SYSTEM_VIEW, SearchOtherActivity.class));
         typeMap.put(MainButtonType.TYPE_SYSTEM_VIEW, systemViews);
 
         List<MainButton> systemComponents = new ArrayList<>();

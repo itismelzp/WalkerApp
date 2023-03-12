@@ -15,6 +15,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.demo.MyApplication
+import com.demo.network.CoroutineExceptionHandlerImpl
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.plus
 
 abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
 
@@ -24,6 +27,8 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
     companion object {
         const val REQUEST_CODE = 0
     }
+
+    protected val mainScope = MainScope() + CoroutineExceptionHandlerImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,5 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+apply plugin: com.dorongold.gradle.tasktree.TaskTreePlugin
+
 buildscript {
     repositories {
         mavenLocal()
@@ -10,6 +12,7 @@ buildscript {
 //        maven { url 'http://localhost:8081/repository/autotracktransform/' }
         maven { url 'https://jitpack.io' }
         maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://plugins.gradle.org/m2" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.2'
@@ -21,10 +24,17 @@ buildscript {
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.16'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
         classpath "com.tencent.shadow.core:gradle-plugin:local-8d9c7a7f-SNAPSHOT"
+
+        classpath "com.dorongold.plugins:task-tree:2.1.1"
     }
 }
 
 allprojects {
+
+//    plugins {
+//        id "com.dorongold.task-tree" version "2.1.1"
+//    }
+
     repositories {
         mavenLocal()
         jcenter()
@@ -33,6 +43,7 @@ allprojects {
 
         maven { url 'https://jitpack.io' }
         maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 }
 

@@ -1,4 +1,4 @@
-package com.demo.network
+package com.demo.network.service
 
 import com.demo.network.model.SearchResultResponse
 import retrofit2.Call
@@ -18,5 +18,12 @@ interface SearchService {
         @Query("max_hits") maxHits: Int,
         @Query("src") src: String
     ): Call<SearchResultResponse>
+
+    @GET("/photosearch/api/v1/album-000001/search")
+    suspend fun coroutineSearch(
+        @Query("query") query: String,
+        @Query("max_hits") maxHits: Int,
+        @Query("src") src: String
+    ): SearchResultResponse
 
 }

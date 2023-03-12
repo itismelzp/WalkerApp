@@ -12,8 +12,8 @@ data class MediaFileMetaData(
     var fileMediaType: Int,
     var filePath: String,
     var mediaId: Int,
-    val latitude: Double,
-    var longitude: Double,
+    var latitude: Double? = null,
+    var longitude: Double? = null,
     var mediaType: Int,
     var width: Int,
     var height: Int

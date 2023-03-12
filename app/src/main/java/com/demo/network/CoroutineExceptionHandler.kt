@@ -3,6 +3,7 @@ package com.demo.network
 import com.demo.logger.MyLog
 import com.google.gson.JsonParseException
 import kotlinx.coroutines.CoroutineExceptionHandler
+import java.net.SocketTimeoutException
 import javax.net.ssl.SSLHandshakeException
 import javax.security.cert.CertificateException
 import kotlin.coroutines.CoroutineContext
@@ -13,6 +14,10 @@ import kotlin.coroutines.CoroutineContext
  * description
  */
 class CoroutineExceptionHandlerImpl : CoroutineExceptionHandler {
+
+    companion object {
+        private const val TAG = "CoroutineExceptionHandl"
+    }
 
     override val key = CoroutineExceptionHandler
 
@@ -27,8 +32,12 @@ class CoroutineExceptionHandlerImpl : CoroutineExceptionHandler {
             is CertificateException, is SSLHandshakeException -> {
                 // 证书异常
             }
+            is SocketTimeoutException -> {
+                // 超时
+                MyLog.e(TAG, "SocketTimeoutException error: ", e)
+            }
             else -> {
-                MyLog.e("CoroutineExceptionHandler", "CoroutineExceptionHandler error ", e)
+                MyLog.e(TAG, "CoroutineExceptionHandler error: ", e)
             }
         }
     }

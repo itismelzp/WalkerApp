@@ -1,6 +1,5 @@
 package com.demo.network.model
 
-import okhttp3.MediaType
 
 /**
  * Created by lizhiping on 2023/3/12.

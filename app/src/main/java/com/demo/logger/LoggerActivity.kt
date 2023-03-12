@@ -11,6 +11,7 @@ import com.demo.network.RequestAccessManager
 import com.demo.network.model.DataCreator
 import com.demo.network.model.FaceScanMetaDataRequest
 import com.demo.network.model.MediaFileMetaDataRequest
+import com.demo.network.model.MediaItem
 import com.demo.network.model.MetaDataResponse
 import com.demo.network.model.Person
 import com.demo.network.model.SearchRequest
@@ -45,6 +46,17 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
     override fun initBaseViews(savedInstanceState: Bundle?) {
         super.initBaseViews(savedInstanceState)
+
+        binding.btnDeviceId.text = getString(R.string.device_id, DeviceIdUtil.getDeviceId(this))
+        MyLog.i(TAG, "deviceId: ${DeviceIdUtil.getDeviceId(this)}")
+
+        initPingView()
+        initMetaUploadView()
+        initSearchView()
+
+    }
+
+    private fun initPingView() {
         binding.btnPing.setOnClickListener {
             lifecycleScope.launch {
                 val ip = "10.250.13.125"
@@ -56,118 +68,153 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                 toast(result)
             }
         }
+    }
 
-        binding.btnDeviceId.text = getString(R.string.device_id, DeviceIdUtil.getDeviceId(this))
-
+    private fun initMetaUploadView() {
         binding.btnMediaMetaUpload.setOnClickListener {
             lifecycleScope.launch {
-                val metaData = Gson().fromJson(DataCreator.MEDIA_META_DATA, MediaFileMetaDataRequest::class.java)
-                metaData.mediaFileMetaDatas[0].latitude = Double.NaN
+                val metaData = Gson().fromJson(
+                    DataCreator.MEDIA_META_DATA,
+                    MediaFileMetaDataRequest::class.java
+                )
+//                metaData.mediaFileMetaDatas[0].latitude = Double.NaN
                 if (metaData.mediaFileMetaDatas[0].latitude!!.isNaN()) {
 //                    metaData.mediaFileMetaDatas[0].latitude = null
                 }
                 MyLog.i(TAG, "metaData: ${GsonUtil.getGson().toJson(metaData)}")
-                RequestAccessManager.INSTANCE.uploadMetaData(metaData, object : Callback<MetaDataResponse> {
-                    override fun onResponse(call: Call<MetaDataResponse>, response: Response<MetaDataResponse>) {
-                        MyLog.d(TAG, "[onResponse] code: ${response.code()}, data: ${response.body()}")
-                        toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
-                    }
+                RequestAccessManager.INSTANCE.uploadMetaData(
+                    metaData,
+                    object : Callback<MetaDataResponse> {
+                        override fun onResponse(
+                            call: Call<MetaDataResponse>,
+                            response: Response<MetaDataResponse>
+                        ) {
+                            MyLog.d(
+                                TAG,
+                                "[onResponse] code: ${response.code()}, data: ${response.body()}"
+                            )
+                            toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
+                        }
 
-                    override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
-                        MyLog.d(TAG, "[onFailure] t: $t")
-                        toast("[onFailure] t: $t")
-                    }
-                })
+                        override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
+                            MyLog.d(TAG, "[onFailure] t: $t")
+                            toast("[onFailure] t: $t")
+                        }
+                    })
             }
         }
 
         binding.btnFaceMetaUpload.setOnClickListener {
             lifecycleScope.launch {
-                val metaData = Gson().fromJson(DataCreator.FACE_META_DATA, FaceScanMetaDataRequest::class.java)
+                val metaData =
+                    Gson().fromJson(DataCreator.FACE_META_DATA, FaceScanMetaDataRequest::class.java)
                 MyLog.i(TAG, "metaData: ${Gson().toJson(metaData)}")
                 toast("metaData: ${Gson().toJson(metaData)}")
-                RequestAccessManager.INSTANCE.uploadMetaData(metaData, object : Callback<MetaDataResponse> {
-                    override fun onResponse(call: Call<MetaDataResponse>, response: Response<MetaDataResponse>) {
-                        MyLog.d(TAG, "[onResponse] code: ${response.code()}, data: ${response.body()}")
-                        toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
-                    }
+                RequestAccessManager.INSTANCE.uploadMetaData(
+                    metaData,
+                    object : Callback<MetaDataResponse> {
+                        override fun onResponse(
+                            call: Call<MetaDataResponse>,
+                            response: Response<MetaDataResponse>
+                        ) {
+                            MyLog.d(
+                                TAG,
+                                "[onResponse] code: ${response.code()}, data: ${response.body()}"
+                            )
+                            toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
+                        }
 
-                    override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
-                        MyLog.d(TAG, "[onFailure] t: $t")
-                        toast("[onFailure] t: $t")
-                    }
-                })
+                        override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
+                            MyLog.d(TAG, "[onFailure] t: $t")
+                            toast("[onFailure] t: $t")
+                        }
+                    })
             }
         }
+    }
 
+    private fun getQuery1(): String {
+        val searchEt = binding.searchEt
+        return if (!TextUtils.isEmpty(searchEt.text.toString())) {
+            searchEt.text.toString()
+        } else {
+            searchEt.hint.toString()
+        }
+    }
+
+    private fun getQuery2(): String {
+        val searchEt = binding.coroutineSearchEt
+        return if (!TextUtils.isEmpty(searchEt.text.toString())) {
+            searchEt.text.toString()
+        } else {
+            searchEt.hint.toString()
+        }
+    }
+
+    private fun clearText() {
+        binding.resultTv.text = ""
+    }
+
+    private fun appendText(str: String) {
+        binding.resultTv.text = "${binding.resultTv.text}\n$str\n"
+    }
+
+    private fun initSearchView() {
         binding.btnSearchResultData.setOnClickListener {
+            clearText()
 
-            MyLog.i(TAG, "SEARCH_SIMPLE_RESULT_DATA: ${DataCreator.SEARCH_SIMPLE_RESULT_DATA}")
-            val searchResultResponse = Gson().fromJson(DataCreator.SEARCH_SIMPLE_RESULT_DATA, SearchResultResponse::class.java)
-            val dataList = searchResultResponse.aggregations.data
-            binding.resultTv.text = "SEARCH_SIMPLE_RESULT_DATA: ${DataCreator.SEARCH_SIMPLE_RESULT_DATA}"
-            MyLog.i(TAG, "dataList.size: ${dataList.size}, searchResultResponse: $searchResultResponse")
+            val localSearchData = getLocalSearchData()
+            val localStr = "localSearchData: $localSearchData\n"
+            MyLog.i(TAG, localStr)
+            binding.resultTv.text = localStr
 
+            val request = SearchRequest(getQuery1(), 2, "all")
+            val requestStr = "request: $request\n"
+            MyLog.d(TAG, requestStr)
+            binding.resultTv.text = "${binding.resultTv.text}\n$requestStr"
 
-            val mediaItemList = DataConverter.dataConvert(dataList)
-            MyLog.i(TAG, "size: ${mediaItemList.size}, mediaItemList: $mediaItemList")
-
-            val searchBtn = binding.searchEt
-            val request = SearchRequest(
-                if (!TextUtils.isEmpty(searchBtn.text.toString()))
-                    searchBtn.text.toString()
-                else
-                    searchBtn.hint.toString(),
-                2,
-                "all"
-            )
 
             RequestAccessManager.INSTANCE.search(request, object : Callback<SearchResultResponse> {
-                override fun onResponse(call: Call<SearchResultResponse>, response: Response<SearchResultResponse>) {
-
-                    val searchResultResponse = response.body()
-                    val dataSize = searchResultResponse?.aggregations?.data?.size ?: 0
-
-                    val result = "【request: $request】\n[onResponse] code: ${response.code()} size: $dataSize\ndata: $searchResultResponse"
-                    MyLog.d(TAG, result)
-//                    toast(result)
-                    binding.resultTv.text = result
+                override fun onResponse(
+                    call: Call<SearchResultResponse>,
+                    response: Response<SearchResultResponse>
+                ) {
+                    val data = response.body()?.aggregations?.data
+                    val responseStr = "[response] size: ${data?.size}, data: $data\n"
+                    MyLog.d(TAG, responseStr)
+                    binding.resultTv.text = "${binding.resultTv.text}\n$responseStr"
                 }
 
                 override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
-                    val result ="[onFailure] t: $t"
-                    MyLog.e(TAG, result)
-//                    toast(result)
-                    binding.resultTv.text = result
+                    val responseStr = "[onFailure] t: $t\n"
+                    MyLog.e(TAG, responseStr)
+                    toast(responseStr)
+                    binding.resultTv.text = "${binding.resultTv.text}\n$responseStr\n"
                 }
             })
         }
 
         binding.btnCoroutineSearch.setOnClickListener {
-//            MyLog.i(TAG, "SEARCH_RESULT_DATA: ${DataCreator.SEARCH_RESULT_DATA}")
-//            val responseJason =
-//                Gson().fromJson(DataCreator.SEARCH_RESULT_DATA, SearchResultResponse::class.java)
-//            MyLog.i(TAG, "searchResultResponse: $responseJason")
+            clearText()
 
-            val searchBtn = binding.btnCoroutineSearch
-            val request = SearchRequest(
-                if (!TextUtils.isEmpty(searchBtn.text.toString()))
-                    searchBtn.text.toString()
-                else
-                    searchBtn.hint.toString(),
-                2000,
-                "all"
-            )
+            val localSearchData = getLocalSearchData()
+            val localStr = "localSearchData: $localSearchData\n"
+            MyLog.i(TAG, localStr)
+            binding.resultTv.text = localStr
+
+            val request = SearchRequest(getQuery2(), 2000, "all")
+            val requestStr = "request: $request\n"
+            MyLog.d(TAG, requestStr)
+            binding.resultTv.text = "${binding.resultTv.text}\n$requestStr"
+
             mainScope.launch {
-                val result = withContext(Dispatchers.IO) {
-                    val searchResultResponse =
-                        RequestAccessManager.INSTANCE.coroutineSearch(request)
-                    val dataSize = searchResultResponse.aggregations.data.size
-                    return@withContext "【request: $request】\n[onResponse] size: $dataSize\ndata: $searchResultResponse"
+                val response = withContext(Dispatchers.IO) {
+                    RequestAccessManager.INSTANCE.coroutineSearch(request)
                 }
-
-                MyLog.d(TAG, result)
-                binding.resultTv.text = result
+                val data = response.aggregations.data
+                val responseStr = "[response] size: ${data.size}, data: $data\n"
+                MyLog.d(TAG, responseStr)
+                binding.resultTv.text = "${binding.resultTv.text}\n$responseStr"
             }
         }
 
@@ -182,8 +229,11 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
             map.forEach { (digit, person) -> MyLog.i(TAG, "$digit: $person") }
         }
+    }
 
-        MyLog.i(TAG, "deviceId: ${DeviceIdUtil.getDeviceId(this)}")
+
+    private fun getLocalSearchData(): List<MediaItem> {
+        return DataConverter.dataConvert(DataCreator.localSearch().aggregations.data)
     }
 
     override fun getViewBinding() = ActivityLoggerLayoutBinding.inflate(layoutInflater)

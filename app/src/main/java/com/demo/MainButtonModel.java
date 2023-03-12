@@ -175,11 +175,11 @@ public class MainButtonModel {
         typeMap.put(MainButtonType.TYPE_COMPILE, compiler);
 
         List<MainButton> other = new ArrayList<>();
+        other.add(new MainButton("日志demo", LoggerActivity.class));
         other.add(new MainButton("View事件分发", ViewDispatchDemoActivity.class));
         other.add(new MainButton("进度条滑动冲突", SlideConflictDemoActivity.class));
         other.add(new MainButton("rxjava demo", RxJavaActivity.class));
         other.add(new MainButton("进程通信demo", IPCDemoActivity.class));
-        other.add(new MainButton("日志demo", LoggerActivity.class));
 //        other.add(new MainButton("日志demo2", bindFragmentListener(LoggerFragment.newInstance())));
         other.add(new MainButton("插件demo", pluginClickListener));
         typeMap.put(MainButtonType.TYPE_OTHER, other);

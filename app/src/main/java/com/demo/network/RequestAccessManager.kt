@@ -29,12 +29,9 @@ class RequestAccessManager {
         private const val META_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
         private const val SEARCH_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
 
-//        private const val SEARCH_BASE_URL = "https://search-album-cn.oppomobile.com"
-//        private const val SEARCH_BASE_URL = "https://search-album-cn.oppomobile.com/api/v1/album-000001/search?query=123&max_hits=2000&src=all"
-
-        private const val CONNECT_TIME_OUT = 30L
-        private const val READ_TIME_OUT = 60L
-        private const val WRITE_TIME_OUT = 90L
+        private const val CONNECT_TIME_OUT = 5000L
+        private const val READ_TIME_OUT = 5000L
+        private const val WRITE_TIME_OUT = 90000L
 
         val INSTANCE by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             RequestAccessManager()
@@ -56,9 +53,9 @@ class RequestAccessManager {
 
     private fun initHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
-            .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
-            .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
+            .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
+            .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
+            .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
             .build()
     }
 

@@ -1,5 +1,7 @@
 package com.demo.network.model
 
+import com.google.gson.Gson
+
 /**
  * Created by lizhiping on 2023/3/7.
  * <p>
@@ -53,8 +55,8 @@ object DataCreator {
             "        \"dataTaken\": 1677848084\n" +
             "    }]\n" +
             "}\n"
-    
-    
+
+
     const val SEARCH_SIMPLE_RESULT_DATA = "{\n" +
             "    \"num_hits\": 22,\n" +
             "    \"hits\": [],\n" +
@@ -377,4 +379,8 @@ object DataCreator {
             "        }\n" +
             "    ]\n" +
             "}\n"
+
+    fun localSearch(): SearchResultResponse {
+        return Gson().fromJson(SEARCH_SIMPLE_RESULT_DATA, SearchResultResponse::class.java)
+    }
 }

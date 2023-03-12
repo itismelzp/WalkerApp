@@ -53,6 +53,50 @@ object DataCreator {
             "        \"dataTaken\": 1677848084\n" +
             "    }]\n" +
             "}\n"
+    
+    
+    const val SEARCH_SIMPLE_RESULT_DATA = "{\n" +
+            "    \"num_hits\": 22,\n" +
+            "    \"hits\": [],\n" +
+            "    \"elapsed_time_micros\": 0,\n" +
+            "    \"errors\": [],\n" +
+            "    \"aggregations\": {\n" +
+            "        \"data\": [{\n" +
+            "                \"dataToken\": 1660376553,\n" +
+            "                \"mediaId\": 1,\n" +
+            "                \"mediaPath\": \"2022_08_13_15_42_IMG_3247.jpg\",\n" +
+            "                \"name\": [\"test0\", \"test1\"],\n" +
+            "                \"type_\": [\n" +
+            "                    0, 1\n" +
+            "                ]\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"dataToken\": 1655198036,\n" +
+            "                \"mediaId\": 2,\n" +
+            "                \"mediaPath\": \"2022_06_14_17_13_IMG_0963.jpg\",\n" +
+            "                \"name\": [\"test1\", \"test2\"],\n" +
+            "                \"type_\": [\n" +
+            "                    1, 2\n" +
+            "                ]\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"dataToken\": 1655198037,\n" +
+            "                \"mediaId\": 3,\n" +
+            "                \"mediaPath\": \"2022_06_14_17_13_IMG_0999.jpg\",\n" +
+            "                \"name\": [\"test3\", \"test4\"],\n" +
+            "                \"type_\": [\n" +
+            "                    3, 4\n" +
+            "                ]\n" +
+            "            }\n" +
+            "\n" +
+            "        ],\n" +
+            "        \"meta\": [\n" +
+            "            \"vec\",\n" +
+            "            \"default\",\n" +
+            "            \"ocr\"\n" +
+            "        ]\n" +
+            "    }\n" +
+            "}"
 
     const val SEARCH_RESULT_DATA = "{\n" +
             "    \"num_hits\": 22,\n" +

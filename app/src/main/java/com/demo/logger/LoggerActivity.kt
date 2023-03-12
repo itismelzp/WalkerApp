@@ -16,6 +16,7 @@ import com.demo.network.model.Person
 import com.demo.network.model.SearchRequest
 import com.demo.network.model.SearchResultResponse
 import com.demo.network.model.TestData
+import com.demo.network.utils.DataConverter
 import com.demo.network.utils.GsonUtil
 import com.demo.utils.DeviceIdUtil
 import com.google.gson.Gson
@@ -100,9 +101,16 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
 
         binding.btnSearchResultData.setOnClickListener {
-//            MyLog.i(TAG, "SEARCH_RESULT_DATA: ${DataCreator.SEARCH_RESULT_DATA}")
-//            val searchResultResponse = Gson().fromJson(DataCreator.SEARCH_RESULT_DATA, SearchResultResponse::class.java)
-//            MyLog.i(TAG, "searchResultResponse: $searchResultResponse")
+
+            MyLog.i(TAG, "SEARCH_SIMPLE_RESULT_DATA: ${DataCreator.SEARCH_SIMPLE_RESULT_DATA}")
+            val searchResultResponse = Gson().fromJson(DataCreator.SEARCH_SIMPLE_RESULT_DATA, SearchResultResponse::class.java)
+            val dataList = searchResultResponse.aggregations.data
+            binding.resultTv.text = "SEARCH_SIMPLE_RESULT_DATA: ${DataCreator.SEARCH_SIMPLE_RESULT_DATA}"
+            MyLog.i(TAG, "dataList.size: ${dataList.size}, searchResultResponse: $searchResultResponse")
+
+
+            val mediaItemList = DataConverter.dataConvert(dataList)
+            MyLog.i(TAG, "size: ${mediaItemList.size}, mediaItemList: $mediaItemList")
 
             val searchBtn = binding.searchEt
             val request = SearchRequest(
@@ -110,7 +118,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                     searchBtn.text.toString()
                 else
                     searchBtn.hint.toString(),
-                2000,
+                2,
                 "all"
             )
 
@@ -123,14 +131,14 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                     val result = "【request: $request】\n[onResponse] code: ${response.code()} size: $dataSize\ndata: $searchResultResponse"
                     MyLog.d(TAG, result)
 //                    toast(result)
-                    binding.resutTv.text = result
+                    binding.resultTv.text = result
                 }
 
                 override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
                     val result ="[onFailure] t: $t"
                     MyLog.e(TAG, result)
 //                    toast(result)
-                    binding.resutTv.text = result
+                    binding.resultTv.text = result
                 }
             })
         }
@@ -159,7 +167,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                 }
 
                 MyLog.d(TAG, result)
-                binding.resutTv.text = result
+                binding.resultTv.text = result
             }
         }
 

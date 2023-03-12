@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
  * description
  */
 data class MediaPath(
-    var dataTaken: Long,
+    var dataToken: Long,
     var mediaId: Int,
     var mediaPath: String,
     var name: List<String>,

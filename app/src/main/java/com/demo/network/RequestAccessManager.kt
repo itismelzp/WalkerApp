@@ -28,6 +28,7 @@ class RequestAccessManager {
         private const val TAG = "MetaDataManager"
         private const val META_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
         private const val SEARCH_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
+        // http://dy-qa-cn.heytapmobi.com/photosearch/api/v1/album-100k/search?query=123&max_hits=2000&src=all
 
         private const val CONNECT_TIME_OUT = 5000L
         private const val READ_TIME_OUT = 5000L

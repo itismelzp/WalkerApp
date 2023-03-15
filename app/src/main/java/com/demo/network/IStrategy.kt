@@ -1,6 +1,6 @@
 package com.demo.network
 
-import com.demo.network.model.MediaItem
+import com.demo.network.model.SearchMediaItem
 import com.demo.network.type.CloudDataMergeType
 import com.demo.network.utils.DataConverter
 
@@ -18,12 +18,12 @@ interface IStrategy<T> {
 
 }
 
-class NeedInLocalUniversalStrategy: IStrategy<MediaItem> {
+class NeedInLocalUniversalStrategy: IStrategy<SearchMediaItem> {
     override fun merge(
-        localData: List<MediaItem>,
-        cloudData: List<MediaItem>,
+        localData: List<SearchMediaItem>,
+        cloudData: List<SearchMediaItem>,
         universalMediaIds: List<Int>?
-    ): List<MediaItem> {
+    ): List<SearchMediaItem> {
         return universalMediaIds?.run {
             DataConverter.dataFold(
                 localData + DataConverter.mediaItemListFilter(cloudData, this)
@@ -38,12 +38,12 @@ class NeedInLocalUniversalStrategy: IStrategy<MediaItem> {
 
 }
 
-class IntersectionStrategy: IStrategy<MediaItem> {
+class IntersectionStrategy: IStrategy<SearchMediaItem> {
     override fun merge(
-        localData: List<MediaItem>,
-        cloudData: List<MediaItem>,
+        localData: List<SearchMediaItem>,
+        cloudData: List<SearchMediaItem>,
         universalMediaIds: List<Int>?
-    ): List<MediaItem> {
+    ): List<SearchMediaItem> {
         return DataConverter.dataFold(localData + cloudData)
     }
 
@@ -54,12 +54,12 @@ class IntersectionStrategy: IStrategy<MediaItem> {
 
 }
 
-class LocalOnlyStrategy : IStrategy<MediaItem> {
+class LocalOnlyStrategy : IStrategy<SearchMediaItem> {
     override fun merge(
-        localData: List<MediaItem>,
-        cloudData: List<MediaItem>,
+        localData: List<SearchMediaItem>,
+        cloudData: List<SearchMediaItem>,
         universalMediaIds: List<Int>?
-    ): List<MediaItem> {
+    ): List<SearchMediaItem> {
         return localData
     }
 
@@ -70,12 +70,12 @@ class LocalOnlyStrategy : IStrategy<MediaItem> {
 
 }
 
-class CloudOnlyStrategy : IStrategy<MediaItem> {
+class CloudOnlyStrategy : IStrategy<SearchMediaItem> {
     override fun merge(
-        localData: List<MediaItem>,
-        cloudData: List<MediaItem>,
+        localData: List<SearchMediaItem>,
+        cloudData: List<SearchMediaItem>,
         universalMediaIds: List<Int>?
-    ): List<MediaItem> {
+    ): List<SearchMediaItem> {
         return cloudData
     }
 

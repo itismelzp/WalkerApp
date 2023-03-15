@@ -12,7 +12,7 @@ import retrofit2.http.Query
  */
 interface SearchService {
 
-    @GET("/photosearch/api/v1/album-000001/search")
+    @GET("/photosearch/api/v1/album-100k/search")
     fun search(
         @Query("query") query: String,
         @Query("max_hits") maxHits: Int,

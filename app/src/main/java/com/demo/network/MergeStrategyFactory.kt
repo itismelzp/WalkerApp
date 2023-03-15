@@ -1,6 +1,6 @@
 package com.demo.network
 
-import com.demo.network.model.MediaItem
+import com.demo.network.model.SearchMediaItem
 import com.demo.network.type.CloudDataMergeType
 
 /**
@@ -19,7 +19,7 @@ object MergeStrategyFactory {
         )
     }
 
-    fun getStrategy(@CloudDataMergeType mergeType: Int): IStrategy<MediaItem> {
+    fun getStrategy(@CloudDataMergeType mergeType: Int): IStrategy<SearchMediaItem> {
         STRATEGIES.forEach {
             if (it.getSupportedType() == mergeType) {
                 return it

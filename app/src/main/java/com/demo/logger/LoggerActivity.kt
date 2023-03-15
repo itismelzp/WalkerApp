@@ -11,7 +11,8 @@ import com.demo.network.RequestAccessManager
 import com.demo.network.model.DataCreator
 import com.demo.network.model.FaceScanMetaDataRequest
 import com.demo.network.model.MediaFileMetaDataRequest
-import com.demo.network.model.MediaItem
+import com.demo.network.model.MediaPath
+import com.demo.network.model.SearchMediaItem
 import com.demo.network.model.MetaDataResponse
 import com.demo.network.model.Person
 import com.demo.network.model.SearchRequest
@@ -168,7 +169,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             MyLog.i(TAG, localStr)
             binding.resultTv.text = localStr
 
-            val request = SearchRequest(getQuery1(), 2, "all")
+            val request = SearchRequest(getQuery1(), 20, "all")
             val requestStr = "request: $request\n"
             MyLog.d(TAG, requestStr)
             binding.resultTv.text = "${binding.resultTv.text}\n$requestStr"
@@ -219,21 +220,41 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
 
         binding.btnTestData.setOnClickListener {
-            val testdata = Gson().fromJson(DataCreator.TEST_DATA, TestData::class.java)
-            MyLog.i(TAG, "testdata: $testdata")
+            Thread {
+                testAggregation()
+            }.start()
 
-            val data = testdata.data
-            val type: Type = object : TypeToken<Map<String, Person>>() {}.type
-            val map: Map<String, Person> = Gson().fromJson(data, type)
-            MyLog.i(TAG, "map: $map")
 
-            map.forEach { (digit, person) -> MyLog.i(TAG, "$digit: $person") }
+//            val testdata = Gson().fromJson(DataCreator.TEST_DATA, TestData::class.java)
+//            MyLog.i(TAG, "testdata: $testdata")
+//
+//            val data = testdata.data
+//            val type: Type = object : TypeToken<Map<String, Person>>() {}.type
+//            val map: Map<String, Person> = Gson().fromJson(data, type)
+//            MyLog.i(TAG, "map: $map")
+//
+//            map.forEach { (digit, person) -> MyLog.i(TAG, "$digit: $person") }
         }
     }
 
+    fun testAggregation() {
+        val aggregations = Gson().fromJson(
+            DataCreator.SEARCH_MEDIA_PATH_LIST,
+            SearchResultResponse.Aggregation::class.java
+        )
+        val dataList: List<MediaPath> = aggregations.data
+        MyLog.i(TAG, "dataList: $dataList")
+        val mediaItemList = DataConverter.mediaPathList2MediaItemList(dataList)
+        MyLog.i(TAG, "mediaItemList: $mediaItemList")
+    }
 
-    private fun getLocalSearchData(): List<MediaItem> {
-        return DataConverter.dataConvert(DataCreator.localSearch().aggregations.data)
+
+    private fun getLocalSearchData(): List<SearchMediaItem> {
+        return DataConverter.mediaPathList2MediaItemList(DataCreator.localSearch().aggregations.data)
+    }
+
+    private fun getAggregations(): List<SearchMediaItem> {
+        return DataConverter.mediaPathList2MediaItemList(DataCreator.aggregation().data)
     }
 
     override fun getViewBinding() = ActivityLoggerLayoutBinding.inflate(layoutInflater)

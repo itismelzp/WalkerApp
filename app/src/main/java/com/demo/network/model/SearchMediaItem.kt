@@ -6,12 +6,11 @@ package com.demo.network.model
  * <p>
  * description
  */
-data class MediaItem(
-    var dataTaken: Long,
-    var mediaIds: MutableList<Int>,
-    var mediaPath: String,
-    var name: String,
+data class SearchMediaItem(
     var type: Int,
+    var isChildType: Boolean,
+    var mediaIds: MutableList<Int>,
+    var name: String, // name or subName
 
     // for SearchResultCursorEntry
     var id: Int = 0,

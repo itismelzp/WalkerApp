@@ -1,7 +1,11 @@
 package com.demo.network.utils
 
-import com.demo.network.model.MediaItem
+import com.demo.network.model.DataCreator
+import com.demo.network.model.SearchMediaItem
 import com.demo.network.model.MediaPath
+import com.demo.network.model.SearchResultKey
+import com.demo.network.model.SearchResultResponse
+import com.google.gson.Gson
 
 /**
  * Created by lizhiping on 2023/3/12.
@@ -10,32 +14,108 @@ import com.demo.network.model.MediaPath
  */
 object DataConverter {
 
-    fun dataConvert(dataList: List<MediaPath>): List<MediaItem> {
-        val mediaItemMap = mutableMapOf<Int, MediaItem>()
+
+    const val LABEL = 5
+    const val CHILD_LABEL = 8
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val aggregations = Gson().fromJson(DataCreator.SEARCH_MEDIA_PATH_LIST, SearchResultResponse.Aggregation::class.java)
+        val dataList: List<MediaPath> = aggregations.data
+        println("dataList: $dataList")
+        val mediaItemList = mediaPathList2MediaItemList(dataList)
+        println("mediaItemList: $mediaItemList")
+    }
+
+    fun LinkedHashMap<SearchResultKey, SearchMediaItem>.putAndComb(item: SearchMediaItem) {
+        val key = SearchResultKey(item.type, item.name)
+        if (!containsKey(key)) {
+            put(key, item)
+        } else {
+            get(key)?.run {
+                mediaIds.addAll(item.mediaIds)
+                count = mediaIds.size
+            }
+        }
+    }
+    fun mediaPathList2MediaItemList(dataList: List<MediaPath>): List<SearchMediaItem> {
+        val mainMediaItemMap = LinkedHashMap<SearchResultKey, SearchMediaItem>()
+
+        // 1）先取出subName，并为每个suName创建SearchMediaItem
+        val subMediaItemMap = LinkedHashMap<SearchResultKey, SearchMediaItem>()
         for (data in dataList) {
-            data.type.forEachIndexed { index, type ->
-                if (!mediaItemMap.containsKey(type)) {
-                    val mediaItem = MediaItem(
-                        data.dataToken,
-                        mutableListOf(data.mediaId),
-                        data.mediaPath,
-                        data.name[index],
-                        type
+            if (data.subNames == null || data.subNames.isEmpty()) {
+                continue
+            }
+            val flattenSubNames: List<String> = data.subNames.flatten()
+            flattenSubNames.forEach {
+                subMediaItemMap.putAndComb(
+                    SearchMediaItem(
+                        type = CHILD_LABEL,
+                        isChildType = true,
+                        mediaIds = mutableListOf(data.mediaId),
+                        name = it,
+                        coverId = data.mediaId,
+                        count = 1,
+                        mediaType = 1
                     )
-                    mediaItemMap[type] = mediaItem
-                } else {
-                    val mediaItem = mediaItemMap[type]
-                    mediaItem?.mediaIds?.add(data.mediaId)
+                );
+            }
+        }
+
+        for (data in dataList) {
+            data.types.forEachIndexed { index, type ->
+                val typeNames = data.names[index]
+                for (name in typeNames) {
+                    mainMediaItemMap.putAndComb(
+                        SearchMediaItem(
+                            type = type,
+                            isChildType = false,
+                            mediaIds = mutableListOf(data.mediaId),
+                            name = name,
+                            coverId = data.mediaId,
+                            count = 1,
+                            mediaType = 1
+                        )
+                    )
                 }
             }
         }
 
-        val result = mutableListOf<MediaItem>()
-        mediaItemMap.values.forEach {
+        mainMediaItemMap.putAll(subMediaItemMap)
+
+        val result = mutableListOf<SearchMediaItem>()
+        mainMediaItemMap.values.forEach {
             result.add(it)
         }
         return result
     }
+
+//    fun dataConvert(dataList: List<MediaPath>): List<SearchMediaItem> {
+//        val mediaItemMap = mutableMapOf<Int, SearchMediaItem>()
+//        for (data in dataList) {
+//            data.type.forEachIndexed { index, type ->
+//                if (!mediaItemMap.containsKey(type)) {
+//                    val mediaItem = SearchMediaItem(
+//                        data.dataToken,
+//                        mutableListOf(data.mediaId),
+//                        data.name[index],
+//                        type
+//                    )
+//                    mediaItemMap[type] = mediaItem
+//                } else {
+//                    val mediaItem = mediaItemMap[type]
+//                    mediaItem?.mediaIds?.add(data.mediaId)
+//                }
+//            }
+//        }
+//
+//        val result = mutableListOf<SearchMediaItem>()
+//        mediaItemMap.values.forEach {
+//            result.add(it)
+//        }
+//        return result
+//    }
 
     fun dataFilter(dataList: List<MediaPath>, whiteList: List<MediaPath>): List<MediaPath> {
         return dataFilterById(dataList, whiteList.map {
@@ -52,8 +132,8 @@ object DataConverter {
     /**
      * 相同type的合在一起，每个type中过滤相同的mediaId
      */
-    fun dataFold(data: List<MediaItem>): List<MediaItem> {
-        val itemTypeMap = LinkedHashMap<Int, MediaItem>()
+    fun dataFold(data: List<SearchMediaItem>): List<SearchMediaItem> {
+        val itemTypeMap = LinkedHashMap<Int, SearchMediaItem>()
         data.forEach {
             if (itemTypeMap.containsKey(it.type)) {
                 val mediaItem = itemTypeMap[it.type]
@@ -69,14 +149,14 @@ object DataConverter {
             }
         }
 
-        val result = mutableListOf<MediaItem>()
+        val result = mutableListOf<SearchMediaItem>()
         itemTypeMap.values.forEach {
             result.add(it)
         }
         return result
     }
 
-    fun mediaItemListFilter(dataList: List<MediaItem>, whiteList: List<Int>): List<MediaItem> {
+    fun mediaItemListFilter(dataList: List<SearchMediaItem>, whiteList: List<Int>): List<SearchMediaItem> {
         val foldedData = dataFold(dataList)
         foldedData.forEach {
             it.mediaIds.retainAll(whiteList)

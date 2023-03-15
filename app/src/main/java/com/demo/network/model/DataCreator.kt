@@ -57,45 +57,126 @@ object DataCreator {
             "}\n"
 
 
+    const val SEARCH_MEDIA_PATH_LIST = "{\n" +
+            "    \"meta\": [\n" +
+            "        \"时间\",\n" +
+            "        \"图集\",\n" +
+            "        \"文字识别\",\n" +
+            "        \"人物\",\n" +
+            "        \"地点\",\n" +
+            "        \"智能场景\",\n" +
+            "        \"回忆\",\n" +
+            "        \"放大镜\"\n" +
+            "    ],\n" +
+            "    \"data\": [{\n" +
+            "        \"mediaId\": 1234,\n" +
+            "        \"dataToken\": 1677848084,\n" +
+            "        \"type_\": [1, 4, 5],\n" +
+            "        \"name\": [\n" +
+            "            [\"植物图集\"],\n" +
+            "            [\"植物园\", \"花卉市场\"],\n" +
+            "            [\"植物\", \"植物识别\"]\n" +
+            "        ],\n" +
+            "        \"subName\": [\n" +
+            "            [\"花\", \"草\", \"树木\"],\n" +
+            "            [\"梅花\", \"仙人掌\"]\n" +
+            "        ]\n" +
+            "    }, {\n" +
+            "        \"mediaId\": 1235,\n" +
+            "        \"dataToken\": 1677848084,\n" +
+            "        \"type_\": [0, 2, 5],\n" +
+            "        \"name\": [\n" +
+            "            [\"一月\"],\n" +
+            "            [\"植物文案\", \"植物文本\"],\n" +
+            "            [\"植物\"]\n" +
+            "        ],\n" +
+            "        \"subName\": [\n" +
+            "            [\"花\", \"苔藓\"]\n" +
+            "        ]\n" +
+            "    }]\n" +
+            "}"
+
     const val SEARCH_SIMPLE_RESULT_DATA = "{\n" +
-            "    \"num_hits\": 22,\n" +
+            "    \"num_hits\": 5,\n" +
             "    \"hits\": [],\n" +
             "    \"elapsed_time_micros\": 0,\n" +
             "    \"errors\": [],\n" +
             "    \"aggregations\": {\n" +
-            "        \"data\": [{\n" +
-            "                \"dataToken\": 1660376553,\n" +
+            "        \"data\": [\n" +
+            "            {\n" +
+            "                \"dataToken\": 1483134755,\n" +
             "                \"mediaId\": 1,\n" +
-            "                \"mediaPath\": \"2022_08_13_15_42_IMG_3247.jpg\",\n" +
-            "                \"name\": [\"test0\", \"test1\"],\n" +
+            "                \"mediaPath\": \"6026\",\n" +
+            "                \"name\": [\n" +
+            "                    [\n" +
+            "                        \"123\"\n" +
+            "                    ]\n" +
+            "                ],\n" +
+            "                \"subName\": [],\n" +
             "                \"type_\": [\n" +
-            "                    0, 1\n" +
+            "                    0\n" +
             "                ]\n" +
             "            },\n" +
             "            {\n" +
-            "                \"dataToken\": 1655198036,\n" +
+            "                \"dataToken\": 1453490613,\n" +
             "                \"mediaId\": 2,\n" +
-            "                \"mediaPath\": \"2022_06_14_17_13_IMG_0963.jpg\",\n" +
-            "                \"name\": [\"test1\", \"test2\"],\n" +
+            "                \"mediaPath\": \"4064\",\n" +
+            "                \"name\": [\n" +
+            "                    [\n" +
+            "                        \"123\"\n" +
+            "                    ]\n" +
+            "                ],\n" +
+            "                \"subName\": [],\n" +
             "                \"type_\": [\n" +
-            "                    1, 2\n" +
+            "                    0\n" +
             "                ]\n" +
             "            },\n" +
             "            {\n" +
-            "                \"dataToken\": 1655198037,\n" +
+            "                \"dataToken\": 1483144754,\n" +
             "                \"mediaId\": 3,\n" +
-            "                \"mediaPath\": \"2022_06_14_17_13_IMG_0999.jpg\",\n" +
-            "                \"name\": [\"test3\", \"test4\"],\n" +
+            "                \"mediaPath\": \"15881\",\n" +
+            "                \"name\": [\n" +
+            "                    [\n" +
+            "                        \"123\"\n" +
+            "                    ]\n" +
+            "                ],\n" +
+            "                \"subName\": [],\n" +
             "                \"type_\": [\n" +
-            "                    3, 4\n" +
+            "                    0\n" +
+            "                ]\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"dataToken\": 1483134579,\n" +
+            "                \"mediaId\": 4,\n" +
+            "                \"mediaPath\": \"5485\",\n" +
+            "                \"name\": [\n" +
+            "                    [\n" +
+            "                        \"123\"\n" +
+            "                    ]\n" +
+            "                ],\n" +
+            "                \"subName\": [],\n" +
+            "                \"type_\": [\n" +
+            "                    0\n" +
+            "                ]\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"dataToken\": 1169526568,\n" +
+            "                \"mediaId\": 5,\n" +
+            "                \"mediaPath\": \"8568\",\n" +
+            "                \"name\": [\n" +
+            "                    [\n" +
+            "                        \"123\"\n" +
+            "                    ]\n" +
+            "                ],\n" +
+            "                \"subName\": [],\n" +
+            "                \"type_\": [\n" +
+            "                    0\n" +
             "                ]\n" +
             "            }\n" +
-            "\n" +
             "        ],\n" +
             "        \"meta\": [\n" +
-            "            \"vec\",\n" +
-            "            \"default\",\n" +
-            "            \"ocr\"\n" +
+            "            \"时间\",\n" +
+            "            \"文字识别\"\n" +
             "        ]\n" +
             "    }\n" +
             "}"
@@ -382,5 +463,9 @@ object DataCreator {
 
     fun localSearch(): SearchResultResponse {
         return Gson().fromJson(SEARCH_SIMPLE_RESULT_DATA, SearchResultResponse::class.java)
+    }
+
+    fun aggregation(): SearchResultResponse.Aggregation {
+        return Gson().fromJson(SEARCH_MEDIA_PATH_LIST, SearchResultResponse.Aggregation::class.java)
     }
 }

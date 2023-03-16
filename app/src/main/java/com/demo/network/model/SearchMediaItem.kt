@@ -18,5 +18,5 @@ data class SearchMediaItem(
     var relation: Int = 0,
     var count: Int = 0,
     var albumType: Int = 0,
-    var mediaType: Int = 0
+    var mediaType: Int = 0 // 1-图片，3-视频
 )

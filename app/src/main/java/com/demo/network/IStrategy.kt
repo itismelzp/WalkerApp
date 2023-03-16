@@ -25,7 +25,7 @@ class NeedInLocalUniversalStrategy: IStrategy<SearchMediaItem> {
         universalMediaIds: List<Int>?
     ): List<SearchMediaItem> {
         return universalMediaIds?.run {
-            DataConverter.dataFold(
+            DataConverter.dataFoldBySearchResultKey(
                 localData + DataConverter.mediaItemListFilter(cloudData, this)
             )
         } ?: localData
@@ -44,7 +44,7 @@ class IntersectionStrategy: IStrategy<SearchMediaItem> {
         cloudData: List<SearchMediaItem>,
         universalMediaIds: List<Int>?
     ): List<SearchMediaItem> {
-        return DataConverter.dataFold(localData + cloudData)
+        return DataConverter.dataFoldBySearchResultKey(localData + cloudData)
     }
 
     @CloudDataMergeType

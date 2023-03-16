@@ -14,22 +14,20 @@ import com.demo.network.model.MediaFileMetaDataRequest
 import com.demo.network.model.MediaPath
 import com.demo.network.model.SearchMediaItem
 import com.demo.network.model.MetaDataResponse
-import com.demo.network.model.Person
 import com.demo.network.model.SearchRequest
 import com.demo.network.model.SearchResultResponse
-import com.demo.network.model.TestData
 import com.demo.network.utils.DataConverter
 import com.demo.network.utils.GsonUtil
 import com.demo.utils.DeviceIdUtil
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.reflect.Type
 
 class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
@@ -169,11 +167,10 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             MyLog.i(TAG, localStr)
             binding.resultTv.text = localStr
 
-            val request = SearchRequest(getQuery1(), 20, "all")
+            val request = SearchRequest(getQuery1(), 2000, "all")
             val requestStr = "request: $request\n"
             MyLog.d(TAG, requestStr)
             binding.resultTv.text = "${binding.resultTv.text}\n$requestStr"
-
 
             RequestAccessManager.INSTANCE.search(request, object : Callback<SearchResultResponse> {
                 override fun onResponse(
@@ -220,10 +217,10 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
 
         binding.btnTestData.setOnClickListener {
-            Thread {
-                testAggregation()
-            }.start()
 
+            mainScope.launch {
+                testAggregation()
+            }
 
 //            val testdata = Gson().fromJson(DataCreator.TEST_DATA, TestData::class.java)
 //            MyLog.i(TAG, "testdata: $testdata")
@@ -237,17 +234,28 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
     }
 
-    fun testAggregation() {
-        val aggregations = Gson().fromJson(
+    private suspend fun testAggregation() {
+        clearText()
+        val aggregation = withContext(Dispatchers.IO) {
+            getAggregation()
+        }
+        val dataList: List<MediaPath> = aggregation.data
+        MyLog.i(TAG, "dataList: $dataList")
+        appendText("dataList: $dataList")
+
+        val mediaItemList = withContext(Dispatchers.IO) {
+            DataConverter.mediaPathList2MediaItemList(aggregation.data)
+        }
+        MyLog.i(TAG, "mediaItemList: $mediaItemList")
+        appendText("mediaItemList: $mediaItemList")
+    }
+
+    private fun getAggregation(): SearchResultResponse.Aggregation {
+        return Gson().fromJson(
             DataCreator.SEARCH_MEDIA_PATH_LIST,
             SearchResultResponse.Aggregation::class.java
         )
-        val dataList: List<MediaPath> = aggregations.data
-        MyLog.i(TAG, "dataList: $dataList")
-        val mediaItemList = DataConverter.mediaPathList2MediaItemList(dataList)
-        MyLog.i(TAG, "mediaItemList: $mediaItemList")
     }
-
 
     private fun getLocalSearchData(): List<SearchMediaItem> {
         return DataConverter.mediaPathList2MediaItemList(DataCreator.localSearch().aggregations.data)
@@ -283,7 +291,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
         val status = process.waitFor()
         val msg = if (status == 0) {
-            appendLine(output, "exec cmd success:$cmd");
+            appendLine(output, "exec cmd success:$cmd")
             "ping ip: $ip, status: 0, result: success."
         } else {
             appendLine(output, "exec cmd fail.");

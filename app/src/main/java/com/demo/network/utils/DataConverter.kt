@@ -27,7 +27,7 @@ object DataConverter {
         println("mediaItemList: $mediaItemList")
     }
 
-    fun LinkedHashMap<SearchResultKey, SearchMediaItem>.putAndComb(item: SearchMediaItem) {
+    private fun LinkedHashMap<SearchResultKey, SearchMediaItem>.putAndComb(item: SearchMediaItem) {
         val key = SearchResultKey(item.type, item.name)
         if (!containsKey(key)) {
             put(key, item)
@@ -38,6 +38,15 @@ object DataConverter {
             }
         }
     }
+
+    private fun LinkedHashMap<SearchResultKey, SearchMediaItem>.putAndCombAll(
+        itemList: List<SearchMediaItem>
+    ) {
+        itemList.forEach {
+            putAndComb(it)
+        }
+    }
+
     fun mediaPathList2MediaItemList(dataList: List<MediaPath>): List<SearchMediaItem> {
         val mainMediaItemMap = LinkedHashMap<SearchResultKey, SearchMediaItem>()
 
@@ -91,32 +100,6 @@ object DataConverter {
         return result
     }
 
-//    fun dataConvert(dataList: List<MediaPath>): List<SearchMediaItem> {
-//        val mediaItemMap = mutableMapOf<Int, SearchMediaItem>()
-//        for (data in dataList) {
-//            data.type.forEachIndexed { index, type ->
-//                if (!mediaItemMap.containsKey(type)) {
-//                    val mediaItem = SearchMediaItem(
-//                        data.dataToken,
-//                        mutableListOf(data.mediaId),
-//                        data.name[index],
-//                        type
-//                    )
-//                    mediaItemMap[type] = mediaItem
-//                } else {
-//                    val mediaItem = mediaItemMap[type]
-//                    mediaItem?.mediaIds?.add(data.mediaId)
-//                }
-//            }
-//        }
-//
-//        val result = mutableListOf<SearchMediaItem>()
-//        mediaItemMap.values.forEach {
-//            result.add(it)
-//        }
-//        return result
-//    }
-
     fun dataFilter(dataList: List<MediaPath>, whiteList: List<MediaPath>): List<MediaPath> {
         return dataFilterById(dataList, whiteList.map {
             it.mediaId
@@ -132,7 +115,7 @@ object DataConverter {
     /**
      * 相同type的合在一起，每个type中过滤相同的mediaId
      */
-    fun dataFold(data: List<SearchMediaItem>): List<SearchMediaItem> {
+    fun dataFoldByType(data: List<SearchMediaItem>): List<SearchMediaItem> {
         val itemTypeMap = LinkedHashMap<Int, SearchMediaItem>()
         data.forEach {
             if (itemTypeMap.containsKey(it.type)) {
@@ -156,8 +139,23 @@ object DataConverter {
         return result
     }
 
+    /**
+     * 相同SearchResultKey(type Int, name String)的合在一起，每个type中过滤相同的mediaId
+     */
+    @JvmStatic
+    fun dataFoldBySearchResultKey(data: List<SearchMediaItem>): List<SearchMediaItem> {
+        val mediaItemMap = LinkedHashMap<SearchResultKey, SearchMediaItem>()
+        mediaItemMap.putAndCombAll(data)
+
+        val result = mutableListOf<SearchMediaItem>()
+        mediaItemMap.values.forEach {
+            result.add(it)
+        }
+        return result
+    }
+
     fun mediaItemListFilter(dataList: List<SearchMediaItem>, whiteList: List<Int>): List<SearchMediaItem> {
-        val foldedData = dataFold(dataList)
+        val foldedData = dataFoldBySearchResultKey(dataList)
         foldedData.forEach {
             it.mediaIds.retainAll(whiteList)
         }

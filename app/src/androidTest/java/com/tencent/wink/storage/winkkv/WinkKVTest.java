@@ -1,6 +1,6 @@
 package com.tencent.wink.storage.winkkv;
 
-import com.demo.storage.EncoderUtil;
+//import com.demo.storage.EncoderUtil;
 import com.demo.storage.MyObject;
 import com.demo.storage.MyParcelObject;
 import com.demo.storage.PackableObject;
@@ -37,7 +37,7 @@ public class WinkKVTest {
     @Before
     public void init() {
         WinkKVLog.init(WinkTestHelper.logger);
-        EncoderUtil.init();
+//        EncoderUtil.init();
     }
 
     @Test

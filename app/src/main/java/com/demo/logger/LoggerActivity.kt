@@ -4,8 +4,19 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.demo.R
+import com.demo.constant.Constant
 import com.demo.databinding.ActivityLoggerLayoutBinding
 import com.demo.network.RequestAccessManager
 import com.demo.network.model.DataCreator
@@ -19,6 +30,9 @@ import com.demo.network.model.SearchResultResponse
 import com.demo.network.utils.DataConverter
 import com.demo.network.utils.GsonUtil
 import com.demo.utils.DeviceIdUtil
+import com.demo.work.UploadMetaDataWorker
+import com.demo.work.UploadWorker
+import com.demo.work.WorkerViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,10 +42,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.concurrent.TimeUnit
 
 class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
     private lateinit var logger: MyLog.ILog
+    private lateinit var workerViewModel: WorkerViewModel
 
     companion object {
         private const val TAG = "LoggerActivity"
@@ -41,6 +57,11 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         super.initBaseData(savedInstanceState)
         requestPermission()
         initLog()
+
+        workerViewModel = ViewModelProvider(this)[WorkerViewModel::class.java]
+
+        workerViewModel.uploadImagesWorkInfo.observe(this, uploadImagesObserver())
+        workerViewModel.uploadMetaWorkInfo.observe(this, uploadMetaObserver())
     }
 
     override fun initBaseViews(savedInstanceState: Bundle?) {
@@ -53,6 +74,41 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         initMetaUploadView()
         initSearchView()
 
+        binding.btnUploadImages.setOnClickListener {
+            initCntText()
+            uploadImages()
+            uploadImagesByThread()
+        }
+        initCntText()
+    }
+
+    private fun initCntText() {
+        binding.tvUploadImages.text = resources.getString(R.string.uploadCnt, 0)
+        binding.tvUploadMeta.text = resources.getString(R.string.uploadMetaCnt, 0)
+    }
+
+    private fun uploadMetaObserver(): Observer<in WorkInfo> {
+        return Observer { workInfo ->
+            if (workInfo == null) {
+                return@Observer
+            }
+            if (WorkInfo.State.RUNNING == workInfo.state) {
+                val progress = workInfo.progress.getInt(UploadMetaDataWorker.PROGRESS, 0)
+                binding.tvUploadMeta.text = resources.getString(R.string.uploadCnt, progress)
+            }
+        }
+    }
+
+    private fun uploadImagesObserver(): Observer<in WorkInfo> {
+        return Observer { workInfo ->
+            if (workInfo == null) {
+                return@Observer
+            }
+            if (WorkInfo.State.RUNNING == workInfo.state) {
+                val progress = workInfo.progress.getInt(UploadWorker.PROGRESS, 0)
+                binding.tvUploadImages.text = resources.getString(R.string.uploadCnt, progress)
+            }
+        }
     }
 
     private fun initPingView() {
@@ -373,5 +429,50 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             return
         }
         logger = LogUtil.MarslogLog(this)
+    }
+
+    private fun uploadImages() {
+        val uploadWorkRequest: OneTimeWorkRequest =
+            OneTimeWorkRequestBuilder<UploadWorker>()
+                .addTag(UploadWorker.TAG)
+                .setId(UploadWorker.ID)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.UNMETERED)
+                        .build()
+                )
+                .setBackoffCriteria(
+                    BackoffPolicy.EXPONENTIAL, 10_000L,
+                    TimeUnit.MILLISECONDS
+                )
+                .build()
+        val uploadMetaDataWorker: OneTimeWorkRequest =
+            OneTimeWorkRequestBuilder<UploadMetaDataWorker>()
+                .addTag(UploadMetaDataWorker.TAG)
+                .setId(UploadMetaDataWorker.ID)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.UNMETERED)
+                        .build()
+                )
+                .build()
+
+        WorkManager.getInstance(this)
+            .beginUniqueWork(
+                Constant.UPLOAD_WORK_NAME,
+                ExistingWorkPolicy.KEEP,
+                uploadWorkRequest
+            )
+            .then(uploadMetaDataWorker)
+            .enqueue()
+    }
+
+    private fun uploadImagesByThread() {
+        Thread {
+            for (i in 1..1000) {
+                MyLog.i(TAG, "[uploadImagesByThread]: $i")
+                TimeUnit.MILLISECONDS.sleep(500L)
+            }
+        }.start()
     }
 }

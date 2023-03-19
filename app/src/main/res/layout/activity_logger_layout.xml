@@ -82,12 +82,43 @@
 
         </LinearLayout>
 
-
         <Button
             android:id="@+id/btn_test_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="test data" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_upload_images"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="test image upload" />
+
+            <TextView
+                android:id="@+id/tv_upload_images"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/uploadCnt"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tv_upload_meta"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/uploadMetaCnt"
+                android:textSize="13sp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_media_meta_upload"

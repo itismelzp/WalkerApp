@@ -29,8 +29,10 @@ class UploadMetaDataWorker(context: Context, workerParams: WorkerParameters) :
                 setProgressAsync(workDataOf(PROGRESS to i))
                 TimeUnit.MILLISECONDS.sleep(250L)
             }
+            makeStatusNotification("upload metaData finished", applicationContext)
             Result.success()
         } catch (t: Throwable) {
+            makeStatusNotification("upload metaData failed", applicationContext)
             Result.failure()
         }
     }

@@ -29,6 +29,8 @@ import com.demo.network.model.SearchRequest
 import com.demo.network.model.SearchResultResponse
 import com.demo.network.utils.DataConverter
 import com.demo.network.utils.GsonUtil
+import com.demo.syscomponent.UploadService
+import com.demo.utils.DataFactory
 import com.demo.utils.DeviceIdUtil
 import com.demo.work.UploadMetaDataWorker
 import com.demo.work.UploadWorker
@@ -43,6 +45,7 @@ import retrofit2.Response
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
+import kotlin.math.ceil
 
 class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
@@ -78,8 +81,92 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             initCntText()
             uploadImages()
             uploadImagesByThread()
+            startJobService()
         }
         initCntText()
+        initSyncView()
+    }
+
+    private fun initSyncView() {
+
+        val syncTest = SyncTest()
+        syncTest.initHandlerThread()
+
+        binding.btnSyncTest.setOnClickListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+
+                val start = System.currentTimeMillis()
+                MyLog.i(TAG, "A")
+                val local: List<Int> = withContext(Dispatchers.IO) {
+                    MyLog.i(TAG, "AA")
+                    getLocalData(1_000)
+                }
+                MyLog.i(TAG, "B")
+                val cloud: List<Int> = withContext(Dispatchers.IO) {
+                    MyLog.i(TAG, "BB")
+                    getCloudData(1_000)
+                }
+                MyLog.i(TAG, "C")
+                appendText("timeCost: ${System.currentTimeMillis() - start}ms, all data: ${(local + cloud).sorted()}")
+                MyLog.i(TAG, "timeCost: ${System.currentTimeMillis() - start}, all data: ${(local + cloud).sorted()}")
+            }
+
+            syncTest.startTest()
+
+        }
+
+        binding.btnSendA.setOnClickListener {
+            syncTest.sendMsgA(null)
+        }
+
+        binding.btnSendB.setOnClickListener {
+            syncTest.sendMsgB(null)
+        }
+
+        binding.btnSendC.setOnClickListener {
+            syncTest.sendMsgC()
+        }
+    }
+
+    private fun getLocalData(timeCost: Long): List<Int> {
+        TimeUnit.MILLISECONDS.sleep(timeCost)
+        return DataFactory.getOdd(10)
+    }
+
+    private fun getCloudData(timeCost: Long): List<Int> {
+        TimeUnit.MILLISECONDS.sleep(timeCost)
+        return DataFactory.getEven(10)
+    }
+
+    // 奇数
+
+
+    private fun multiSlice() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val keys = listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17)
+            val bucketSize = 5
+
+            val total = keys.size
+            val threadSize = ceil(total / bucketSize.toDouble()).toInt()
+            var start: Int
+            var end: Int
+            for (i in 0 until threadSize) {
+                start = i * bucketSize
+                end = i * bucketSize + bucketSize - 1
+                if (end > total - 1) {
+                    end = total - 1
+                }
+
+                MyLog.i(
+                    TAG,
+                    "threadSize: $threadSize, thread: $i, start: $start, end: $end, ${
+                        keys.slice(
+                            start..end
+                        )
+                    }"
+                )
+            }
+        }
     }
 
     private fun initCntText() {
@@ -160,31 +247,41 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
 
         binding.btnFaceMetaUpload.setOnClickListener {
-            lifecycleScope.launch {
-                val metaData =
-                    Gson().fromJson(DataCreator.FACE_META_DATA, FaceScanMetaDataRequest::class.java)
-                MyLog.i(TAG, "metaData: ${Gson().toJson(metaData)}")
-                toast("metaData: ${Gson().toJson(metaData)}")
-                RequestAccessManager.INSTANCE.uploadMetaData(
-                    metaData,
-                    object : Callback<MetaDataResponse> {
-                        override fun onResponse(
-                            call: Call<MetaDataResponse>,
-                            response: Response<MetaDataResponse>
-                        ) {
-                            MyLog.d(
-                                TAG,
-                                "[onResponse] code: ${response.code()}, data: ${response.body()}"
-                            )
-                            toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
-                        }
 
-                        override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
-                            MyLog.d(TAG, "[onFailure] t: $t")
-                            toast("[onFailure] t: $t")
-                        }
-                    })
-            }
+            val metaData =
+                Gson().fromJson(DataCreator.FACE_META_DATA, FaceScanMetaDataRequest::class.java)
+            MyLog.i(TAG, "metaData: ${Gson().toJson(metaData)}")
+            toast("metaData: ${Gson().toJson(metaData)}")
+
+            RequestAccessManager.INSTANCE.uploadMetaData(
+                metaData,
+                object : Callback<MetaDataResponse> {
+                    override fun onResponse(
+                        call: Call<MetaDataResponse>,
+                        response: Response<MetaDataResponse>
+                    ) {
+                        MyLog.d(
+                            TAG,
+                            "[onResponse] code: ${response.code()}, data: ${response.body()}"
+                        )
+                        toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
+                    }
+
+                    override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
+                        MyLog.d(TAG, "[onFailure] t: $t")
+                        toast("[onFailure] t: $t")
+                    }
+                })
+
+
+            Thread {
+                val response = RequestAccessManager.INSTANCE.uploadMetaDataSync(metaData)
+                MyLog.d(
+                    TAG,
+                    "[uploadMetaDataSync] code: ${response.code()}, data: ${response.body()}"
+                )
+            }.start()
+//            toast("[uploadMetaDataSync] code: ${response.code()}, data: ${response.body()}")
         }
     }
 
@@ -439,6 +536,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                 .setConstraints(
                     Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.UNMETERED)
+                        .setRequiresCharging(true)
                         .build()
                 )
                 .setBackoffCriteria(
@@ -460,11 +558,13 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         WorkManager.getInstance(this)
             .beginUniqueWork(
                 Constant.UPLOAD_WORK_NAME,
-                ExistingWorkPolicy.KEEP,
+                ExistingWorkPolicy.REPLACE,
                 uploadWorkRequest
             )
             .then(uploadMetaDataWorker)
             .enqueue()
+
+
     }
 
     private fun uploadImagesByThread() {
@@ -474,5 +574,9 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                 TimeUnit.MILLISECONDS.sleep(500L)
             }
         }.start()
+    }
+
+    private fun startJobService() {
+        UploadService.scheduleJob(this)
     }
 }

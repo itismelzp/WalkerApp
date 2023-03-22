@@ -19,6 +19,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".syscomponent.UploadService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <provider
             android:name=".syscomponent.RecentSearchProvider"
             android:authorities="@string/recentSearchProvider"
@@ -36,7 +42,7 @@
             android:name=".syscomponent.SearchableActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -69,7 +75,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -78,7 +84,8 @@
         </activity>
         <activity
             android:name=".logger.LoggerActivity"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -156,9 +163,7 @@
             <intent-filter>
                 <action android:name="com.demo.ipc.MyAIDLService" />
             </intent-filter>
-        </service>
-
-        <!-- for shadow -->
+        </service> <!-- for shadow -->
         <activity
             android:name="com.tencent.shadow.sample.runtime.PluginDefaultProxyActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"

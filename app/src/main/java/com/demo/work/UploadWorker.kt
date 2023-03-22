@@ -26,14 +26,15 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
     override fun doWork(): Result {
         return try {
 
-            for (i in 1..1000) {
+            for (i in 1..100) {
                 MyLog.i(TAG, "[uploadImages] i: $i")
                 setProgressAsync(workDataOf(PROGRESS to i))
                 TimeUnit.MILLISECONDS.sleep(100L)
             }
-
+            makeStatusNotification("upload images finished", applicationContext)
             Result.success()
         } catch (t: Throwable) {
+            makeStatusNotification("upload images finished", applicationContext)
             Result.failure()
         }
     }

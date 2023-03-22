@@ -10,6 +10,7 @@ import com.demo.network.service.SearchService
 import com.demo.network.utils.GsonUtil
 import okhttp3.OkHttpClient
 import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.guava.GuavaCallAdapterFactory
 import retrofit2.adapter.java8.Java8CallAdapterFactory
@@ -80,6 +81,11 @@ class RequestAccessManager {
     fun uploadMetaData(metaData: FaceScanMetaDataRequest, callback: Callback<MetaDataResponse>) {
         val call = metaDataService.uploadMetaData(metaData)
         call.enqueue(callback)
+    }
+
+    fun uploadMetaDataSync(metaData: FaceScanMetaDataRequest): Response<MetaDataResponse> {
+        val call = metaDataService.uploadMetaData(metaData)
+        return call.execute()
     }
 
     fun search(request: SearchRequest, callBack: Callback<SearchResultResponse>) {

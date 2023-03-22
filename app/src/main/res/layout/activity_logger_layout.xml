@@ -120,6 +120,36 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_sync_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="初始化&amp;同步" />
+
+            <Button
+                android:id="@+id/btn_send_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SEND A" />
+
+            <Button
+                android:id="@+id/btn_send_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SEND B" />
+
+            <Button
+                android:id="@+id/btn_send_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SEND C" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tv_media_meta_upload"
             android:layout_width="match_parent"

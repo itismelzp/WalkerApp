@@ -1,8 +1,7 @@
 package com.demo.coroutine
 
-import android.app.Service
-import android.content.Intent
-import android.os.IBinder
+import android.app.job.JobService
+import androidx.work.Configuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -11,12 +10,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-abstract class BaseService : Service() {
+abstract class BaseJobService : JobService() {
 
-    private val normalScope = NormalScope()
+    val normalScope = NormalScope()
 
-    override fun onBind(intent: Intent): IBinder {
-        TODO("Return the communication channel to the service.")
+    init {
+        val builder = Configuration.Builder()
+        builder.setJobSchedulerJobIdRange(1000, 10000)
     }
 
     override fun onDestroy() {

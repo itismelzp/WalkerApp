@@ -31,9 +31,9 @@ class RequestAccessManager {
         private const val SEARCH_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
         // http://dy-qa-cn.heytapmobi.com/photosearch/api/v1/album-100k/search?query=123&max_hits=2000&src=all
 
-        private const val CONNECT_TIME_OUT = 5000L
-        private const val READ_TIME_OUT = 5000L
-        private const val WRITE_TIME_OUT = 90000L
+        private const val CONNECT_TIME_OUT = 5_000L
+        private const val READ_TIME_OUT = 9_000L
+        private const val WRITE_TIME_OUT = 90_000L
 
         val INSTANCE by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             RequestAccessManager()
@@ -42,14 +42,14 @@ class RequestAccessManager {
 
     private val metaDataService: MetaDataService
     private val searchService: SearchService
-    private val retrofit: Retrofit
+    private val uploadMetaRetrofit: Retrofit
     private val searchRetrofit: Retrofit
 
     init {
         val okHttpClient = initHttpClient()
-        retrofit = initRetrofit(okHttpClient, META_BASE_URL)
+        uploadMetaRetrofit = initRetrofit(okHttpClient, META_BASE_URL)
         searchRetrofit = initRetrofit(okHttpClient, SEARCH_BASE_URL)
-        metaDataService = retrofit.create(MetaDataService::class.java)
+        metaDataService = uploadMetaRetrofit.create(MetaDataService::class.java)
         searchService = searchRetrofit.create(SearchService::class.java)
     }
 
@@ -58,6 +58,12 @@ class RequestAccessManager {
             .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
             .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
             .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
+            .addInterceptor(
+                RetryInterceptor.Builder()
+//                    .buildRetryCount(10)
+//                    .buildRetryInterval(2_000L)
+                    .build()
+            )
             .build()
     }
 
@@ -74,18 +80,40 @@ class RequestAccessManager {
 
 
     fun uploadMetaData(metaData: MediaFileMetaDataRequest, callback: Callback<MetaDataResponse>) {
-        val call = metaDataService.uploadMetaData(metaData)
+        val call = metaDataService.uploadFileMetaData(metaData)
         call.enqueue(callback)
     }
 
     fun uploadMetaData(metaData: FaceScanMetaDataRequest, callback: Callback<MetaDataResponse>) {
-        val call = metaDataService.uploadMetaData(metaData)
+        val call = metaDataService.uploadFaceMetaData(metaData)
         call.enqueue(callback)
     }
 
     fun uploadMetaDataSync(metaData: FaceScanMetaDataRequest): Response<MetaDataResponse> {
-        val call = metaDataService.uploadMetaData(metaData)
+        val call = metaDataService.uploadFaceMetaData(metaData)
         return call.execute()
+    }
+
+    suspend fun coroutineSearchWithUserId(userId: String, request: SearchRequest): SearchResultResponse {
+        return searchService.coroutineSearchWithUserId(
+            userId,
+            request.query,
+            request.maxHits,
+            request.src
+        )
+    }
+
+    fun searchWithUserId(
+        userId: String,
+        request: SearchRequest,
+        callBack: Callback<SearchResultResponse>
+    ) {
+        return searchService.searchWithUserId(
+            userId,
+            request.query,
+            request.maxHits,
+            request.src
+        ).enqueue(callBack)
     }
 
     fun search(request: SearchRequest, callBack: Callback<SearchResultResponse>) {

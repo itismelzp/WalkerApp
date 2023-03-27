@@ -15,9 +15,9 @@ import retrofit2.http.POST
 interface MetaDataService {
 
     @POST("/photo")
-    fun uploadMetaData(@Body metaData: MediaFileMetaDataRequest): Call<MetaDataResponse>
+    fun uploadFileMetaData(@Body metaData: MediaFileMetaDataRequest): Call<MetaDataResponse>
 
     @POST("/photo")
-    fun uploadMetaData(@Body metaData: FaceScanMetaDataRequest): Call<MetaDataResponse>
+    fun uploadFaceMetaData(@Body metaData: FaceScanMetaDataRequest): Call<MetaDataResponse>
 
 }

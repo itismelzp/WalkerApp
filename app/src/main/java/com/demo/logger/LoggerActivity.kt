@@ -23,8 +23,8 @@ import com.demo.network.model.DataCreator
 import com.demo.network.model.FaceScanMetaDataRequest
 import com.demo.network.model.MediaFileMetaDataRequest
 import com.demo.network.model.MediaPath
-import com.demo.network.model.SearchMediaItem
 import com.demo.network.model.MetaDataResponse
+import com.demo.network.model.SearchMediaItem
 import com.demo.network.model.SearchRequest
 import com.demo.network.model.SearchResultResponse
 import com.demo.network.utils.DataConverter
@@ -36,6 +36,7 @@ import com.demo.work.UploadMetaDataWorker
 import com.demo.work.UploadWorker
 import com.demo.work.WorkerViewModel
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -107,7 +108,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                     getCloudData(1_000)
                 }
                 MyLog.i(TAG, "C")
-                appendText("timeCost: ${System.currentTimeMillis() - start}ms, all data: ${(local + cloud).sorted()}")
+                appendResultText("timeCost: ${System.currentTimeMillis() - start}ms, all data: ${(local + cloud).sorted()}")
                 MyLog.i(TAG, "timeCost: ${System.currentTimeMillis() - start}, all data: ${(local + cloud).sorted()}")
             }
 
@@ -248,10 +249,13 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
         binding.btnFaceMetaUpload.setOnClickListener {
 
+            clearResultText()
             val metaData =
                 Gson().fromJson(DataCreator.FACE_META_DATA, FaceScanMetaDataRequest::class.java)
-            MyLog.i(TAG, "metaData: ${Gson().toJson(metaData)}")
-            toast("metaData: ${Gson().toJson(metaData)}")
+            val request = "metaData: ${Gson().toJson(metaData)}"
+            MyLog.i(TAG, request)
+//            appendResultText(request)
+//            toast("metaData: ${Gson().toJson(metaData)}")
 
             RequestAccessManager.INSTANCE.uploadMetaData(
                 metaData,
@@ -260,32 +264,33 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                         call: Call<MetaDataResponse>,
                         response: Response<MetaDataResponse>
                     ) {
-                        MyLog.d(
-                            TAG,
-                            "[onResponse] code: ${response.code()}, data: ${response.body()}"
-                        )
-                        toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
+                        val responseMsg = "[onResponse] code: ${response.code()}, data: ${response.body()}"
+                        MyLog.d(TAG, responseMsg)
+//                        toast(msg)
+                        appendResultText(responseMsg)
+
+                        val result = response.body()?.result?.let {
+                            Gson().fromJson(
+                                it.toString(),
+                                object : TypeToken<Map<String, Int>>() {}.type
+                            ) as Map<String, Int>
+                        }
+
+                        appendResultText()
+                        appendResultText("result: $result")
                     }
 
                     override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
                         MyLog.d(TAG, "[onFailure] t: $t")
-                        toast("[onFailure] t: $t")
+//                        toast("[onFailure] t: $t")
+                        appendResultText("[onFailure] t: $t")
                     }
                 })
 
-
-            Thread {
-                val response = RequestAccessManager.INSTANCE.uploadMetaDataSync(metaData)
-                MyLog.d(
-                    TAG,
-                    "[uploadMetaDataSync] code: ${response.code()}, data: ${response.body()}"
-                )
-            }.start()
-//            toast("[uploadMetaDataSync] code: ${response.code()}, data: ${response.body()}")
         }
     }
 
-    private fun getQuery1(): String {
+    private fun getQuery(): String {
         val searchEt = binding.searchEt
         return if (!TextUtils.isEmpty(searchEt.text.toString())) {
             searchEt.text.toString()
@@ -294,69 +299,64 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
     }
 
-    private fun getQuery2(): String {
-        val searchEt = binding.coroutineSearchEt
-        return if (!TextUtils.isEmpty(searchEt.text.toString())) {
-            searchEt.text.toString()
-        } else {
-            searchEt.hint.toString()
-        }
-    }
 
-    private fun clearText() {
+    private fun clearResultText() {
         binding.resultTv.text = ""
     }
 
-    private fun appendText(str: String) {
+    private fun appendResultText(str: String = "") {
         binding.resultTv.text = "${binding.resultTv.text}\n$str\n"
     }
 
     private fun initSearchView() {
         binding.btnSearchResultData.setOnClickListener {
-            clearText()
+            clearResultText()
 
             val localSearchData = getLocalSearchData()
             val localStr = "localSearchData: $localSearchData\n"
             MyLog.i(TAG, localStr)
             binding.resultTv.text = localStr
 
-            val request = SearchRequest(getQuery1(), 2000, "all")
+            val request = SearchRequest(getQuery(), 2000, "all")
             val requestStr = "request: $request\n"
             MyLog.d(TAG, requestStr)
-            binding.resultTv.text = "${binding.resultTv.text}\n$requestStr"
+            appendResultText(requestStr)
 
+            val start = System.currentTimeMillis()
             RequestAccessManager.INSTANCE.search(request, object : Callback<SearchResultResponse> {
                 override fun onResponse(
                     call: Call<SearchResultResponse>,
                     response: Response<SearchResultResponse>
                 ) {
                     val data = response.body()?.aggregations?.data
-                    val responseStr = "[response] size: ${data?.size}, data: $data\n"
+                    val end = System.currentTimeMillis()
+                    val responseStr = "[response] size: ${data?.size ?: 0}, timeCost: ${end - start}, data: $data\n"
                     MyLog.d(TAG, responseStr)
-                    binding.resultTv.text = "${binding.resultTv.text}\n$responseStr"
+                    appendResultText(responseStr)
                 }
 
                 override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
-                    val responseStr = "[onFailure] t: $t\n"
+                    val end = System.currentTimeMillis()
+                    val responseStr = "[onFailure] timeCost: ${end - start},  t: $t\n"
                     MyLog.e(TAG, responseStr)
                     toast(responseStr)
-                    binding.resultTv.text = "${binding.resultTv.text}\n$responseStr\n"
+                    appendResultText(responseStr)
                 }
             })
         }
 
         binding.btnCoroutineSearch.setOnClickListener {
-            clearText()
+            clearResultText()
 
             val localSearchData = getLocalSearchData()
             val localStr = "localSearchData: $localSearchData\n"
             MyLog.i(TAG, localStr)
             binding.resultTv.text = localStr
 
-            val request = SearchRequest(getQuery2(), 2000, "all")
+            val request = SearchRequest(getQuery(), 2000, "all")
             val requestStr = "request: $request\n"
             MyLog.d(TAG, requestStr)
-            binding.resultTv.text = "${binding.resultTv.text}\n$requestStr"
+            appendResultText(requestStr)
 
             mainScope.launch {
                 val response = withContext(Dispatchers.IO) {
@@ -365,8 +365,39 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                 val data = response.aggregations.data
                 val responseStr = "[response] size: ${data.size}, data: $data\n"
                 MyLog.d(TAG, responseStr)
-                binding.resultTv.text = "${binding.resultTv.text}\n$responseStr"
+                appendResultText(requestStr)
             }
+        }
+
+        binding.btnCoroutineUserIdSearch.setOnClickListener {
+            clearResultText()
+            val request = SearchRequest(getQuery(), 2000, "all")
+            val start = System.currentTimeMillis()
+            RequestAccessManager.INSTANCE.searchWithUserId(
+                "1022486851",
+                request,
+                object : Callback<SearchResultResponse> {
+                    override fun onResponse(
+                        call: Call<SearchResultResponse>,
+                        response: Response<SearchResultResponse>
+                    ) {
+                        val end = System.currentTimeMillis()
+                        val data = response.body()?.aggregations?.data
+                        val responseStr =
+                            "[response] size: ${data?.size ?: 0},  timeCost: ${end - start}, data: $data\n"
+                        MyLog.d(TAG, responseStr)
+                        appendResultText(responseStr)
+                    }
+
+                    override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
+                        val end = System.currentTimeMillis()
+                        val responseStr = "[onFailure] timeCost: ${end - start}, t: $t\n"
+                        MyLog.e(TAG, responseStr)
+                        toast(responseStr)
+                        appendResultText(responseStr)
+                    }
+                }
+            )
         }
 
         binding.btnTestData.setOnClickListener {
@@ -388,19 +419,19 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     }
 
     private suspend fun testAggregation() {
-        clearText()
+        clearResultText()
         val aggregation = withContext(Dispatchers.IO) {
             getAggregation()
         }
         val dataList: List<MediaPath> = aggregation.data
         MyLog.i(TAG, "dataList: $dataList")
-        appendText("dataList: $dataList")
+        appendResultText("dataList: $dataList")
 
         val mediaItemList = withContext(Dispatchers.IO) {
             DataConverter.mediaPathList2MediaItemList(aggregation.data)
         }
         MyLog.i(TAG, "mediaItemList: $mediaItemList")
-        appendText("mediaItemList: $mediaItemList")
+        appendResultText("mediaItemList: $mediaItemList")
     }
 
     private fun getAggregation(): SearchResultResponse.Aggregation {

@@ -8,15 +8,18 @@ import android.provider.SearchRecentSuggestions
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.lifecycleScope
 import com.demo.R
 import com.demo.databinding.LayoutSearchActivityBinding
 import com.demo.logger.BaseActivity
 import com.demo.network.RequestAccessManager
+import com.demo.network.model.SearchMediaItem
 import com.demo.network.model.SearchRequest
 import com.demo.network.model.SearchResultResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.demo.network.utils.DataConverter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -32,6 +35,7 @@ class SearchableActivity : BaseActivity<LayoutSearchActivityBinding>() {
 
     companion object {
         const val JARGON = "JARGON"
+        private const val TAG = "SearchableActivity"
     }
 
     private val textDataAdapter = TextDataAdapter()
@@ -127,22 +131,22 @@ class SearchableActivity : BaseActivity<LayoutSearchActivityBinding>() {
 
     private fun doMySearch(query: String) {
 
-        RequestAccessManager.INSTANCE.search(SearchRequest(query, 200, "all"), object :
-            Callback<SearchResultResponse> {
-            override fun onResponse(
-                call: Call<SearchResultResponse>,
-                response: Response<SearchResultResponse>
-            ) {
-                response.body()
+        val request = SearchRequest(query, 2000, "all")
+        lifecycleScope.launch(Dispatchers.Main) {
+            val response: SearchResultResponse = withContext(Dispatchers.IO) {
+                RequestAccessManager.INSTANCE.coroutineSearchWithUserId("12345", request)
             }
+            val data = response.aggregations.data
+            val itemList: List<SearchMediaItem> = DataConverter.mediaPathList2MediaItemList(data)
 
-            override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
-
+            val map = itemList.map {
+                it.name
             }
-        })
+            val vo = arrayListOf<String>()
+            vo.addAll(map)
+            textDataAdapter.setNewData(vo)
+        }
 
-        val filterData = originData.filter { it.contains(query) } as ArrayList<String>
-        textDataAdapter.setNewData(filterData)
     }
 
     private fun mergeResult(localData: List<String>, cloudData: List<String>): List<String> {

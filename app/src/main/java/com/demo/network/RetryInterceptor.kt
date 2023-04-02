@@ -23,7 +23,12 @@ class RetryInterceptor(private val retryCount: Int, private val retryInterval: L
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         return try {
-            chain.proceed(chain.request())
+            val response: Response = chain.proceed(chain.request())
+            MyLog.i(
+                TAG,
+                "[intercept] response.isSuccessful: ${response.isSuccessful}, code: ${response.code()}"
+            )
+            response
         } catch (exception: IOException) {
             retry(0, exception, chain)
         }

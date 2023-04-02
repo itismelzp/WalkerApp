@@ -1,5 +1,10 @@
 package com.demo.logger
 
+import android.media.ExifInterface
+import android.media.ExifInterface.TAG_DATETIME
+import android.media.ExifInterface.TAG_DATETIME_DIGITIZED
+import android.media.ExifInterface.TAG_DATETIME_ORIGINAL
+import android.media.ExifInterface.TAG_ORIENTATION
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -7,16 +12,8 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.work.BackoffPolicy
-import androidx.work.Constraints
-import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.demo.R
-import com.demo.constant.Constant
 import com.demo.databinding.ActivityLoggerLayoutBinding
 import com.demo.network.RequestAccessManager
 import com.demo.network.model.DataCreator
@@ -32,6 +29,7 @@ import com.demo.network.utils.GsonUtil
 import com.demo.syscomponent.UploadService
 import com.demo.utils.DataFactory
 import com.demo.utils.DeviceIdUtil
+import com.demo.utils.ExifUtils
 import com.demo.work.UploadMetaDataWorker
 import com.demo.work.UploadWorker
 import com.demo.work.WorkerViewModel
@@ -44,9 +42,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
+
 
 class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
@@ -77,13 +80,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         initPingView()
         initMetaUploadView()
         initSearchView()
-
-        binding.btnUploadImages.setOnClickListener {
-            initCntText()
-            uploadImages()
-            uploadImagesByThread()
-            startJobService()
-        }
+        initUploadImages()
         initCntText()
         initSyncView()
     }
@@ -139,35 +136,278 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         return DataFactory.getEven(10)
     }
 
-    // 奇数
-
-
     private fun multiSlice() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val keys = listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17)
-            val bucketSize = 5
+        clearResultText()
+        val keys = DataFactory.getEven(3000)
+        val bucketSize = 5
+        val total = keys.size
+        lifecycleScope.launch(Dispatchers.Main) {
+            val result = withContext(Dispatchers.IO) {
+                val startTime = System.currentTimeMillis()
+                val threadSize = ceil(total / bucketSize.toDouble()).toInt()
+                var start: Int
+                var end: Int
 
-            val total = keys.size
-            val threadSize = ceil(total / bucketSize.toDouble()).toInt()
-            var start: Int
-            var end: Int
-            for (i in 0 until threadSize) {
-                start = i * bucketSize
-                end = i * bucketSize + bucketSize - 1
-                if (end > total - 1) {
-                    end = total - 1
-                }
-
-                MyLog.i(
-                    TAG,
-                    "threadSize: $threadSize, thread: $i, start: $start, end: $end, ${
+                var tempResult = ""
+                for (i in 0 until threadSize) {
+                    start = i * bucketSize
+                    end = (i + 1) * bucketSize - 1
+                    if (end > total - 1) {
+                        end = total - 1
+                    }
+                    val msg = "slice: ($i/$threadSize), rang: [$start, $end], index: ${
                         keys.slice(
                             start..end
                         )
-                    }"
-                )
+                    }\n"
+                    MyLog.i(TAG, msg)
+                    tempResult += msg
+                }
+                "timeCost: ${System.currentTimeMillis() - startTime}, result: $tempResult"
+            }
+            appendResultText(result)
+        }
+    }
+
+    private fun <E> List<E>.groupByIndex(bucketSize: Int): Map<Int, List<E>> {
+        val threadSize = ceil(size / bucketSize.toDouble()).toInt()
+        var start: Int
+        var end: Int
+        val map = mutableMapOf<Int, List<E>>()
+        for (i in 0 until threadSize) {
+            start = i * bucketSize
+            end = (i + 1) * bucketSize - 1
+            if (end > size - 1) {
+                end = size - 1
+            }
+            val slice = slice(start..end)
+            map[i] = slice
+        }
+        return map
+    }
+
+    private fun listSlice() {
+        appendResultText()
+        val keys = DataFactory.getEven(3000)
+        val bucketSize = 5
+
+        val start = System.currentTimeMillis()
+
+        val result: Map<Int, List<Int>> = keys.groupBy {
+            keys.indexOf(it) / bucketSize
+        }
+
+        appendResultText("timeCost: ${System.currentTimeMillis() - start}, result: $result")
+    }
+
+    private fun initUploadImages() {
+        binding.btnUploadImages.setOnClickListener {
+
+            val localMediaIds = intArrayOf(
+                74103,
+                67950,
+                70690,
+                39714,
+                67994,
+                60867,
+                60145,
+                73684,
+                43363,
+                61694,
+                54413,
+                73989,
+                66482,
+                67252,
+                67022,
+                53678,
+                60353,
+                57501,
+                56547,
+                38425,
+                71036,
+                73688,
+                70582,
+                66217,
+                40655,
+                66456,
+                54839,
+                60032,
+                73714,
+                68267,
+                40555,
+                61427,
+                69716,
+                38848,
+                39488,
+                68860,
+                38745,
+                68429,
+                40654,
+                43371,
+                54529,
+                67455,
+                41981,
+                70041,
+                61315,
+                73531,
+                42555,
+                52180,
+                39913,
+                67481,
+                38849,
+                40556,
+                70041,
+                43582,
+                73684,
+                38425,
+                39913,
+                38745,
+                43371,
+                54819,
+                40556,
+                57501,
+                68267,
+                60778,
+                67455,
+                61427,
+                38849,
+                40555,
+                70582,
+                60145,
+                52180,
+                42555,
+                68429,
+                38851,
+                39714,
+                67022,
+                38850,
+                39488,
+                67252,
+                54839,
+                60723,
+                56547,
+                74103,
+                37628,
+                53882,
+                38848,
+                73531,
+                41981,
+                73325,
+                71036,
+                61694,
+                67950,
+                60032,
+                54413,
+                60353,
+                37599,
+                40654,
+                40655,
+                68860,
+                66217,
+                67994,
+                60867,
+                67481,
+                54529,
+                70690,
+                66456,
+                73989,
+                53678,
+                66482,
+                73714,
+                61315
+            )
+
+
+            clearResultText()
+
+            val localList = localMediaIds.toList()
+            appendResultText("localList size: ${localList.size}, distinct size: ${localList.distinct().size}")
+
+
+            val localMediaIds2 = intArrayOf(74103,70690,39714,68860,60867,68267,60145,73684,43363,61694,54413,73989,68429,66482,67252,67022,53678,60353,57501,56547,38425,71036,73688,40655,66456,54839,60032,67950,73714,67994,40555,61427,69716,38848,39488,38745,40654,43371,54529,41981,67455,66217,70582,70041,61315,73531,42555,52180,39913,67481,38849,40556)
+            appendResultText("localMediaIds2 size: ${localMediaIds2.size}, distinct size: ${localMediaIds2.distinct().size}")
+
+            val local3 = intArrayOf(74103,70690,54413,53678,39714,68860,56547,68267,73684,43363,73989,68429,54529,66482,61315,67252,67022,52180,60867,38425,71036,73688,40655,66456,67950,73714,67994,40555,69716,38848,39488,61694,54839,57501,38745,40654,43371,61427,41981,67455,66217,70582,70041,60145,60353,73531,42555,60032,39913,67481,38849,40556)
+            appendResultText("local3 size: ${local3.size}, distinct size: ${local3.distinct().size}")
+
+            val fileList = assets.list("")?.toList()
+            fileList?.run {
+                MyLog.i(TAG, "[initUploadImages] fileList: $this")
+                val photoList: List<String> = fileList.filter { it.endsWith(".jpg", ignoreCase = true) }
+                photoList.forEach {
+                    val inputStream  = assets.open(it)
+                    val exifInterface = ExifInterface(inputStream)
+                    val readExif = readExif(exifInterface)
+                    val msg = "[initUploadImages] file: $it\n$readExif"
+                    MyLog.i(TAG, msg)
+                    appendResultText(msg)
+                }
+            }
+            val testImage1 = "/storage/emulated/0/DCIM/4544775236_90726d7289_o.jpg"
+            val testImage2 = "/storage/emulated/0/DCIM/2547921893_d86f760e4a_o.jpg"
+            val testImage3 = "/storage/emulated/0/DCIM/20662127472_e6c8784ce0_o.jpg"
+            val testImage4 = "/storage/emulated/0/DCIM/209842930_65f670d0f0_o.jpg"
+            val testImage5 = "/storage/emulated/0/DCIM/2021_04_02_12_11_IMG_1483.JPG"
+
+            val str1 = "testImage1: \n${readExif(testImage1)}"
+            appendResultText(str1)
+            MyLog.i(TAG, str1)
+
+            val str2 = "testImage2: \n${readExif(testImage2)}"
+            appendResultText(str2)
+            MyLog.i(TAG, str2)
+
+            val str3 = "testImage3: \n${readExif(testImage3)}"
+            appendResultText(str3)
+            MyLog.i(TAG, str3)
+
+            val str4 = "testImage4：\n${readExif(testImage4)}"
+            appendResultText(str4)
+            MyLog.i(TAG, str4)
+
+            val str5 = "testImage5：\n${readExif(testImage5)}"
+            appendResultText(str5)
+            MyLog.i(TAG, str5)
+
+            initCntText()
+            workerViewModel.uploadImages()
+//            uploadImagesByThread()
+            startJobService()
+
+            val list = mutableListOf<Int>()
+            list.add(1)
+            list.add(2)
+            list.add(3)
+            list.add(4)
+            list.forEachIndexed { index, i ->
+                if (index == 2) {
+                    return@forEachIndexed
+                }
+                appendResultText("[forEachIndexed] i:$i")
             }
         }
+    }
+
+    private fun readExif(path: String) : ExifEntry {
+        return readExif(ExifInterface(File(path)))
+    }
+
+    private fun readExif(exif: ExifInterface): ExifEntry {
+        val exifData = ExifEntry()
+        exifData.mOrientation = exif.getAttribute(TAG_ORIENTATION)
+//        exifData.mDateTime = exif.getAttribute(TAG_DATETIME)
+        exifData.mDateTime = exif.getAttribute(TAG_DATETIME)
+        exifData.mDateTimeOriginal = exif.getAttribute(TAG_DATETIME_ORIGINAL)
+        exifData.mDateTimeDigitized = exif.getAttribute(TAG_DATETIME_DIGITIZED)
+        exifData.mTimeStamp = ExifUtils.getDateTime2(exif)
+        exifData.timeStamp = timeToDate(exifData.mTimeStamp)
+        return exifData
+    }
+
+    private fun timeToDate(timeStamp: Long): String {
+        val date = Date(timeStamp)
+        val sd = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return sd.format(date);
     }
 
     private fun initCntText() {
@@ -400,7 +640,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             )
         }
 
-        binding.btnTestData.setOnClickListener {
+        binding.btnDataConverter.setOnClickListener {
 
             mainScope.launch {
                 testAggregation()
@@ -415,6 +655,11 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 //            MyLog.i(TAG, "map: $map")
 //
 //            map.forEach { (digit, person) -> MyLog.i(TAG, "$digit: $person") }
+        }
+
+        binding.btnSliceTest.setOnClickListener {
+            multiSlice()
+            listSlice()
         }
     }
 
@@ -557,45 +802,6 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             return
         }
         logger = LogUtil.MarslogLog(this)
-    }
-
-    private fun uploadImages() {
-        val uploadWorkRequest: OneTimeWorkRequest =
-            OneTimeWorkRequestBuilder<UploadWorker>()
-                .addTag(UploadWorker.TAG)
-                .setId(UploadWorker.ID)
-                .setConstraints(
-                    Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.UNMETERED)
-                        .setRequiresCharging(true)
-                        .build()
-                )
-                .setBackoffCriteria(
-                    BackoffPolicy.EXPONENTIAL, 10_000L,
-                    TimeUnit.MILLISECONDS
-                )
-                .build()
-        val uploadMetaDataWorker: OneTimeWorkRequest =
-            OneTimeWorkRequestBuilder<UploadMetaDataWorker>()
-                .addTag(UploadMetaDataWorker.TAG)
-                .setId(UploadMetaDataWorker.ID)
-                .setConstraints(
-                    Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.UNMETERED)
-                        .build()
-                )
-                .build()
-
-        WorkManager.getInstance(this)
-            .beginUniqueWork(
-                Constant.UPLOAD_WORK_NAME,
-                ExistingWorkPolicy.REPLACE,
-                uploadWorkRequest
-            )
-            .then(uploadMetaDataWorker)
-            .enqueue()
-
-
     }
 
     private fun uploadImagesByThread() {

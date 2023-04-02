@@ -28,18 +28,23 @@
             android:textIsSelectable="true"
             tools:text="deviceId: xxxx" />
 
-        <Button
-            android:id="@+id/btn_media_meta_upload"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="upload file media data" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_face_meta_upload"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="upload file face data" />
+            <Button
+                android:id="@+id/btn_media_meta_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="upload media meta" />
 
+            <Button
+                android:id="@+id/btn_face_meta_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="upload face meta" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,11 +63,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="search" />
+
             <Button
                 android:id="@+id/btn_coroutine_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="协程search" />
+
             <Button
                 android:id="@+id/btn_coroutine_user_id_search"
                 android:layout_width="wrap_content"
@@ -71,11 +78,24 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_test_data"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="test data" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_data_converter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test data converter" />
+
+            <Button
+                android:id="@+id/btn_slice_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test slice" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

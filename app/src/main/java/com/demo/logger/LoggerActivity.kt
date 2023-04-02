@@ -30,6 +30,7 @@ import com.demo.syscomponent.UploadService
 import com.demo.utils.DataFactory
 import com.demo.utils.DeviceIdUtil
 import com.demo.utils.ExifUtils
+import com.demo.utils.sliceByIndex
 import com.demo.work.UploadMetaDataWorker
 import com.demo.work.UploadWorker
 import com.demo.work.WorkerViewModel
@@ -44,11 +45,9 @@ import retrofit2.Response
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.ceil
 
 
 class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
@@ -138,52 +137,24 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
     private fun multiSlice() {
         clearResultText()
-        val keys = DataFactory.getEven(3000)
-        val bucketSize = 5
+        val keys = DataFactory.getEven(5)
+        val bucketSize = 3
         val total = keys.size
         lifecycleScope.launch(Dispatchers.Main) {
+
+            appendResultText("sliceByIndex: ${keys.sliceByIndex(bucketSize)}")
+
             val result = withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
-                val threadSize = ceil(total / bucketSize.toDouble()).toInt()
-                var start: Int
-                var end: Int
-
                 var tempResult = ""
-                for (i in 0 until threadSize) {
-                    start = i * bucketSize
-                    end = (i + 1) * bucketSize - 1
-                    if (end > total - 1) {
-                        end = total - 1
-                    }
-                    val msg = "slice: ($i/$threadSize), rang: [$start, $end], index: ${
-                        keys.slice(
-                            start..end
-                        )
-                    }\n"
-                    MyLog.i(TAG, msg)
-                    tempResult += msg
+
+                keys.sliceByIndex(bucketSize) { index, total, it ->
+                    tempResult += "slice: ($index/$total), values: $it\n"
                 }
-                "timeCost: ${System.currentTimeMillis() - startTime}, result: $tempResult"
+                "timeCost: ${System.currentTimeMillis() - startTime}, total: $total, result:\n$tempResult"
             }
             appendResultText(result)
         }
-    }
-
-    private fun <E> List<E>.groupByIndex(bucketSize: Int): Map<Int, List<E>> {
-        val threadSize = ceil(size / bucketSize.toDouble()).toInt()
-        var start: Int
-        var end: Int
-        val map = mutableMapOf<Int, List<E>>()
-        for (i in 0 until threadSize) {
-            start = i * bucketSize
-            end = (i + 1) * bucketSize - 1
-            if (end > size - 1) {
-                end = size - 1
-            }
-            val slice = slice(start..end)
-            map[i] = slice
-        }
-        return map
     }
 
     private fun listSlice() {
@@ -203,132 +174,13 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     private fun initUploadImages() {
         binding.btnUploadImages.setOnClickListener {
 
-            val localMediaIds = intArrayOf(
-                74103,
-                67950,
-                70690,
-                39714,
-                67994,
-                60867,
-                60145,
-                73684,
-                43363,
-                61694,
-                54413,
-                73989,
-                66482,
-                67252,
-                67022,
-                53678,
-                60353,
-                57501,
-                56547,
-                38425,
-                71036,
-                73688,
-                70582,
-                66217,
-                40655,
-                66456,
-                54839,
-                60032,
-                73714,
-                68267,
-                40555,
-                61427,
-                69716,
-                38848,
-                39488,
-                68860,
-                38745,
-                68429,
-                40654,
-                43371,
-                54529,
-                67455,
-                41981,
-                70041,
-                61315,
-                73531,
-                42555,
-                52180,
-                39913,
-                67481,
-                38849,
-                40556,
-                70041,
-                43582,
-                73684,
-                38425,
-                39913,
-                38745,
-                43371,
-                54819,
-                40556,
-                57501,
-                68267,
-                60778,
-                67455,
-                61427,
-                38849,
-                40555,
-                70582,
-                60145,
-                52180,
-                42555,
-                68429,
-                38851,
-                39714,
-                67022,
-                38850,
-                39488,
-                67252,
-                54839,
-                60723,
-                56547,
-                74103,
-                37628,
-                53882,
-                38848,
-                73531,
-                41981,
-                73325,
-                71036,
-                61694,
-                67950,
-                60032,
-                54413,
-                60353,
-                37599,
-                40654,
-                40655,
-                68860,
-                66217,
-                67994,
-                60867,
-                67481,
-                54529,
-                70690,
-                66456,
-                73989,
-                53678,
-                66482,
-                73714,
-                61315
-            )
-
-
             clearResultText()
 
-            val localList = localMediaIds.toList()
-            appendResultText("localList size: ${localList.size}, distinct size: ${localList.distinct().size}")
-
-
-            val localMediaIds2 = intArrayOf(74103,70690,39714,68860,60867,68267,60145,73684,43363,61694,54413,73989,68429,66482,67252,67022,53678,60353,57501,56547,38425,71036,73688,40655,66456,54839,60032,67950,73714,67994,40555,61427,69716,38848,39488,38745,40654,43371,54529,41981,67455,66217,70582,70041,61315,73531,42555,52180,39913,67481,38849,40556)
-            appendResultText("localMediaIds2 size: ${localMediaIds2.size}, distinct size: ${localMediaIds2.distinct().size}")
-
-            val local3 = intArrayOf(74103,70690,54413,53678,39714,68860,56547,68267,73684,43363,73989,68429,54529,66482,61315,67252,67022,52180,60867,38425,71036,73688,40655,66456,67950,73714,67994,40555,69716,38848,39488,61694,54839,57501,38745,40654,43371,61427,41981,67455,66217,70582,70041,60145,60353,73531,42555,60032,39913,67481,38849,40556)
-            appendResultText("local3 size: ${local3.size}, distinct size: ${local3.distinct().size}")
+            val records = mutableListOf<DataRecordTable>()
+            records.add(DataRecordTable("111", 1, 1234567890, 0))
+            records.add(DataRecordTable("222", 2, 1234567890, 1))
+            records.add(DataRecordTable("333", 3, 1234567890, 0))
+            appendResultText("sql:\n${BatchOpDBUtil.update(records)}\n")
 
             val fileList = assets.list("")?.toList()
             fileList?.run {
@@ -659,7 +511,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
         binding.btnSliceTest.setOnClickListener {
             multiSlice()
-            listSlice()
+//            listSlice()
         }
     }
 

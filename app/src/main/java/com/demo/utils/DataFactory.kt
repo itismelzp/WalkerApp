@@ -23,7 +23,7 @@ object DataFactory {
         var i = initial
         repeat(cnt) {
             result.add(i)
-            i+=2
+            i += 2
         }
         return result
     }

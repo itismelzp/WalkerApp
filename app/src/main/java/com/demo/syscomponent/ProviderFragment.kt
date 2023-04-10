@@ -57,9 +57,7 @@ class ProviderFragment : BaseFragment<FragmentProviderBinding>() {
         initObserver()
     }
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentProviderBinding> {
-        return createFragment()
-    }
+    override fun createFragment(arg1: String, arg2: String) = createFragment()
 
     private fun initObserver() {
         textLiveData.observe(viewLifecycleOwner) {

@@ -31,8 +31,10 @@ import com.demo.logger.MyLog;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
 import com.demo.storage.WinkKVDemoActivity;
+import com.demo.sync.SyncDemoFragment;
 import com.demo.syscomponent.ProviderFragment;
 import com.demo.syscomponent.SearchOtherActivity;
+import com.demo.video.VideoMetaFragment;
 import com.demo.widget.activity.ScaleActivity;
 import com.demo.widget.activity.ShapeBgActivity;
 import com.demo.wink.WinkActivity;
@@ -158,9 +160,23 @@ public class MainButtonModel {
         systemComponents.add(new MainButton("fragment demo", MainButtonType.TYPE_SYSTEM_COMPONENT, bindFragmentListener(new GridFragment())));
         systemComponents.add(
                 new MainButton.Builder()
-                        .setName("Provider")
-                        .setType(MainButtonType.TYPE_SYSTEM_COMPONENT)
-                        .setOnClickListener(bindFragmentListener(ProviderFragment.newInstance()))
+                        .name("Provider")
+                        .type(MainButtonType.TYPE_SYSTEM_COMPONENT)
+                        .onClickListener(bindFragmentListener(ProviderFragment.newInstance()))
+                        .build()
+        );
+        systemComponents.add(
+                new MainButton.Builder()
+                        .name("同步")
+                        .type(MainButtonType.TYPE_SYSTEM_COMPONENT)
+                        .onClickListener(bindFragmentListener(SyncDemoFragment.newInstance()))
+                        .build()
+        );
+        systemComponents.add(
+                new MainButton.Builder()
+                        .name("视频元数据")
+                        .type(MainButtonType.TYPE_SYSTEM_COMPONENT)
+                        .onClickListener(bindFragmentListener(VideoMetaFragment.newInstance()))
                         .build()
         );
         typeMap.put(MainButtonType.TYPE_SYSTEM_COMPONENT, systemComponents);

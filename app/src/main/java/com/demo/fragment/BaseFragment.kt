@@ -5,6 +5,8 @@ import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.demo.R
@@ -71,6 +73,11 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    @UiThread
+    protected fun toast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(requireContext(), text, duration).show()
     }
 
 }

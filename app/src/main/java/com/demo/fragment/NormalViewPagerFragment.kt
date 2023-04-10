@@ -38,13 +38,9 @@ class NormalViewPagerFragment : BaseFragment<FragmentSlideShowBinding>() {
     lateinit var indicatorContainer: LinearLayout //填充指示点的容器
     private val mHandler: Handler = Handler()
 
-    override fun createFragment(): BaseFragment<FragmentSlideShowBinding> {
-        return newInstance("", "")
-    }
+    override fun createFragment() = newInstance("", "")
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentSlideShowBinding> {
-        return newInstance(arg1, arg2)
-    }
+    override fun createFragment(arg1: String, arg2: String) = newInstance(arg1, arg2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -30,9 +30,7 @@ class ViewPagerCollectionFragment : BaseFragment<FragmentViewPager2DemoBinding>(
         OppoGalleryFragment.newInstance()
     )
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentViewPager2DemoBinding> {
-        return newInstance("", "")
-    }
+    override fun createFragment(arg1: String, arg2: String) = newInstance("", "")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

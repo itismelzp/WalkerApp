@@ -98,12 +98,8 @@ class ImagePagerFragment : BaseFragment<FragmentImagePagerBinding>() {
         attachToRoot: Boolean
     ) = FragmentImagePagerBinding.inflate(inflater, container, attachToRoot)
 
-    override fun createFragment(): BaseFragment<FragmentImagePagerBinding> {
-        return newInstance()
-    }
+    override fun createFragment() = newInstance()
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentImagePagerBinding> {
-        return newInstance(arg1, arg2)
-    }
+    override fun createFragment(arg1: String, arg2: String) = newInstance(arg1, arg2)
 
 }

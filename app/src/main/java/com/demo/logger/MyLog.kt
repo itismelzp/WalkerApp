@@ -52,6 +52,11 @@ class MyLog {
         fun e(tag: String?, msg: String?, t: Throwable?) {
             sLogInf?.apply { e(tag, msg, t) }
         }
+
+        @JvmStatic
+        fun getTimeCost(time: Long): Long {
+            return System.currentTimeMillis() - time
+        }
     }
 
     /**

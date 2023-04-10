@@ -91,22 +91,22 @@ public class MainButton implements Comparable<MainButton> {
         public Builder() {
         }
 
-        public Builder setName(String name) {
+        public Builder name(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder setType(@MainButtonType int type) {
+        public Builder type(@MainButtonType int type) {
             this.type = type;
             return this;
         }
 
-        public Builder setJumpClass(Class<?> jumpClass) {
+        public Builder jumpClass(Class<?> jumpClass) {
             this.jumpClass = jumpClass;
             return this;
         }
 
-        public Builder setOnClickListener(OnClickListener clickListener) {
+        public Builder onClickListener(OnClickListener clickListener) {
             this.clickListener = clickListener;
             return this;
         }

@@ -33,13 +33,9 @@ class GridFragment : BaseFragment<MainFragmentGridBinding>() {
     private var param2: String? = null
 
     private var listener: OnActionListener? = null
-    override fun createFragment(): BaseFragment<MainFragmentGridBinding> {
-        return newInstance()
-    }
+    override fun createFragment() = newInstance()
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment<MainFragmentGridBinding> {
-        return newInstance(arg1, arg2)
-    }
+    override fun createFragment(arg1: String, arg2: String) = newInstance(arg1, arg2)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

@@ -79,9 +79,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         attachToRoot: Boolean
     ) = FragmentMainBinding.inflate(inflater, container, attachToRoot)
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentMainBinding> {
-        return newInstance("", "")
-    }
+    override fun createFragment(arg1: String, arg2: String) = newInstance("", "")
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

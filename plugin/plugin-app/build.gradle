@@ -48,12 +48,12 @@ dependencies {
     //如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
     compileOnly "com.tencent.shadow.core:runtime:$shadow_version"
 
-    implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
-    implementation "com.google.android.material:material:$rootProject.materialVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
-    testImplementation "junit:junit:$rootProject.junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
+    implementation "androidx.appcompat:appcompat:${rootProject.appCompatVersion}"
+    implementation "com.google.android.material:material:${rootProject.materialVersion}"
+    implementation "androidx.constraintlayout:constraintlayout:${rootProject.constraintLayoutVersion}"
+    testImplementation "junit:junit:${rootProject.junitVersion}"
+    androidTestImplementation "androidx.test.ext:junit:${rootProject.androidxJunitVersion}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.espressoVersion}"
 }
 
 

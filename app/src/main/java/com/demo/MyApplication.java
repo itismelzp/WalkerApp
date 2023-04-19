@@ -4,7 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.webkit.WebView;
+
+import androidx.work.Configuration;
+import androidx.work.WorkManager;
 
 import com.demo.customview.utils.ViewUtils;
 import com.demo.ipc.ProcessUtil;
@@ -39,6 +43,8 @@ import tv.danmaku.ijk.media.exo2.ExoPlayerCacheManager;
  */
 public class MyApplication extends Application {
 
+    private static final String TAG = "MyApplication";
+
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
@@ -49,8 +55,15 @@ public class MyApplication extends Application {
     }
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        Log.i(TAG, "[onCreate]");
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(TAG, "[onCreate]");
 
         mContext = getApplicationContext();
         ViewUtils.initContext(mContext);
@@ -61,16 +74,20 @@ public class MyApplication extends Application {
         WinkDbLog.init(new LogUtil.DefaultLog());
 
         MyLog.init(new LogUtil.TimberLog());
-        onApplicationCreate(this);
+        initPlugin(this);
 
         initVideoSdk();
+
+        initWorkManager();
+
+        MyLog.e(TAG, "onCreate");
     }
 
     public static Context getInstance() {
         return mContext;
     }
 
-    public static void onApplicationCreate(Application application) {
+    private void initPlugin(Application application) {
         //Log接口Manager也需要使用，所以主进程也初始化。
         LoggerFactory.setILoggerFactory(new AndroidLoggerFactory());
 
@@ -109,4 +126,11 @@ public class MyApplication extends Application {
         Debuger.enable();
     }
 
+    private void initWorkManager() {
+        Configuration config = new Configuration.Builder()
+                .setMinimumLoggingLevel(Log.INFO)
+                .setJobSchedulerJobIdRange(1000, 2000)
+                .build();
+        WorkManager.initialize(this, config);
+    }
 }

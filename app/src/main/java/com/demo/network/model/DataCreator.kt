@@ -431,7 +431,7 @@ object DataCreator {
             "        {\n" +
             "            \"mediaId\": 1451,\n" +
             "            \"fileId\": \"ocs_path/image1\",\n" +
-            "            \"groupId\": 4,\n" +
+            "            \"groupId\": 3,\n" +
             "            \"groupName\": \"小明\",\n" +
             "            \"groupRelation\": 11,\n" +
             "            \"relationDesc\": \"朋友\",\n" +

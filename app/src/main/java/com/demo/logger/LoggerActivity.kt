@@ -15,11 +15,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.demo.R
 import com.demo.databinding.ActivityLoggerLayoutBinding
+import com.demo.network.CoroutineExceptionHandlerImpl
 import com.demo.network.RequestAccessManager
 import com.demo.network.model.DataCreator
 import com.demo.network.model.FaceScanMetaDataRequest
 import com.demo.network.model.MediaFileMetaDataRequest
 import com.demo.network.model.MediaPath
+import com.demo.network.model.MemoryRequest
 import com.demo.network.model.MetaDataResponse
 import com.demo.network.model.SearchMediaItem
 import com.demo.network.model.SearchRequest
@@ -37,6 +39,7 @@ import com.demo.work.WorkerViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Call
@@ -79,6 +82,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         initPingView()
         initMetaUploadView()
         initSearchView()
+        initMemoryView()
         initUploadImages()
         initCntText()
         initSyncView()
@@ -171,72 +175,72 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         appendResultText("timeCost: ${System.currentTimeMillis() - start}, result: $result")
     }
 
+    private fun initExif() {
+        clearResultText()
+
+        val fileList = assets.list("")?.toList()
+        fileList?.run {
+            MyLog.i(TAG, "[initUploadImages] fileList: $this")
+            val photoList: List<String> = fileList.filter { it.endsWith(".jpg", ignoreCase = true) }
+            photoList.forEach {
+                val inputStream  = assets.open(it)
+                val exifInterface = ExifInterface(inputStream)
+                val readExif = readExif(exifInterface)
+                val msg = "[initUploadImages] file: $it\n$readExif"
+                MyLog.i(TAG, msg)
+                appendResultText(msg)
+            }
+        }
+
+        val testImage1 = "/storage/emulated/0/DCIM/4544775236_90726d7289_o.jpg"
+        val testImage2 = "/storage/emulated/0/DCIM/2547921893_d86f760e4a_o.jpg"
+        val testImage3 = "/storage/emulated/0/DCIM/20662127472_e6c8784ce0_o.jpg"
+        val testImage4 = "/storage/emulated/0/DCIM/209842930_65f670d0f0_o.jpg"
+        val testImage5 = "/storage/emulated/0/DCIM/2021_04_02_12_11_IMG_1483.JPG"
+
+        val str1 = "testImage1: \n${readExif(testImage1)}"
+        appendResultText(str1)
+        MyLog.i(TAG, str1)
+
+        val str2 = "testImage2: \n${readExif(testImage2)}"
+        appendResultText(str2)
+        MyLog.i(TAG, str2)
+
+        val str3 = "testImage3: \n${readExif(testImage3)}"
+        appendResultText(str3)
+        MyLog.i(TAG, str3)
+
+        val str4 = "testImage4：\n${readExif(testImage4)}"
+        appendResultText(str4)
+        MyLog.i(TAG, str4)
+
+        val str5 = "testImage5：\n${readExif(testImage5)}"
+        appendResultText(str5)
+        MyLog.i(TAG, str5)
+    }
+
+    private fun batchDBOp() {
+        clearResultText()
+        val records = mutableListOf<DataRecordTable>()
+        records.add(DataRecordTable("111", 1, 1234567890, 0))
+        records.add(DataRecordTable("222", 2, 1234567890, 1))
+        records.add(DataRecordTable("333", 3, 1234567890, 0))
+        appendResultText("sql:\n${BatchOpDBUtil.update(records)}\n")
+    }
+
     private fun initUploadImages() {
-        binding.btnUploadImages.setOnClickListener {
-
+        binding.btnStartUploadworker.setOnClickListener {
             clearResultText()
-
-            val records = mutableListOf<DataRecordTable>()
-            records.add(DataRecordTable("111", 1, 1234567890, 0))
-            records.add(DataRecordTable("222", 2, 1234567890, 1))
-            records.add(DataRecordTable("333", 3, 1234567890, 0))
-            appendResultText("sql:\n${BatchOpDBUtil.update(records)}\n")
-
-            val fileList = assets.list("")?.toList()
-            fileList?.run {
-                MyLog.i(TAG, "[initUploadImages] fileList: $this")
-                val photoList: List<String> = fileList.filter { it.endsWith(".jpg", ignoreCase = true) }
-                photoList.forEach {
-                    val inputStream  = assets.open(it)
-                    val exifInterface = ExifInterface(inputStream)
-                    val readExif = readExif(exifInterface)
-                    val msg = "[initUploadImages] file: $it\n$readExif"
-                    MyLog.i(TAG, msg)
-                    appendResultText(msg)
-                }
-            }
-            val testImage1 = "/storage/emulated/0/DCIM/4544775236_90726d7289_o.jpg"
-            val testImage2 = "/storage/emulated/0/DCIM/2547921893_d86f760e4a_o.jpg"
-            val testImage3 = "/storage/emulated/0/DCIM/20662127472_e6c8784ce0_o.jpg"
-            val testImage4 = "/storage/emulated/0/DCIM/209842930_65f670d0f0_o.jpg"
-            val testImage5 = "/storage/emulated/0/DCIM/2021_04_02_12_11_IMG_1483.JPG"
-
-            val str1 = "testImage1: \n${readExif(testImage1)}"
-            appendResultText(str1)
-            MyLog.i(TAG, str1)
-
-            val str2 = "testImage2: \n${readExif(testImage2)}"
-            appendResultText(str2)
-            MyLog.i(TAG, str2)
-
-            val str3 = "testImage3: \n${readExif(testImage3)}"
-            appendResultText(str3)
-            MyLog.i(TAG, str3)
-
-            val str4 = "testImage4：\n${readExif(testImage4)}"
-            appendResultText(str4)
-            MyLog.i(TAG, str4)
-
-            val str5 = "testImage5：\n${readExif(testImage5)}"
-            appendResultText(str5)
-            MyLog.i(TAG, str5)
-
             initCntText()
-            workerViewModel.uploadImages()
-//            uploadImagesByThread()
-            startJobService()
+            workerViewModel.uploadImages() // start by WorkManager
+            uploadImagesByThread() // start by Thread
+            startJobService() // start JobService
+        }
 
-            val list = mutableListOf<Int>()
-            list.add(1)
-            list.add(2)
-            list.add(3)
-            list.add(4)
-            list.forEachIndexed { index, i ->
-                if (index == 2) {
-                    return@forEachIndexed
-                }
-                appendResultText("[forEachIndexed] i:$i")
-            }
+        binding.btnCancelUploadworker.setOnClickListener {
+//            clearResultText()
+//            initCntText()
+            workerViewModel.cancelWork()
         }
     }
 
@@ -293,21 +297,25 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
     private fun initPingView() {
         binding.btnPing.setOnClickListener {
+            clearResultText()
             lifecycleScope.launch {
-                val ip = "10.250.13.125"
+//                val ip = "10.250.13.125"
+                val ip = "www.baidu.com"
                 toast("ping: $ip")
+                appendResultText("ping: $ip")
                 val result = withContext(Dispatchers.IO) {
-//                    ping("127.0.0.1")
                     ping(ip)
                 }
-                toast(result)
+//                toast(result)
+                appendResultText(result)
             }
         }
     }
 
     private fun initMetaUploadView() {
         binding.btnMediaMetaUpload.setOnClickListener {
-            lifecycleScope.launch {
+            clearResultText()
+            lifecycleScope.launch() {
                 val metaData = Gson().fromJson(
                     DataCreator.MEDIA_META_DATA,
                     MediaFileMetaDataRequest::class.java
@@ -324,30 +332,27 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                             call: Call<MetaDataResponse>,
                             response: Response<MetaDataResponse>
                         ) {
-                            MyLog.d(
-                                TAG,
-                                "[onResponse] code: ${response.code()}, data: ${response.body()}"
-                            )
-                            toast("[onResponse] code: ${response.code()}, data: ${response.body()}")
+                            val msg = "[onResponse] code: ${response.code()}, data: ${response.body()}"
+                            MyLog.d(TAG, msg)
+                            appendResultText(msg)
+                            appendResultText("parseResult: ${response.body()?.parseResult()}")
                         }
 
                         override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
-                            MyLog.d(TAG, "[onFailure] t: $t")
-                            toast("[onFailure] t: $t")
+                            MyLog.e(TAG, "[onFailure] t: ", t)
+                            appendResultText("[onFailure] t: $t")
                         }
                     })
             }
         }
 
         binding.btnFaceMetaUpload.setOnClickListener {
-
             clearResultText()
             val metaData =
                 Gson().fromJson(DataCreator.FACE_META_DATA, FaceScanMetaDataRequest::class.java)
             val request = "metaData: ${Gson().toJson(metaData)}"
             MyLog.i(TAG, request)
 //            appendResultText(request)
-//            toast("metaData: ${Gson().toJson(metaData)}")
 
             RequestAccessManager.INSTANCE.uploadMetaData(
                 metaData,
@@ -356,25 +361,14 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                         call: Call<MetaDataResponse>,
                         response: Response<MetaDataResponse>
                     ) {
-                        val responseMsg = "[onResponse] code: ${response.code()}, data: ${response.body()}"
-                        MyLog.d(TAG, responseMsg)
-//                        toast(msg)
-                        appendResultText(responseMsg)
-
-                        val result = response.body()?.result?.let {
-                            Gson().fromJson(
-                                it.toString(),
-                                object : TypeToken<Map<String, Int>>() {}.type
-                            ) as Map<String, Int>
-                        }
-
-                        appendResultText()
-                        appendResultText("result: $result")
+                        val msg = "[onResponse] code: ${response.code()}, data: ${response.body()}"
+                        MyLog.d(TAG, msg)
+                        appendResultText(msg)
+                        appendResultText("parseResult: ${response.body()?.parseResult()}")
                     }
 
                     override fun onFailure(call: Call<MetaDataResponse>, t: Throwable) {
                         MyLog.d(TAG, "[onFailure] t: $t")
-//                        toast("[onFailure] t: $t")
                         appendResultText("[onFailure] t: $t")
                     }
                 })
@@ -461,13 +455,13 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             }
         }
 
-        binding.btnCoroutineUserIdSearch.setOnClickListener {
+        binding.btnSearchWithUserid.setOnClickListener {
             clearResultText()
             val request = SearchRequest(getQuery(), 2000, "all")
             val start = System.currentTimeMillis()
+            val userId = "1022486851"
             RequestAccessManager.INSTANCE.searchWithUserId(
-                "1022486851",
-                request,
+                userId, request,
                 object : Callback<SearchResultResponse> {
                     override fun onResponse(
                         call: Call<SearchResultResponse>,
@@ -476,20 +470,41 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                         val end = System.currentTimeMillis()
                         val data = response.body()?.aggregations?.data
                         val responseStr =
-                            "[response] size: ${data?.size ?: 0},  timeCost: ${end - start}, data: $data\n"
+                            "[response] userId: $userId, size: ${data?.size ?: 0},  timeCost: ${end - start}, data: $data\n"
                         MyLog.d(TAG, responseStr)
                         appendResultText(responseStr)
                     }
 
                     override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
                         val end = System.currentTimeMillis()
-                        val responseStr = "[onFailure] timeCost: ${end - start}, t: $t\n"
+                        val responseStr = "[onFailure] userId: $userId, timeCost: ${end - start}, t: $t\n"
                         MyLog.e(TAG, responseStr)
                         toast(responseStr)
                         appendResultText(responseStr)
                     }
                 }
             )
+        }
+
+        binding.btnCoroutineWithUserid.setOnClickListener {
+            mainScope.launch {
+                clearResultText()
+                val request = SearchRequest(getQuery(), 1000, "all")
+                val start = System.currentTimeMillis()
+                val userId = "1022486851"
+                appendResultText("[coroutineSearchWithUserId] request: $request")
+                appendResultText("coroutineSearchWithUserId...")
+                val response = withContext(Dispatchers.IO) {
+                    runCatching {
+                        RequestAccessManager.INSTANCE.coroutineSearchWithUserId(userId, request)
+                    }.onFailure {
+                        MyLog.e(TAG, "coroutineSearchWithUserId error: ",it)
+                    }.getOrElse {
+                        "coroutineSearchWithUserId error."
+                    }
+                }
+                appendResultText("[coroutineSearchWithUserId] cost: ${MyLog.getTimeCost(start)}, data: $response")
+            }
         }
 
         binding.btnDataConverter.setOnClickListener {
@@ -512,6 +527,20 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         binding.btnSliceTest.setOnClickListener {
             multiSlice()
 //            listSlice()
+        }
+    }
+
+    private fun initMemoryView() {
+        val memoryRequest = MemoryRequest("706840440", "pet")
+        binding.btnFetchMemory.setOnClickListener {
+            mainScope.launch {
+                clearResultText()
+                val memoryResultResponse =
+                    withContext(Dispatchers.IO + CoroutineExceptionHandlerImpl()) {
+                        RequestAccessManager.INSTANCE.coroutineFetchMemory(memoryRequest)
+                    }
+                appendResultText("memoryResultResponse:\n$memoryResultResponse")
+            }
         }
     }
 

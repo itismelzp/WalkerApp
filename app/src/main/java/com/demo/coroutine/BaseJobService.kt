@@ -1,7 +1,7 @@
 package com.demo.coroutine
 
+import android.annotation.SuppressLint
 import android.app.job.JobService
-import androidx.work.Configuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -10,14 +10,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
+@SuppressLint("SpecifyJobSchedulerIdRange")
 abstract class BaseJobService : JobService() {
 
-    val normalScope = NormalScope()
+    private val normalScope = NormalScope()
 
-    init {
-        val builder = Configuration.Builder()
-        builder.setJobSchedulerJobIdRange(1000, 10000)
-    }
+//    init {
+//        val builder = Configuration.Builder()
+//        builder.setJobSchedulerJobIdRange(1000, 10000)
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

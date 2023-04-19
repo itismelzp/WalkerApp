@@ -35,7 +35,7 @@ dependencies {
     compileOnly "com.tencent.shadow.dynamic:host:$shadow_version"
 
 
-    testImplementation "junit:junit:$rootProject.junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
+    testImplementation "junit:junit:${rootProject.junitVersion}"
+    androidTestImplementation "androidx.test.ext:junit:${rootProject.androidxJunitVersion}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.espressoVersion}"
 }

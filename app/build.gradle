@@ -86,25 +86,25 @@ dependencies {
     implementation project(':track-sdk')
     implementation project(':storage-sdk')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
-    implementation "com.google.android.material:material:$rootProject.materialVersion"
+    implementation "androidx.appcompat:appcompat:${rootProject.appCompatVersion}"
+    implementation "androidx.constraintlayout:constraintlayout:${rootProject.constraintLayoutVersion}"
+    implementation "com.google.android.material:material:${rootProject.materialVersion}"
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     implementation 'com.google.protobuf:protobuf-java:3.5.1'
     implementation 'com.google.protobuf:protoc:3.5.1'
     implementation 'io.github.billywei01:packable:1.0.2'
-    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+    implementation "com.google.code.gson:gson:${rootProject.gsonVersion}"
     implementation 'com.airbnb.android:lottie:5.2.0'
 
     // kotlin
-    implementation "androidx.core:core-ktx:$rootProject.ktxVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlinVersion"
+    implementation "androidx.core:core-ktx:${rootProject.ktxVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.kotlinVersion}"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "androidx.activity:activity-ktx:1.2.2"
     implementation "androidx.fragment:fragment-ktx:1.3.3"
 //    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.lifecycleVersion}"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
@@ -124,7 +124,7 @@ dependencies {
     // 一定要kapt
 
     compileOnly 'com.tencent:mmkv:1.2.11'
-    compileOnly "androidx.room:room-runtime:$rootProject.roomVersion"
+    compileOnly "androidx.room:room-runtime:${rootProject.roomVersion}"
 
     // rxjava
     implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
@@ -148,10 +148,10 @@ dependencies {
     compileOnly "com.tencent.mars:mars-xlog:1.2.5" // just use xlog, included in mars-wrapper and mars-core
 
     // shadow
-    implementation "com.tencent.shadow.dynamic:host:$rootProject.shadow_version"
+    implementation "com.tencent.shadow.dynamic:host:${rootProject.shadow_version}"
     // Shadow Transform后业务代码会有一部分实际引用runtime中的类
     // 如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
-    compileOnly "com.tencent.shadow.core:runtime:$shadow_version"
+    compileOnly "com.tencent.shadow.core:runtime:${rootProject.shadow_version}"
 
     // -- 视频库 --（https://github.com/CarGuo/GSYVideoPlayer）
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.3.4-release-jitpack'
@@ -175,10 +175,10 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-guava:2.9.0"
 
     // workManager
-    implementation("androidx.work:work-runtime-ktx:${rootProject.work_version}")
+    implementation "androidx.work:work-runtime-ktx:${rootProject.work_version}"
 
     // test
-    testImplementation "junit:junit:$rootProject.junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
+    testImplementation "junit:junit:${rootProject.junitVersion}"
+    androidTestImplementation "androidx.test.ext:junit:${rootProject.androidxJunitVersion}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.espressoVersion}"
 }

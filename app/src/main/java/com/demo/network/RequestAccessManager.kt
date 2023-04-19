@@ -2,9 +2,12 @@ package com.demo.network
 
 import com.demo.network.model.FaceScanMetaDataRequest
 import com.demo.network.model.MediaFileMetaDataRequest
+import com.demo.network.model.MemoryRequest
+import com.demo.network.model.MemoryResponse
 import com.demo.network.model.MetaDataResponse
 import com.demo.network.model.SearchRequest
 import com.demo.network.model.SearchResultResponse
+import com.demo.network.service.MemoryService
 import com.demo.network.service.MetaDataService
 import com.demo.network.service.SearchService
 import com.demo.network.utils.GsonUtil
@@ -29,6 +32,7 @@ class RequestAccessManager {
         private const val TAG = "MetaDataManager"
         private const val META_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
         private const val SEARCH_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
+        private const val MEMORY_BASE_URL = "http://vediomem-beta-cn.heytapmobi.com"
         // http://dy-qa-cn.heytapmobi.com/photosearch/api/v1/album-100k/search?query=123&max_hits=2000&src=all
 
         private const val CONNECT_TIME_OUT = 5_000L
@@ -40,17 +44,23 @@ class RequestAccessManager {
         }
     }
 
-    private val metaDataService: MetaDataService
-    private val searchService: SearchService
+
     private val uploadMetaRetrofit: Retrofit
     private val searchRetrofit: Retrofit
+    private val memoryRetrofit: Retrofit
+
+    private val metaDataService: MetaDataService
+    private val searchService: SearchService
+    private val memoryService: MemoryService
 
     init {
         val okHttpClient = initHttpClient()
         uploadMetaRetrofit = initRetrofit(okHttpClient, META_BASE_URL)
         searchRetrofit = initRetrofit(okHttpClient, SEARCH_BASE_URL)
+        memoryRetrofit = initRetrofit(okHttpClient, MEMORY_BASE_URL)
         metaDataService = uploadMetaRetrofit.create(MetaDataService::class.java)
         searchService = searchRetrofit.create(SearchService::class.java)
+        memoryService = memoryRetrofit.create(MemoryService::class.java)
     }
 
     private fun initHttpClient(): OkHttpClient {
@@ -130,6 +140,14 @@ class RequestAccessManager {
             request.maxHits,
             request.src
         )
+    }
+
+    fun fetchMemory(request: MemoryRequest, callBack: Callback<List<MemoryResponse>>) {
+        memoryService.fetchMemory(request.userId, request.theme).enqueue(callBack)
+    }
+
+    suspend fun coroutineFetchMemory(request: MemoryRequest): List<MemoryResponse> {
+        return memoryService.coroutineFetchMemory(request.userId, request.theme)
     }
 
 }

@@ -18,16 +18,15 @@ class MemoriesAlbumSetFragment : BaseFragment<ExploreMemoriesAlbumSetList2Bindin
 
     private lateinit var mChoiceNessMemoriesAdapter: MemoriesChoisenessListAdapter
     private lateinit var mAllMemoriesAdapter: MemoriesAllListAdapter
+    private lateinit var viewModel: MemoriesAlbumSetViewModel
 
     companion object {
 
-        private const val TAG = "MemoriesAlbumSetFragmen"
+        private const val TAG = "MemoriesAlbumSetFragment"
 
         const val SPAN_COUNT = 2
         fun newInstance() = MemoriesAlbumSetFragment()
     }
-
-    private lateinit var viewModel: MemoriesAlbumSetViewModel
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -38,9 +37,7 @@ class MemoriesAlbumSetFragment : BaseFragment<ExploreMemoriesAlbumSetList2Bindin
     override fun createFragment(
         arg1: String,
         arg2: String
-    ): BaseFragment<ExploreMemoriesAlbumSetList2Binding> {
-        return newInstance()
-    }
+    ) = newInstance()
 
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)

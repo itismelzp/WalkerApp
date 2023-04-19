@@ -126,8 +126,8 @@
     <string name="search_hint" translatable="false">Search something</string>
     <string name="title_activity_search" translatable="false">SearchActivity</string>
     <string name="recentSearchProvider" translatable="false">com.demo.syscomponent.recentsearchprovider</string>
-    <string name="uploadCnt" translatable="false">images:%d</string>
-    <string name="uploadMetaCnt" translatable="false">meta:%d</string>
+    <string name="uploadCnt" translatable="false">FileWorker:%d</string>
+    <string name="uploadMetaCnt" translatable="false">MetaWorker:%d</string>
 
 
 </resources>

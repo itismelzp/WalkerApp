@@ -19,7 +19,7 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
 
     companion object {
         const val TAG = "UploadWorker"
-        val ID = UUID.randomUUID()
+        val ID: UUID = UUID.randomUUID()
         const val PROGRESS = "PROGRESS"
     }
 

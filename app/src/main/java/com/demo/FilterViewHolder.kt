@@ -34,11 +34,11 @@ class FilterViewHolder(
         fun create(
             parent: ViewGroup,
             checkedCallback: (type: Int, isChecked: Boolean) -> Unit?
-        ): FilterViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.fragment_main_filter_item, parent, false)
-            return FilterViewHolder(view, checkedCallback)
-        }
+        ): FilterViewHolder = FilterViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.fragment_main_filter_item, parent, false), checkedCallback
+        )
+
     }
 
 }

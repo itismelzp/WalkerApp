@@ -1,111 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/explorer_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:importantForAccessibility="no"
-    android:overScrollMode="always"
-    android:scrollbars="none">
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/base_fragment_normal_album_set_root"
+    <include layout="@layout/base_appbar_with_hideable_title_divider_layout" />
+
+    <ScrollView
+        android:id="@+id/explorer_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <!--    android:background="?attr/gColorBackgroundWithCard">-->
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:overScrollMode="always"
+        android:scrollbars="none">
 
-        <TextView
-            android:id="@+id/memories_choiceness_list_title"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center_vertical"
-            android:text="精选回忆"
-            android:textColor="#D9000000"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/memories_choiceness_rv"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/base_fragment_normal_album_set_root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:importantForAccessibility="no"
-            android:nestedScrollingEnabled="false"
-            app:layout_constraintTop_toBottomOf="@id/memories_choiceness_list_title" />
+            android:layout_height="wrap_content">
+            <!--    android:background="?attr/gColorBackgroundWithCard">-->
 
-        <TextView
-            android:id="@+id/memories_all_list_title"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center_vertical"
-            android:text="全部回忆"
-            android:textColor="#D9000000"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/memories_choiceness_rv" />
+            <TextView
+                android:id="@+id/memories_choiceness_list_title"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_vertical"
+                android:text="精选回忆"
+                android:textColor="#D9000000"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <com.demo.fragment.NestedScrollableHost-->
-        <!--            android:id="@+id/memories_all_nsh"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:layout_marginStart="16dp"-->
-        <!--            android:layout_marginEnd="16dp"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/memories_all_list_title">-->
-        <!--        </com.demo.fragment.NestedScrollableHost>-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/memories_choiceness_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:importantForAccessibility="no"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintTop_toBottomOf="@id/memories_choiceness_list_title" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/memories_all_rv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:importantForAccessibility="no"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/memories_all_list_title"
-            tools:itemCount="12" />
+            <TextView
+                android:id="@+id/memories_all_list_title"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_vertical"
+                android:text="全部回忆"
+                android:textColor="#D9000000"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/memories_choiceness_rv" />
 
-        <ImageView
-            android:id="@+id/andes_cloud_logo_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="32dp"
-            android:src="@drawable/andes_cloud_logo"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/andes_cloud_title_tv"
-            app:layout_constraintTop_toBottomOf="@+id/memories_all_rv" />
+            <!--        <com.demo.fragment.NestedScrollableHost-->
+            <!--            android:id="@+id/memories_all_nsh"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="match_parent"-->
+            <!--            android:layout_marginStart="16dp"-->
+            <!--            android:layout_marginEnd="16dp"-->
+            <!--            app:layout_constraintTop_toBottomOf="@id/memories_all_list_title">-->
+            <!--        </com.demo.fragment.NestedScrollableHost>-->
 
-        <TextView
-            android:id="@+id/andes_cloud_title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4.4dp"
-            android:text="由安第斯智能云提供技术服务"
-            android:textColor="#4D000000"
-            android:textSize="8.8sp"
-            app:layout_constraintBottom_toBottomOf="@id/andes_cloud_logo_iv"
-            app:layout_constraintLeft_toRightOf="@id/andes_cloud_logo_iv"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/andes_cloud_logo_iv" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/memories_all_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:importantForAccessibility="no"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/memories_all_list_title"
+                tools:itemCount="12" />
 
-        <!--    <include layout="@layout/base_appbar_with_hideable_title_divider_layout" />-->
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/andes_cloud_logo_iv"
+                android:layout_width="18dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="32dp"
+                android:src="@drawable/andes_cloud_logo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/andes_cloud_title_tv"
+                app:layout_constraintTop_toBottomOf="@id/memories_all_rv" />
 
-</ScrollView>
+            <TextView
+                android:id="@+id/andes_cloud_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4.4dp"
+                android:text="由安第斯智能云提供技术服务"
+                android:textColor="#4D000000"
+                android:textSize="8.8sp"
+                app:layout_constraintBottom_toBottomOf="@id/andes_cloud_logo_iv"
+                app:layout_constraintLeft_toRightOf="@id/andes_cloud_logo_iv"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/andes_cloud_logo_iv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</LinearLayout>
+
+
 
 

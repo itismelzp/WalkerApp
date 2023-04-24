@@ -71,10 +71,8 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun loadChoicenessMemoryData() {
-        val viewData = mutableListOf<AlbumBindingData>()
-
-        ImageDataProvider.getRepeatableImages(MEMORIES_THUMB_COUNT).forEachIndexed { index, resId ->
-            viewData.add(
+        val viewData =
+            ImageDataProvider.getRepeatableImages(MEMORIES_THUMB_COUNT).mapIndexed { index, resId ->
                 AlbumBindingData(
                     ResourcesCompat.getDrawable(
                         MyApplication.getInstance().resources,
@@ -82,27 +80,25 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
                         null
                     ), "幸福时刻$index", "2021-2012年", false
                 )
-            )
-        }
+            } as MutableList<AlbumBindingData>
 
         multiChoiceNessBlockLiveData.postValue(viewData)
     }
 
     private fun loadAllMemoryData() {
-        val viewData = mutableListOf<AlbumBindingData>()
-
-        ImageDataProvider.getRepeatableImages(MEMORIES_ALL_THUMB_COUNT).forEachIndexed { index, resId ->
-            viewData.add(
+        val viewData =
+            ImageDataProvider.getRepeatableImages(MEMORIES_ALL_THUMB_COUNT).mapIndexed { index, resId ->
                 AlbumBindingData(
                     ResourcesCompat.getDrawable(
                         MyApplication.getInstance().resources,
                         resId,
                         null
-                    ), "幸福时刻$index", "2021-2012年", false
+                    ),
+                    "幸福时刻$index",
+                    "2021-2012年",
+                    false
                 )
-            )
-        }
-
+            } as MutableList<AlbumBindingData>
         multiAllBlockLiveData.postValue(viewData)
     }
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shareInterpolator="false"
+    android:zAdjustment="bottom"
+    android:fillEnabled="true"
+    android:fillBefore="false"
+    android:fillAfter="true">
+
+    <!--没有进行实际的动画，但为避免背景白屏，时长duration要等于上层fragment动画的时长-->
+    <translate
+        android:fromYDelta="0"
+        android:toYDelta="0"
+        android:duration="432"/>
+</set>

@@ -17,8 +17,8 @@ import com.demo.logger.MyLog
  * <p>
  * description
  */
-class MemoriesChoisenessListAdapter(diffCallback: DiffUtil.ItemCallback<AlbumBindingData>) :
-    ListAdapter<AlbumBindingData, MemoriesChoisenessListAdapter.MemoriesViewHolder>(diffCallback) {
+class MemoriesChoicenessListAdapter(diffCallback: DiffUtil.ItemCallback<AlbumBindingData>) :
+    ListAdapter<AlbumBindingData, MemoriesChoicenessListAdapter.MemoriesViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MemoriesViewHolder.create(parent)
 

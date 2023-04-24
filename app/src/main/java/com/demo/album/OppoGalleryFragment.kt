@@ -92,8 +92,8 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE) // 推荐使用Transition
                 .replace(
                     R.id.fragment_container,
-                    MemoriesAlbumSetFragment.newInstance(),
-                    MemoriesAlbumSetFragment.Companion::class.java.simpleName
+                    MemoriesAlbumSetFragmentBeta2.newInstance(),
+                    MemoriesAlbumSetFragmentBeta2.Companion::class.java.simpleName
                 )
                 .addToBackStack(null)
                 .commit()

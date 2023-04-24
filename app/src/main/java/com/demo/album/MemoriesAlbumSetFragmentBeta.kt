@@ -12,11 +12,11 @@ import com.demo.databinding.ExploreMemoriesAlbumSetList2Binding
 import com.demo.fragment.BaseFragment
 import com.demo.logger.MyLog
 
-class MemoriesAlbumSetFragment : BaseFragment<ExploreMemoriesAlbumSetList2Binding>() {
+class MemoriesAlbumSetFragmentBeta : BaseFragment<ExploreMemoriesAlbumSetList2Binding>() {
 
     private lateinit var explorerViewModel: ExplorerViewModel
 
-    private lateinit var mChoiceNessMemoriesAdapter: MemoriesChoisenessListAdapter
+    private lateinit var mChoiceNessMemoriesAdapter: MemoriesChoicenessListAdapter
     private lateinit var mAllMemoriesAdapter: MemoriesAllListAdapter
     private lateinit var viewModel: MemoriesAlbumSetViewModel
 
@@ -25,7 +25,7 @@ class MemoriesAlbumSetFragment : BaseFragment<ExploreMemoriesAlbumSetList2Bindin
         private const val TAG = "MemoriesAlbumSetFragment"
 
         const val SPAN_COUNT = 2
-        fun newInstance() = MemoriesAlbumSetFragment()
+        fun newInstance() = MemoriesAlbumSetFragmentBeta()
     }
 
     override fun getViewBinding(
@@ -55,7 +55,7 @@ class MemoriesAlbumSetFragment : BaseFragment<ExploreMemoriesAlbumSetList2Bindin
 
     private fun initChoiceNessMemoriesRV() {
         binding.memoriesChoicenessRv.apply {
-            adapter = MemoriesChoisenessListAdapter(MemoriesChoisenessListAdapter.MainDiffItemCallback()).apply {
+            adapter = MemoriesChoicenessListAdapter(MemoriesChoicenessListAdapter.MainDiffItemCallback()).apply {
                 mChoiceNessMemoriesAdapter = this
                 addItemDecoration(
                     SpaceItemDecoration(

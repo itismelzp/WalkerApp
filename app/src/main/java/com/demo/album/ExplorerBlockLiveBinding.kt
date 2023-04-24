@@ -59,7 +59,7 @@ class ExplorerBlockLiveBinding(
         multiLiveData.addSource(data.datas) {
             Log.i(TAG, "view.rvGallery: ${data.datas}")
             view.rvGallery.also { singleLine ->
-                (singleLine.adapter as MemoriesChoisenessListAdapter).submitList(it)
+                (singleLine.adapter as MemoriesChoicenessListAdapter).submitList(it)
             }
         }
         multiLiveData.observe(lifecycleOwner)

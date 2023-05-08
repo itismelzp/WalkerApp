@@ -1,12 +1,16 @@
 package com.demo.utils;
 
+import static android.media.ExifInterface.TAG_DATETIME_ORIGINAL;
+import static android.media.ExifInterface.TAG_SUBSEC_TIME_ORIGINAL;
 import static android.text.format.DateUtils.SECOND_IN_MILLIS;
 
-import static androidx.exifinterface.media.ExifInterface.TAG_DATETIME_ORIGINAL;
-import static androidx.exifinterface.media.ExifInterface.TAG_SUBSEC_TIME_ORIGINAL;
-
+//import static androidx.exifinterface.media.ExifInterface.TAG_DATETIME_ORIGINAL;
+//import static androidx.exifinterface.media.ExifInterface.TAG_SUBSEC_TIME_ORIGINAL;
+//
 import android.annotation.SuppressLint;
 import android.media.ExifInterface;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
@@ -15,7 +19,9 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+//import androidx.exifinterface.media.ExifInterface;
 
+import com.demo.MyApplication;
 import com.demo.logger.MyLog;
 import com.google.common.collect.Lists;
 
@@ -162,7 +168,7 @@ public final class ExifUtils {
                 exif.getAttribute(TAG_OFFSET_TIME));
     }
 
-    public static long getDateTime2(final ExifInterface exif) {
+    public static long getDateTime2(File file, final ExifInterface exif) {
         if (exif == null) {
             return -1;
         }
@@ -177,15 +183,62 @@ public final class ExifUtils {
             timeToParse = originalTime;
         } else if (digitizedTime != null) {
             timeToParse = digitizedTime;
-        } else {
+        } else if (dateTime != null) {
             timeToParse = dateTime;
+        } else {
+            timeToParse = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault())
+                    .format(new Date(file.lastModified()));
         }
-
-        if (timeToParse == null) {
-            return -1;
-        }
-
         return parseDateTime(timeToParse, null, null);
+    }
+
+    private long getVideoDateTaken(Uri uri, File file) {
+        long modifiedTime;
+        long fileLastModifiedTime = file.lastModified();
+        MediaMetadataRetriever mmr = null;
+        try {
+            mmr = new MediaMetadataRetriever();
+            mmr.setDataSource(MyApplication.getInstance(), uri);
+            // 获取媒体的日期(Date the media was acquired): "20210708T070344.000Z"
+            String dateString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DATE);
+
+            Date date = formatMediaMetadataKeyDate(dateString);
+            if (date != null) {
+                modifiedTime = date.getTime();
+            } else {
+                modifiedTime = fileLastModifiedTime;
+            }
+        } catch (Exception e) {
+            modifiedTime = fileLastModifiedTime;
+        } finally {
+            try {
+                if (mmr != null) {
+                    mmr.close();
+                    mmr.release();
+                }
+            } catch (IOException ignored) {
+            }
+        }
+        return modifiedTime;
+    }
+
+    private Date formatMediaMetadataKeyDate(String date) {
+        if (date.isEmpty()) {
+            return null;
+        }
+        Date inputDate = null;
+        try {
+            inputDate = new SimpleDateFormat("yyyyMMdd'T'HHmmss.SSS Z", Locale.getDefault()).parse(date.replace("Z", " UTC"));
+        } catch (Exception e) {
+            MyLog.e(TAG, "error parsing date:", e);
+            try {
+                inputDate = new SimpleDateFormat("yyyy MM dd.SSS Z", Locale.getDefault()).parse(date.replace("Z", " UTC"));
+            } catch (Exception ex) {
+                MyLog.e(TAG, "error parsing date: ", ex);
+            }
+        }
+        MyLog.i(TAG, "formatMediaMetadataKeyDate: " + inputDate);
+        return inputDate;
     }
 
 

@@ -19,9 +19,9 @@ data class MemoryResponse(
     @SerializedName("theme")
     var theme: String,
     @SerializedName("timeEnd")
-    var timeEnd: Int,
+    var timeEnd: Long,
     @SerializedName("timeStart")
-    var timeStart: Int,
+    var timeStart: Long,
     @SerializedName("userid")
     var userid: String,
     @SerializedName("videoPath")

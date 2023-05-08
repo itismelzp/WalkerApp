@@ -1,14 +1,20 @@
 package com.demo.logger
 
+import android.content.Context
+import android.content.Intent
 import android.media.ExifInterface
 import android.media.ExifInterface.TAG_DATETIME
 import android.media.ExifInterface.TAG_DATETIME_DIGITIZED
 import android.media.ExifInterface.TAG_DATETIME_ORIGINAL
 import android.media.ExifInterface.TAG_ORIENTATION
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +28,7 @@ import com.demo.network.model.FaceScanMetaDataRequest
 import com.demo.network.model.MediaFileMetaDataRequest
 import com.demo.network.model.MediaPath
 import com.demo.network.model.MemoryRequest
+import com.demo.network.model.MemoryResponse
 import com.demo.network.model.MetaDataResponse
 import com.demo.network.model.SearchMediaItem
 import com.demo.network.model.SearchRequest
@@ -37,20 +44,27 @@ import com.demo.work.UploadMetaDataWorker
 import com.demo.work.UploadWorker
 import com.demo.work.WorkerViewModel
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.BufferedReader
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 
 class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
@@ -71,6 +85,42 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
         workerViewModel.uploadImagesWorkInfo.observe(this, uploadImagesObserver())
         workerViewModel.uploadMetaWorkInfo.observe(this, uploadMetaObserver())
+
+        val callbackDemo = CallbackDemo()
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            val start = System.currentTimeMillis()
+            val async1 = async(Dispatchers.IO) {
+                val time = System.currentTimeMillis()
+                val await = callbackDemo.await("/path1")
+                MyLog.i(TAG, "async2 cost: ${System.currentTimeMillis() - time}")
+                await
+            }
+            val async2 = async(Dispatchers.IO) {
+                val time = System.currentTimeMillis()
+                val await = callbackDemo.await("/path2")
+                MyLog.i(TAG, "async2 cost: ${System.currentTimeMillis() - time}")
+                await
+            }
+            val mix = "${async1.await()}, ${async2.await()}"
+            val cost = System.currentTimeMillis() - start
+            appendResultText("[onSuccess] cost: $cost, async: $mix")
+            MyLog.i(TAG, "[onSuccess] cost: $cost, async: $mix")
+        }
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                callbackDemo.mockDownLoadFile("/path", object : DownLoadCallback {
+                    override fun onSuccess(distPath: String) {
+//                        appendResultText("[onSuccess] distPath: $distPath")
+                    }
+
+                    override fun onFailed(e: Throwable) {
+//                        appendResultText("[onFailed] e: $e")
+                    }
+                })
+            }
+        }
     }
 
     override fun initBaseViews(savedInstanceState: Bundle?) {
@@ -86,6 +136,9 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         initUploadImages()
         initCntText()
         initSyncView()
+        initExif()
+        initDownLoadView()
+        initOpenVideoView()
     }
 
     private fun initSyncView() {
@@ -98,18 +151,21 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
                 val start = System.currentTimeMillis()
                 MyLog.i(TAG, "A")
-                val local: List<Int> = withContext(Dispatchers.IO) {
+                val local = async {
                     MyLog.i(TAG, "AA")
                     getLocalData(1_000)
                 }
                 MyLog.i(TAG, "B")
-                val cloud: List<Int> = withContext(Dispatchers.IO) {
+                val cloud = async {
                     MyLog.i(TAG, "BB")
                     getCloudData(1_000)
                 }
                 MyLog.i(TAG, "C")
-                appendResultText("timeCost: ${System.currentTimeMillis() - start}ms, all data: ${(local + cloud).sorted()}")
-                MyLog.i(TAG, "timeCost: ${System.currentTimeMillis() - start}, all data: ${(local + cloud).sorted()}")
+                appendResultText("timeCost: ${System.currentTimeMillis() - start}ms, all data: ${(local.await() + cloud.await()).sorted()}")
+                MyLog.i(
+                    TAG,
+                    "timeCost: ${System.currentTimeMillis() - start}, all data: ${(local.await() + cloud.await()).sorted()}"
+                )
             }
 
             syncTest.startTest()
@@ -176,47 +232,158 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     }
 
     private fun initExif() {
-        clearResultText()
+        binding.exifBtn.setOnClickListener {
+            clearResultText()
 
-        val fileList = assets.list("")?.toList()
-        fileList?.run {
-            MyLog.i(TAG, "[initUploadImages] fileList: $this")
-            val photoList: List<String> = fileList.filter { it.endsWith(".jpg", ignoreCase = true) }
-            photoList.forEach {
-                val inputStream  = assets.open(it)
-                val exifInterface = ExifInterface(inputStream)
-                val readExif = readExif(exifInterface)
-                val msg = "[initUploadImages] file: $it\n$readExif"
-                MyLog.i(TAG, msg)
-                appendResultText(msg)
+//            val fileList = assets.list("")?.toList()
+//            fileList?.run {
+//                MyLog.i(TAG, "[initUploadImages] fileList: $this")
+//                val photoList: List<String> =
+//                    fileList.filter { it.endsWith(".jpg", ignoreCase = true) }
+//                photoList.forEach {
+//                    val inputStream = assets.open(it)
+//                    val exifInterface = ExifInterface(inputStream)
+//                    val readExif = readExif(exifInterface)
+//                    val msg = "[initUploadImages] file: $it\n$readExif"
+//                    MyLog.i(TAG, msg)
+//                    appendResultText(msg)
+//                }
+//            }
+
+            val basePath = Environment.getExternalStorageDirectory().path
+            val baseAbsPath = Environment.getExternalStorageDirectory().absolutePath
+            appendResultText("basePath: $basePath")
+            appendResultText("baseAbsPath: $baseAbsPath")
+
+            val testImage1 = "/storage/emulated/0/DCIM/2022_04_01_21_53_IMG_9516.JPG"
+            val testImage2 = "/sdcard/DCIM/2022_04_02_19_20_IMG_9555.JPG"
+            val testImage3 = "$basePath/DCIM/2022_04_02_23_05_IMG_9580.JPG"
+            val testImage4 = "$basePath/DCIM/2022_04_07_18_59_IMG_9665.HEIC"
+            val testImage5 = "$baseAbsPath/DCIM/2022_04_16_16_40_IMG_9807.HEIC"
+            val testImage6 = "$baseAbsPath/DCIM/Camera/8420d6addcd74cd4ad68ba6c5aa5b093_1.jpg"
+            val testVide1 = "$baseAbsPath/DCIM/Camera/Story_20230426143955.mp4"
+
+//            val str1 = "testImage1: \n${readExif(testImage1)}"
+//            appendResultText(str1)
+//            MyLog.i(TAG, str1)
+//
+//            val str2 = "testImage2: \n${readExif(testImage2)}"
+//            appendResultText(str2)
+//            MyLog.i(TAG, str2)
+//
+//            val str3 = "testImage3: \n${readExif(testImage3)}"
+//            appendResultText(str3)
+//            MyLog.i(TAG, str3)
+//
+//            val str4 = "testImage4：\n${readExif(testImage4)}"
+//            appendResultText(str4)
+//            MyLog.i(TAG, str4)
+//
+//            val str5 = "testImage5：\n${readExif(testImage5)}"
+//            appendResultText(str5)
+//            MyLog.i(TAG, str5)
+
+            val str6 = "testImage6：\n${readExif(testImage6)}"
+            appendResultText(str6)
+            MyLog.i(TAG, str6)
+
+            val videoStr1 = "testVide1：\n${readExif(testVide1)}"
+            appendResultText(videoStr1)
+            MyLog.i(TAG, videoStr1)
+        }
+    }
+
+    private fun initDownLoadView() {
+        binding.downFileBtn.setOnClickListener {
+            mainScope.launch {
+                clearResultText()
+                RequestAccessManager.INSTANCE.downloadFile(object : Callback<ResponseBody> {
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        MyLog.i(TAG, "[initDownLoadView] code: ${response.code()}")
+                        response.body()?.let {
+                            val saveSDCard = writeFileToSDCard(it)
+                            MyLog.i(TAG, "saveSDCard: $saveSDCard")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        MyLog.e(TAG, "[initDownLoadView] failed.", t)
+                    }
+
+                })
+                appendResultText("[initDownLoadView]:")
             }
         }
+    }
 
-        val testImage1 = "/storage/emulated/0/DCIM/4544775236_90726d7289_o.jpg"
-        val testImage2 = "/storage/emulated/0/DCIM/2547921893_d86f760e4a_o.jpg"
-        val testImage3 = "/storage/emulated/0/DCIM/20662127472_e6c8784ce0_o.jpg"
-        val testImage4 = "/storage/emulated/0/DCIM/209842930_65f670d0f0_o.jpg"
-        val testImage5 = "/storage/emulated/0/DCIM/2021_04_02_12_11_IMG_1483.JPG"
+    private fun initOpenVideoView() {
+        binding.openVideoBtn.setOnClickListener {
 
-        val str1 = "testImage1: \n${readExif(testImage1)}"
-        appendResultText(str1)
-        MyLog.i(TAG, str1)
+//            val photoURI = FileProvider.getUriForFile(
+//                context,
+//                context.applicationContext.packageName + ".provider",
+//                createImageFile()
+//            )
 
-        val str2 = "testImage2: \n${readExif(testImage2)}"
-        appendResultText(str2)
-        MyLog.i(TAG, str2)
+            val file = File("/sdcard/DCIM/Camera/1682579946037.mp4")
+            val photoURI = FileProvider.getUriForFile(
+                this,
+                "${applicationContext.packageName}.fileProvider",
+                file
+            )
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(photoURI, "video/*")
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivity(intent) // Crashes on this line
+        }
+    }
 
-        val str3 = "testImage3: \n${readExif(testImage3)}"
-        appendResultText(str3)
-        MyLog.i(TAG, str3)
+    fun getUri(context: Context, authorites: String, file: File): Uri {
+        val uri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //设置7.0以上共享文件，分享路径定义在xml/file_paths.xml
+            FileProvider.getUriForFile(context, authorites, file)
+        } else {
+            // 7.0以下,共享文件
+            Uri.fromFile(file)
+        }
+        return uri
+    }
 
-        val str4 = "testImage4：\n${readExif(testImage4)}"
-        appendResultText(str4)
-        MyLog.i(TAG, str4)
+    private fun writeFileToSDCard(body: ResponseBody): Boolean {
+        var inputStream: InputStream? = null
+        var outputStream: OutputStream? = null
+        try {
+            val basePath = Environment.getExternalStorageDirectory().path
+            val futureStudioIconFile =
+                File("$basePath${File.separator}DCIM${File.separator}Camera${File.separator}test.mp4")
+            MyLog.i(TAG, "[writeFileToSDCard]: $futureStudioIconFile")
 
-        val str5 = "testImage5：\n${readExif(testImage5)}"
-        appendResultText(str5)
-        MyLog.i(TAG, str5)
+            val fileReader = ByteArray(4096)
+            val fileSize = body.contentLength()
+            var fileSizeDownloaded: Long = 0
+            inputStream = body.byteStream()
+            outputStream = FileOutputStream(futureStudioIconFile)
+            while (true) {
+                val read: Int = inputStream.read(fileReader)
+                if (read == -1) {
+                    break
+                }
+                outputStream.write(fileReader, 0, read)
+                fileSizeDownloaded += read.toLong()
+                Log.d(TAG, "[writeFileToSDCard] file download: $fileSizeDownloaded of $fileSize")
+            }
+            outputStream.flush()
+        } catch (e: IOException) {
+            MyLog.e(TAG, "[writeFileToSDCard]")
+        } finally {
+            inputStream?.close()
+            outputStream?.close()
+        }
+        return true
     }
 
     private fun batchDBOp() {
@@ -244,18 +411,31 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
     }
 
-    private fun readExif(path: String) : ExifEntry {
-        return readExif(ExifInterface(File(path)))
+    private fun readExif(path: String): ExifEntry {
+        return readExif(File(path))
     }
 
-    private fun readExif(exif: ExifInterface): ExifEntry {
+//    private fun readExif(exif: ExifInterface): ExifEntry {
+//        val exifData = ExifEntry()
+//        exifData.mOrientation = exif.getAttribute(TAG_ORIENTATION)
+////        exifData.mDateTime = exif.getAttribute(TAG_DATETIME)
+//        exifData.mDateTime = exif.getAttribute(TAG_DATETIME)
+//        exifData.mDateTimeOriginal = exif.getAttribute(TAG_DATETIME_ORIGINAL)
+//        exifData.mDateTimeDigitized = exif.getAttribute(TAG_DATETIME_DIGITIZED)
+//        exifData.mTimeStamp = ExifUtils.getDateTime2(exif)
+//        exifData.timeStamp = timeToDate(exifData.mTimeStamp)
+//        return exifData
+//    }
+
+    private fun readExif(file: File): ExifEntry {
+//        file.setLastModified(Date().time)
+        val exif = ExifInterface(file)
         val exifData = ExifEntry()
         exifData.mOrientation = exif.getAttribute(TAG_ORIENTATION)
-//        exifData.mDateTime = exif.getAttribute(TAG_DATETIME)
         exifData.mDateTime = exif.getAttribute(TAG_DATETIME)
         exifData.mDateTimeOriginal = exif.getAttribute(TAG_DATETIME_ORIGINAL)
         exifData.mDateTimeDigitized = exif.getAttribute(TAG_DATETIME_DIGITIZED)
-        exifData.mTimeStamp = ExifUtils.getDateTime2(exif)
+        exifData.mTimeStamp = ExifUtils.getDateTime2(file, exif)
         exifData.timeStamp = timeToDate(exifData.mTimeStamp)
         return exifData
     }
@@ -263,7 +443,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     private fun timeToDate(timeStamp: Long): String {
         val date = Date(timeStamp)
         val sd = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        return sd.format(date);
+        return sd.format(date)
     }
 
     private fun initCntText() {
@@ -332,7 +512,8 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                             call: Call<MetaDataResponse>,
                             response: Response<MetaDataResponse>
                         ) {
-                            val msg = "[onResponse] code: ${response.code()}, data: ${response.body()}"
+                            val msg =
+                                "[onResponse] code: ${response.code()}, data: ${response.body()}"
                             MyLog.d(TAG, msg)
                             appendResultText(msg)
                             appendResultText("parseResult: ${response.body()?.parseResult()}")
@@ -416,7 +597,8 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                 ) {
                     val data = response.body()?.aggregations?.data
                     val end = System.currentTimeMillis()
-                    val responseStr = "[response] size: ${data?.size ?: 0}, timeCost: ${end - start}, data: $data\n"
+                    val responseStr =
+                        "[response] size: ${data?.size ?: 0}, timeCost: ${end - start}, data: $data\n"
                     MyLog.d(TAG, responseStr)
                     appendResultText(responseStr)
                 }
@@ -477,7 +659,8 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
                     override fun onFailure(call: Call<SearchResultResponse>, t: Throwable) {
                         val end = System.currentTimeMillis()
-                        val responseStr = "[onFailure] userId: $userId, timeCost: ${end - start}, t: $t\n"
+                        val responseStr =
+                            "[onFailure] userId: $userId, timeCost: ${end - start}, t: $t\n"
                         MyLog.e(TAG, responseStr)
                         toast(responseStr)
                         appendResultText(responseStr)
@@ -498,7 +681,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                     runCatching {
                         RequestAccessManager.INSTANCE.coroutineSearchWithUserId(userId, request)
                     }.onFailure {
-                        MyLog.e(TAG, "coroutineSearchWithUserId error: ",it)
+                        MyLog.e(TAG, "coroutineSearchWithUserId error: ", it)
                     }.getOrElse {
                         "coroutineSearchWithUserId error."
                     }
@@ -531,17 +714,39 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     }
 
     private fun initMemoryView() {
-        val memoryRequest = MemoryRequest("706840440", "pet")
+        val memoryRequest = MemoryRequest("80349095-0508-1", "all")
         binding.btnFetchMemory.setOnClickListener {
             mainScope.launch {
                 clearResultText()
-                val memoryResultResponse =
+                val memoryResultResponse: List<MemoryResponse> =
                     withContext(Dispatchers.IO + CoroutineExceptionHandlerImpl()) {
-                        RequestAccessManager.INSTANCE.coroutineFetchMemory(memoryRequest)
+                        runCatching {
+                            RequestAccessManager.INSTANCE.coroutineFetchMemory(memoryRequest)
+                        }.onSuccess {
+                            MyLog.i(TAG, "coroutineFetchMemory response: $it")
+                        }.onFailure {
+                            MyLog.e(TAG, "coroutineFetchMemory failed:", it)
+                        }.getOrElse {
+                            MyLog.i(TAG, "coroutineFetchMemory")
+                            listOf()
+                        }
                     }
                 appendResultText("memoryResultResponse:\n$memoryResultResponse")
             }
         }
+    }
+
+    private fun longToDate(lo: String): String {
+        val date = Date(lo)
+        val sd = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return sd.format(date)
+    }
+
+    public fun stringToDate(lo: String): String {
+        val time = lo.toLong()
+        val date = Date(time)
+        val sd = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return sd.format(date)
     }
 
     private suspend fun testAggregation() {
@@ -698,3 +903,20 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         UploadService.scheduleJob(this)
     }
 }
+
+suspend fun CallbackDemo.await(path: String): String =
+    suspendCancellableCoroutine {
+        mockDownLoadFile(path, object : DownLoadCallback {
+            override fun onSuccess(distPath: String) {
+                it.resume("$path: $distPath")
+            }
+
+            override fun onFailed(e: Throwable) {
+                it.resumeWithException(e)
+            }
+        })
+
+        it.invokeOnCancellation {
+            println("Call cancelled!")
+        }
+    }

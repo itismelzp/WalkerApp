@@ -1,16 +1,19 @@
 package com.demo.ipc;
 
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-public class SubPreLoadService extends Service {
+import androidx.annotation.Nullable;
+
+public class SubPreLoadService extends IntentService {
 
     private static final String TAG = "SubPreLoadService";
 
     public SubPreLoadService() {
+        super("SubPreLoadService");
     }
 
     @Override
@@ -20,17 +23,18 @@ public class SubPreLoadService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "[onStartCommand]");
-
-//        new Handler().postDelayed(ProcessUtil::killMyProcess, 5000);
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
     public IBinder onBind(Intent intent) {
         Log.i(TAG, "[onBind]");
         return null;
+    }
+
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+        String value = null;
+        if (intent != null) {
+            value = intent.getStringExtra("walker");
+        }
+        Log.i(TAG, "[onHandleIntent] value: " + value + ",cur: " + Thread.currentThread());
     }
 
     @Override

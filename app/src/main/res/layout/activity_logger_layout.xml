@@ -186,6 +186,24 @@
                 android:text="SEND C" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/exif_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Exif" />
+
+        <Button
+            android:id="@+id/down_file_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="下载" />
+
+        <Button
+            android:id="@+id/open_video_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="打开视频" />
+
         <TextView
             android:id="@+id/tv_media_meta_upload"
             android:layout_width="match_parent"

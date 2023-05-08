@@ -7,11 +7,13 @@ import com.demo.network.model.MemoryResponse
 import com.demo.network.model.MetaDataResponse
 import com.demo.network.model.SearchRequest
 import com.demo.network.model.SearchResultResponse
+import com.demo.network.service.DownLoadService
 import com.demo.network.service.MemoryService
 import com.demo.network.service.MetaDataService
 import com.demo.network.service.SearchService
 import com.demo.network.utils.GsonUtil
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -33,6 +35,7 @@ class RequestAccessManager {
         private const val META_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
         private const val SEARCH_BASE_URL = "http://dy-qa-cn.heytapmobi.com"
         private const val MEMORY_BASE_URL = "http://vediomem-beta-cn.heytapmobi.com"
+        private const val DOWNLOAD_BASE_URL = "http://s3v2.dg-access-test.wanyol.com"
         // http://dy-qa-cn.heytapmobi.com/photosearch/api/v1/album-100k/search?query=123&max_hits=2000&src=all
 
         private const val CONNECT_TIME_OUT = 5_000L
@@ -48,19 +51,23 @@ class RequestAccessManager {
     private val uploadMetaRetrofit: Retrofit
     private val searchRetrofit: Retrofit
     private val memoryRetrofit: Retrofit
+    private val downLoadRetrofit: Retrofit
 
     private val metaDataService: MetaDataService
     private val searchService: SearchService
     private val memoryService: MemoryService
+    private val downLoadService: DownLoadService
 
     init {
         val okHttpClient = initHttpClient()
         uploadMetaRetrofit = initRetrofit(okHttpClient, META_BASE_URL)
         searchRetrofit = initRetrofit(okHttpClient, SEARCH_BASE_URL)
         memoryRetrofit = initRetrofit(okHttpClient, MEMORY_BASE_URL)
+        downLoadRetrofit = initRetrofit(okHttpClient, DOWNLOAD_BASE_URL)
         metaDataService = uploadMetaRetrofit.create(MetaDataService::class.java)
         searchService = searchRetrofit.create(SearchService::class.java)
         memoryService = memoryRetrofit.create(MemoryService::class.java)
+        downLoadService = downLoadRetrofit.create(DownLoadService::class.java)
     }
 
     private fun initHttpClient(): OkHttpClient {
@@ -104,7 +111,10 @@ class RequestAccessManager {
         return call.execute()
     }
 
-    suspend fun coroutineSearchWithUserId(userId: String, request: SearchRequest): SearchResultResponse {
+    suspend fun coroutineSearchWithUserId(
+        userId: String,
+        request: SearchRequest
+    ): SearchResultResponse {
         return searchService.coroutineSearchWithUserId(
             userId,
             request.query,
@@ -148,6 +158,38 @@ class RequestAccessManager {
 
     suspend fun coroutineFetchMemory(request: MemoryRequest): List<MemoryResponse> {
         return memoryService.coroutineFetchMemory(request.userId, request.theme)
+    }
+
+    fun downloadFile(callback: Callback<ResponseBody>) {
+        val call = downLoadService.downLoadFile()
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(
+                call: retrofit2.Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                callback.onResponse(call, response)
+            }
+
+            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                callback.onFailure(call, t)
+            }
+        })
+    }
+
+    fun downloadFileSync(fileUrl: String, callback: Callback<ResponseBody>) {
+        val call = downLoadService.downloadFileSync(fileUrl)
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(
+                call: retrofit2.Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                callback.onResponse(call, response)
+            }
+
+            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                callback.onFailure(call, t)
+            }
+        })
     }
 
 }

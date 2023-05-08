@@ -3,6 +3,7 @@ package com.demo.sync
 import android.widget.TextView
 import com.demo.logger.MyLog
 import java.lang.Thread.sleep
+import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.locks.ReentrantLock
 
 /**
@@ -60,7 +61,8 @@ class SyncManager(private val textView: TextView) {
         clearText()
         testThreadJoin()
         testSynchronized()
-        testReentrantLock()
+//        testReentrantLock()
+        testBlockingQueue()
     }
 
 
@@ -120,7 +122,24 @@ class SyncManager(private val textView: TextView) {
     }
 
     // 4. BlockingQueue
-    private fun testBlockingQueue(start: Long = System.currentTimeMillis()) {}
+    private fun testBlockingQueue(start: Long = System.currentTimeMillis()) {
+        lateinit var s1: String
+        lateinit var s2: String
+
+        val queue = SynchronousQueue<Unit>()
+
+        Thread {
+            s1 = task1()
+            queue.put(Unit)
+        }.start()
+
+        s2 = task2()
+
+        queue.take()
+        task3(s1, s2)
+
+        appendText("[testBlockingQueue] cost: ${MyLog.getTimeCost(start)}ms, ${task3(s1, s2)}")
+    }
 
     // 5. CountDownLatch
     private fun testCountDownLatch(start: Long = System.currentTimeMillis()) {}

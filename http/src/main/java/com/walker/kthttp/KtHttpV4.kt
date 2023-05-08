@@ -1,15 +1,11 @@
 package com.walker.kthttp
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-import okhttp3.internal.wait
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.math.sin
 
 /**
  * Created by lizhiping on 2023/4/24.
@@ -36,9 +32,6 @@ suspend fun <T : Any> KtCall<T>.await(): T =
             call.cancel()
         }
     }
-
-object KtHttpV4 {
-}
 
 fun main() = runBlocking {
     val start = System.currentTimeMillis()

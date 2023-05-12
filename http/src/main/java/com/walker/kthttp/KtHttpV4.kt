@@ -54,7 +54,7 @@ fun main() = runBlocking {
     try {
         println(deferred.await())
     } catch (e: Exception) {
-        println("Time exception: ${System.currentTimeMillis() - -start}")
+        println("Time exception: ${System.currentTimeMillis() - start}")
         println("Catch exception: $e")
     } finally {
         println("Time total: ${System.currentTimeMillis() - start}")

@@ -20,7 +20,7 @@ class SyncDemoFragment : BaseFragment<FragmentSyncDemoBinding>() {
         super.initBaseViews(savedInstanceState)
 
         binding.btnTestSync.setOnClickListener {
-            SyncManager(binding.tvTestResult).startTest()
+            SyncManager(binding.tvTestResult, this).startTest()
         }
     }
 

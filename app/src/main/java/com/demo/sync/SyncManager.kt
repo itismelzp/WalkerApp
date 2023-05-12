@@ -1,7 +1,14 @@
 package com.demo.sync
 
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.demo.logger.MyLog
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import java.lang.Thread.sleep
 import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.locks.ReentrantLock
@@ -15,7 +22,7 @@ import java.util.concurrent.locks.ReentrantLock
  *
  * 参考：[...](https://juejin.cn/post/6981952428786597902)
  */
-class SyncManager(private val textView: TextView) {
+class SyncManager(private val textView: TextView, private val fragment: Fragment) {
 
     companion object {
         private const val TAG = "SyncManager"
@@ -32,7 +39,7 @@ class SyncManager(private val textView: TextView) {
 
 
     val task2: () -> String = {
-        sleep(2000)
+        sleep(2_000L)
         "World".also {
             val msg = "task2 finished $it\n"
             MyLog.i(TAG, msg)
@@ -41,7 +48,7 @@ class SyncManager(private val textView: TextView) {
     }
 
     val task3: (String, String) -> String = { p1, p2 ->
-        sleep(2000)
+        sleep(1_000L)
         "$p1 $p2".also {
             val msg = "task3 finished $it\n"
             MyLog.i(TAG, msg)
@@ -49,20 +56,31 @@ class SyncManager(private val textView: TextView) {
         }
     }
 
-    private fun appendText(msg: String) {
-        textView.text = "${textView.text}\n$msg\n"
+    val task4: (List<String>) -> String = {
+        sleep(1_000L)
+        it.reduce { acc, s ->
+            "$s, $acc"
+        }.apply {
+            val msg = "task4 finished $this\n"
+            MyLog.i(TAG, msg)
+        }
     }
 
-    private fun clearText() {
-        textView.text = ""
+    val task5: (String) -> String = {
+        sleep(1_000L)
+        it.also {
+            val msg = "task5 finished $it\n"
+            MyLog.i(TAG, msg)
+        }
     }
 
     fun startTest() {
         clearText()
-        testThreadJoin()
-        testSynchronized()
+//        testThreadJoin()
+//        testSynchronized()
 //        testReentrantLock()
-        testBlockingQueue()
+//        testBlockingQueue()
+        testCoroutine()
     }
 
 
@@ -160,8 +178,57 @@ class SyncManager(private val textView: TextView) {
     private fun testsRxjava(start: Long = System.currentTimeMillis()) {}
 
     // 11. Coroutine
-    private fun testCoroutine(start: Long = System.currentTimeMillis()) {}
+    private fun testCoroutine(start: Long = System.currentTimeMillis()) {
+        fragment.lifecycleScope.launch(Dispatchers.Main) {
+//            val c1: Deferred<String> = async(Dispatchers.IO) {
+//                task1()
+//            }
+//            val c2 = async(Dispatchers.IO) {
+//                task2()
+//            }
+            val result = mutableListOf<Deferred<String>>().apply {
+                repeat(10) {
+                    add(async(Dispatchers.IO) {
+                        task1()
+                    })
+                }
+            }.awaitAll().reduce { acc, s ->
+                "$s, $acc"
+            }
+//            val await1 = c1.await()
+//            val await2 = c2.await()
+//            appendText("[testCoroutine] result: ${task3(await1, await2)}, timeCost: ${MyLog.getTimeCost(start)}")
+            appendText("[testCoroutine] result: ${task5(result)}, timeCost: ${MyLog.getTimeCost(start)}ms")
+        }
+    }
+
+    private fun testCoroutine2(start: Long = System.currentTimeMillis()) {
+        fragment.lifecycleScope.launch(Dispatchers.Main) {
+            val result = mutableListOf<Pair<Int, Deferred<String>>>().apply {
+                repeat(10) {
+                    add(it to async(Dispatchers.IO) {
+                        task1()
+                    })
+                }
+            }.map {
+                it.first to it.second.await()
+            }.map {
+                it.second
+            }.reduce { acc, s ->
+                "$s, $acc"
+            }
+            appendText("[testCoroutine] result: ${task5(result)}, timeCost: ${MyLog.getTimeCost(start)}ms")
+        }
+    }
 
     // 12. Flow
     private fun testFlow(start: Long = System.currentTimeMillis()) {}
+
+    private fun appendText(msg: String) {
+        textView.text = "${textView.text}\n$msg\n"
+    }
+
+    private fun clearText() {
+        textView.text = ""
+    }
 }

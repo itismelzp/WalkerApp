@@ -19,6 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
+import com.demo.MyApplication
 import com.demo.R
 import com.demo.databinding.ActivityLoggerLayoutBinding
 import com.demo.network.CoroutineExceptionHandlerImpl
@@ -139,6 +140,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         initExif()
         initDownLoadView()
         initOpenVideoView()
+        initFileOperator()
     }
 
     private fun initSyncView() {
@@ -339,6 +341,23 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivity(intent) // Crashes on this line
+        }
+    }
+
+    private fun initFileOperator() {
+        binding.databaseListBtn.setOnClickListener {
+            clearResultText()
+            LocalFileExportUtil.getDatabaseFiles(MyApplication.getInstance()).let { files ->
+                appendResultText("$files")
+                files.map {
+                    appendResultText("listDatabase file: $it")
+                    File(it)
+                }.filter {
+                    it.isFile
+                }.forEach {
+                    appendResultText("download file: $it, result: ${LocalFileExportUtil.exportFile(it)}")
+                }
+            }
         }
     }
 

@@ -204,6 +204,16 @@
             android:layout_height="wrap_content"
             android:text="打开视频" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/database_list_btn"
+                android:text="数据库列表"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tv_media_meta_upload"
             android:layout_width="match_parent"

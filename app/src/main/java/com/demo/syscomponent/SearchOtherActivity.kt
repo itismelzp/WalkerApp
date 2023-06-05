@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.demo.databinding.ActivitySearchOtherBinding
-import com.demo.logger.BaseActivity
+import com.demo.base.BaseActivity
 
 class SearchOtherActivity : BaseActivity<ActivitySearchOtherBinding>() {
 

@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.demo.databinding.FragmentProviderBinding
-import com.demo.fragment.BaseFragment
+import com.demo.base.BaseFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,7 +25,7 @@ import java.util.UUID
  * Use the [ProviderFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ProviderFragment : BaseFragment<FragmentProviderBinding>() {
+class ProviderFragment : com.demo.base.BaseFragment<FragmentProviderBinding>() {
 
     private var textStr: String = ""
 

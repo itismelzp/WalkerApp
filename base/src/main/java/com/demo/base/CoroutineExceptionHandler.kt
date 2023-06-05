@@ -1,7 +1,6 @@
-package com.demo.network
+package com.demo.base
 
-import com.demo.logger.MyLog
-import com.google.gson.JsonParseException
+import com.demo.base.log.MyLog
 import kotlinx.coroutines.CoroutineExceptionHandler
 import java.net.SocketTimeoutException
 import javax.net.ssl.SSLHandshakeException
@@ -23,12 +22,12 @@ class CoroutineExceptionHandlerImpl : CoroutineExceptionHandler {
 
     override fun handleException(context: CoroutineContext, e: Throwable) {
         when (e) {
-            is ApiErrorException -> {
+//            is ApiErrorException -> {
                 // 处理业务错误
-            }
-            is JsonParseException -> {
+//            }
+//            is JsonParseException -> {
                 // 数据解析异常
-            }
+//            }
             is CertificateException, is SSLHandshakeException -> {
                 // 证书异常
             }

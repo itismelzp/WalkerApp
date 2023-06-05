@@ -19,7 +19,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ViewPagerCollectionFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ViewPagerCollectionFragment : BaseFragment<FragmentViewPager2DemoBinding>() {
+class ViewPagerCollectionFragment : com.demo.base.BaseFragment<FragmentViewPager2DemoBinding>() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -61,7 +61,7 @@ class ViewPagerCollectionFragment : BaseFragment<FragmentViewPager2DemoBinding>(
 
     class DemoCollectionAdapter(
         fragment: Fragment,
-        private val pageList: List<BaseFragment<out ViewBinding>>
+        private val pageList: List<com.demo.base.BaseFragment<out ViewBinding>>
     ) : FragmentStateAdapter(fragment) {
 
         override fun getItemCount(): Int = pageList.size

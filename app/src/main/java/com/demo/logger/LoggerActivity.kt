@@ -19,10 +19,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
+import com.demo.base.BaseActivity
 import com.demo.MyApplication
 import com.demo.R
 import com.demo.databinding.ActivityLoggerLayoutBinding
-import com.demo.network.CoroutineExceptionHandlerImpl
+import com.demo.base.CoroutineExceptionHandlerImpl
+import com.demo.base.log.MyLog
 import com.demo.network.RequestAccessManager
 import com.demo.network.model.DataCreator
 import com.demo.network.model.FaceScanMetaDataRequest
@@ -262,36 +264,43 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
             val testImage3 = "$basePath/DCIM/2022_04_02_23_05_IMG_9580.JPG"
             val testImage4 = "$basePath/DCIM/2022_04_07_18_59_IMG_9665.HEIC"
             val testImage5 = "$baseAbsPath/DCIM/2022_04_16_16_40_IMG_9807.HEIC"
-            val testImage6 = "$baseAbsPath/DCIM/Camera/8420d6addcd74cd4ad68ba6c5aa5b093_1.jpg"
+            val testImage6 = "$baseAbsPath/DCIM/Camera/8420d6addcd74cd4ad68ba6c5aa5b093.jpg"
+            val testImage7 = "$baseAbsPath/DCIM/Camera/IMG20230522094209.jpg"
             val testVide1 = "$baseAbsPath/DCIM/Camera/Story_20230426143955.mp4"
 
-//            val str1 = "testImage1: \n${readExif(testImage1)}"
+//            val str1 = "$testImage1: \n${readExif(testImage1)}"
 //            appendResultText(str1)
 //            MyLog.i(TAG, str1)
 //
-//            val str2 = "testImage2: \n${readExif(testImage2)}"
+//            val str2 = "$testImage2: \n${readExif(testImage2)}"
 //            appendResultText(str2)
 //            MyLog.i(TAG, str2)
 //
-//            val str3 = "testImage3: \n${readExif(testImage3)}"
+//            val str3 = "$testImage3: \n${readExif(testImage3)}"
 //            appendResultText(str3)
 //            MyLog.i(TAG, str3)
 //
-//            val str4 = "testImage4：\n${readExif(testImage4)}"
+//            val str4 = "$testImage4：\n${readExif(testImage4)}"
 //            appendResultText(str4)
 //            MyLog.i(TAG, str4)
 //
-//            val str5 = "testImage5：\n${readExif(testImage5)}"
+//            val str5 = "$testImage5：\n${readExif(testImage5)}"
 //            appendResultText(str5)
 //            MyLog.i(TAG, str5)
 
-            val str6 = "testImage6：\n${readExif(testImage6)}"
-            appendResultText(str6)
-            MyLog.i(TAG, str6)
+            "$testImage6：\n${readExif(testImage6)}".also {
+                appendResultText(it)
+                MyLog.i(TAG, it)
+            }
+            "$testImage7：\n${readExif(testImage7)}".also {
+                appendResultText(it)
+                MyLog.i(TAG, it)
+            }
+            "$testVide1：\n${readExif(testVide1)}".also {
+                appendResultText(it)
+                MyLog.i(TAG, it)
+            }
 
-            val videoStr1 = "testVide1：\n${readExif(testVide1)}"
-            appendResultText(videoStr1)
-            MyLog.i(TAG, videoStr1)
         }
     }
 
@@ -358,6 +367,13 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                     appendResultText("download file: $it, result: ${LocalFileExportUtil.exportFile(it)}")
                 }
             }
+
+            // 读写files目录下文件
+            appendResultText("filesDir.path: ${filesDir.path}")
+            appendResultText("filesDir.canonicalPath: ${filesDir.canonicalPath}")
+            appendResultText("filesDir.canonicalFile: ${filesDir.canonicalFile}")
+            appendResultText("filesDir.absolutePath: ${filesDir.absolutePath}")
+            appendResultText("filesDir.absoluteFile: ${filesDir.absoluteFile}")
         }
     }
 
@@ -431,6 +447,9 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     }
 
     private fun readExif(path: String): ExifEntry {
+        if (!File(path).exists()) {
+            return ExifEntry()
+        }
         return readExif(File(path))
     }
 
@@ -733,7 +752,8 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     }
 
     private fun initMemoryView() {
-        val memoryRequest = MemoryRequest("80349095-0508-1", "all")
+//        val memoryRequest = MemoryRequest("80349095-0508-1", "all")
+        val memoryRequest = MemoryRequest("photo-9052835", "all")
         binding.btnFetchMemory.setOnClickListener {
             mainScope.launch {
                 clearResultText()
@@ -743,10 +763,8 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                             RequestAccessManager.INSTANCE.coroutineFetchMemory(memoryRequest)
                         }.onSuccess {
                             MyLog.i(TAG, "coroutineFetchMemory response: $it")
-                        }.onFailure {
-                            MyLog.e(TAG, "coroutineFetchMemory failed:", it)
                         }.getOrElse {
-                            MyLog.i(TAG, "coroutineFetchMemory")
+                            MyLog.e(TAG, "coroutineFetchMemory failed:", it)
                             listOf()
                         }
                     }

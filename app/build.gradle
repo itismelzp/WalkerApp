@@ -82,9 +82,11 @@ protobuf {
 }
 
 dependencies {
+    implementation project(':base')
     implementation project(':constant')
     implementation project(':track-sdk')
     implementation project(':storage-sdk')
+    implementation project(':storage-ktx')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.appcompat:appcompat:${rootProject.appCompatVersion}"
     implementation "androidx.constraintlayout:constraintlayout:${rootProject.constraintLayoutVersion}"

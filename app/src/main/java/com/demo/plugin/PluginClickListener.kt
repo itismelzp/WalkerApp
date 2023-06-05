@@ -5,7 +5,7 @@ import android.view.View
 import com.demo.MainButton
 import com.demo.MyApplication
 import com.demo.constant.Constant.FROM_ID_START_ACTIVITY
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import com.tencent.shadow.dynamic.host.EnterCallback
 
 /**

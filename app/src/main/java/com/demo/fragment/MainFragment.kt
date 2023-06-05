@@ -17,7 +17,7 @@ import com.demo.MainListAdapter.MainDiffItemCallback
 import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.FragmentMainBinding
 import com.demo.ipc.ProcessUtil
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -29,7 +29,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MainFragment : BaseFragment<FragmentMainBinding>() {
+class MainFragment : com.demo.base.BaseFragment<FragmentMainBinding>() {
 
     private var mainListAdapter: MainListAdapter? = null
     private var filterAdapter: FilterListAdapter? = null

@@ -8,7 +8,7 @@ import android.content.ComponentName
 import android.content.Context
 import androidx.core.content.ContextCompat.getSystemService
 import com.demo.coroutine.BaseJobService
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import com.demo.utils.KeyguardManagerUtils
 import com.demo.utils.PowerManagerUtils
 import kotlinx.coroutines.Dispatchers

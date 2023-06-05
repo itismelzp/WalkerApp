@@ -5,6 +5,7 @@ import android.os.Environment
 import android.os.Looper.getMainLooper
 import android.util.Log
 import com.demo.BuildConfig
+import com.demo.base.log.MyLog
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog

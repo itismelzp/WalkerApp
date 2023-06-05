@@ -1,4 +1,4 @@
-package com.demo.fragment
+package com.demo.base
 
 import android.os.Bundle
 import android.transition.TransitionInflater
@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.demo.R
 
 /**
  * Created by lizhiping on 2023/1/30.

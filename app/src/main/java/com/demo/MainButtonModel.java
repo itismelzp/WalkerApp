@@ -13,6 +13,7 @@ import com.demo.album.OppoGalleryFragment;
 import com.demo.animator.AnimatorActivity;
 import com.demo.appbar.ScrollingActivity;
 import com.demo.apt.AptDemoActivity;
+import com.demo.base.BaseFragment;
 import com.demo.customview.activity.CustomMatrixActivity;
 import com.demo.customview.activity.CustomShaderActivity;
 import com.demo.customview.activity.ListViewDemoActivity;
@@ -21,16 +22,16 @@ import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.ryg.ViewDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
-import com.demo.fragment.BaseFragment;
 import com.demo.fragment.CoordinatorLayoutFragment;
 import com.demo.fragment.GridFragment;
 import com.demo.fragment.ViewPagerCollectionFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
-import com.demo.logger.MyLog;
+import com.demo.base.log.MyLog;
 import com.demo.rxjava.RxJavaActivity;
 import com.demo.storage.RoomActivity;
 import com.demo.storage.WinkKVDemoActivity;
+import com.demo.storage_ktx.RoomKtxFragment;
 import com.demo.sync.SyncDemoFragment;
 import com.demo.syscomponent.ProviderFragment;
 import com.demo.syscomponent.SearchOtherActivity;
@@ -183,6 +184,14 @@ public class MainButtonModel {
 
         List<MainButton> storage = new ArrayList<>();
         storage.add(new MainButton("存储页", MainButtonType.TYPE_STORAGE, RoomActivity.class));
+        storage.add(
+                new MainButton.Builder()
+                        .name("存储页KTX")
+                        .type(MainButtonType.TYPE_STORAGE)
+                        .onClickListener(bindFragmentListener(RoomKtxFragment.newInstance()))
+                        .build()
+        );
+
         storage.add(new MainButton("wink kv demo", MainButtonType.TYPE_STORAGE, WinkKVDemoActivity.class));
         typeMap.put(MainButtonType.TYPE_STORAGE, storage);
 

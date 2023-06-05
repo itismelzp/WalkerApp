@@ -17,24 +17,23 @@ import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.demo.base.BaseActivity
 import com.demo.MyApplication
+import com.demo.base.log.MyLog
 import com.demo.databinding.ActivityLoggerLayoutBinding
-import com.demo.fragment.BaseFragment
 import kotlinx.coroutines.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class LoggerFragment : BaseFragment<ActivityLoggerLayoutBinding>() {
+open class LoggerFragment : com.demo.base.BaseFragment<ActivityLoggerLayoutBinding>() {
 
     private lateinit var logger: MyLog.ILog
 
     companion object {
-        private const val TAG = "LoggerActivity"
+        private const val TAG = "LoggerFragment"
 
         @JvmStatic
-        fun newInstance(): LoggerFragment {
-            return LoggerFragment()
-        }
+        fun newInstance(): LoggerFragment = LoggerFragment()
     }
 
     override fun getViewBinding(
@@ -46,9 +45,7 @@ class LoggerFragment : BaseFragment<ActivityLoggerLayoutBinding>() {
     override fun createFragment(
         arg1: String,
         arg2: String
-    ): BaseFragment<ActivityLoggerLayoutBinding> {
-        return createFragment()
-    }
+    ): com.demo.base.BaseFragment<ActivityLoggerLayoutBinding> = createFragment()
 
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)
@@ -72,11 +69,9 @@ class LoggerFragment : BaseFragment<ActivityLoggerLayoutBinding>() {
     }
 
     @UiThread
-    private fun toastPintMsg(msg: String) {
-        toast(msg)
-    }
+    private fun toastPintMsg(msg: String) = toast(msg)
 
-    protected fun requestPermission() {
+    private fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // 先判断有没有权限
             if (!Environment.isExternalStorageManager()) {
@@ -112,9 +107,8 @@ class LoggerFragment : BaseFragment<ActivityLoggerLayoutBinding>() {
     }
 
     @UiThread
-    private fun toast(text: String?) {
+    private fun toast(text: String?) =
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
-    }
 
     /**
      * Ping命令格式为：ping -c 1 -w 5 ip
@@ -150,9 +144,7 @@ class LoggerFragment : BaseFragment<ActivityLoggerLayoutBinding>() {
         return output.toString()
     }
 
-    private fun appendLine(sb: StringBuffer?, line: String) {
-        sb?.append("$line\n")
-    }
+    private fun appendLine(sb: StringBuffer?, line: String) = sb?.append("$line\n")
 
     private fun initLog() {
         // Logger -- TAG为：PRETTYLOGGER

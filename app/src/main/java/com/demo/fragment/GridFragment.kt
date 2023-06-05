@@ -14,9 +14,10 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.lifecycleScope
 import com.demo.R
+import com.demo.base.BaseFragment
 import com.demo.databinding.MainFragmentGridBinding
 import com.demo.fragment.adapter.GridAdapter
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

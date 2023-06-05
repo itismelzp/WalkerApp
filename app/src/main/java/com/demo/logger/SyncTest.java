@@ -2,11 +2,11 @@ package com.demo.logger;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
 
+import com.demo.base.log.MyLog;
 import com.demo.utils.DataFactory;
 
 import java.io.Serializable;

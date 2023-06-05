@@ -21,7 +21,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.demo.R
 import com.demo.SpaceItemDecoration
 import com.demo.databinding.FragmentAlbumSlideShowBinding
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import com.demo.viewpager.CustomGsyVideo
 import com.demo.viewpager.MediaType
 import com.demo.viewpager.VideoBean
@@ -38,7 +38,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AlbumSlideShowFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AlbumSlideShowFragment : BaseFragment<FragmentAlbumSlideShowBinding>(), View.OnClickListener {
+class AlbumSlideShowFragment : com.demo.base.BaseFragment<FragmentAlbumSlideShowBinding>(), View.OnClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -59,7 +59,7 @@ class AlbumSlideShowFragment : BaseFragment<FragmentAlbumSlideShowBinding>(), Vi
 
     private var position = 0
 
-    override fun createFragment(arg1: String, arg2: String): BaseFragment<FragmentAlbumSlideShowBinding> {
+    override fun createFragment(arg1: String, arg2: String): com.demo.base.BaseFragment<FragmentAlbumSlideShowBinding> {
         return newInstance("", "")
     }
 

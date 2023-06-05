@@ -8,7 +8,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import com.demo.ipc.ProcessUtil
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 
 class MyProvider : ContentProvider() {
 

@@ -14,7 +14,7 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.demo.R
 import com.demo.databinding.FragmentSlideShowBinding
 import com.demo.fragment.adapter.SlideShowAdapter
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,7 +27,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [NormalViewPagerFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class NormalViewPagerFragment : BaseFragment<FragmentSlideShowBinding>() {
+class NormalViewPagerFragment : com.demo.base.BaseFragment<FragmentSlideShowBinding>() {
 
     private var param1: String? = null
     private var param2: String? = null

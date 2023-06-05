@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 

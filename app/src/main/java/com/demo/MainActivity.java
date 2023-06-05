@@ -7,11 +7,11 @@ import androidx.annotation.NonNull;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.demo.base.BaseActivity;
 import com.demo.databinding.ActivityMainBinding;
 import com.demo.fragment.GridFragment;
 import com.demo.fragment.MainFragment;
-import com.demo.logger.BaseActivity;
-import com.demo.logger.MyLog;
+import com.demo.base.log.MyLog;
 
 
 public class MainActivity extends BaseActivity<ActivityMainBinding> implements GridFragment.OnActionListener {

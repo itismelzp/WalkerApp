@@ -29,7 +29,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.demo.R
 import com.demo.customview.utils.ViewUtils
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 
 abstract class AlbumBaseFragment : Fragment(){
     companion object {

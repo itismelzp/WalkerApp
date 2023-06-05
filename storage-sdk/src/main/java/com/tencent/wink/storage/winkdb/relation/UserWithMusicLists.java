@@ -1,5 +1,6 @@
 package com.tencent.wink.storage.winkdb.relation;
 
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
@@ -22,6 +23,7 @@ public class UserWithMusicLists {
     )
     public List<MusicList> musicListList;
 
+    @NonNull
     @Override
     public String toString() {
         return "UserWithMusicLists{" +

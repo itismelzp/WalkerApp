@@ -22,15 +22,13 @@ import androidx.annotation.VisibleForTesting;
 //import androidx.exifinterface.media.ExifInterface;
 
 import com.demo.MyApplication;
-import com.demo.logger.MyLog;
-import com.google.common.collect.Lists;
+import com.demo.base.log.MyLog;
 
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;

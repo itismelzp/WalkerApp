@@ -9,10 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.ExploreMemoriesAlbumSetList2Binding
-import com.demo.fragment.BaseFragment
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 
-class MemoriesAlbumSetFragmentBeta : BaseFragment<ExploreMemoriesAlbumSetList2Binding>() {
+class MemoriesAlbumSetFragmentBeta : com.demo.base.BaseFragment<ExploreMemoriesAlbumSetList2Binding>() {
 
     private lateinit var explorerViewModel: ExplorerViewModel
 

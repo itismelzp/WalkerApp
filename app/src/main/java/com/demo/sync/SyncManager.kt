@@ -3,7 +3,7 @@ package com.demo.sync
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

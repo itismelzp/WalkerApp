@@ -1,17 +1,14 @@
 package com.demo.syscomponent
 
 import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
-import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import com.demo.R
 import com.demo.databinding.LayoutSearchActivityBinding
-import com.demo.logger.BaseActivity
+import com.demo.base.BaseActivity
 import com.demo.network.RequestAccessManager
 import com.demo.network.model.SearchMediaItem
 import com.demo.network.model.SearchRequest
@@ -76,25 +73,25 @@ class SearchableActivity : BaseActivity<LayoutSearchActivityBinding>() {
         handleIntent(intent, true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.example_seach_menu, menu)
-        menu?.run {
-            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            val searchView = findItem(R.id.action_search).actionView as SearchView
-
-            searchView.apply {
-                setOnCloseListener {
-                    textDataAdapter.setNewData(originData)
-                    false
-                }
-                setSearchableInfo(searchManager.getSearchableInfo(componentName)) // 设置搜索配置
-                if (lastQueryValue.isNotEmpty()) {
-                    setQuery(lastQueryValue, false)
-                }
-            }
-        }
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.example_seach_menu, menu)
+//        menu?.run {
+//            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//            val searchView = findItem(R.id.action_search).actionView as SearchView
+//
+//            searchView.apply {
+//                setOnCloseListener {
+//                    textDataAdapter.setNewData(originData)
+//                    false
+//                }
+//                setSearchableInfo(searchManager.getSearchableInfo(componentName)) // 设置搜索配置
+//                if (lastQueryValue.isNotEmpty()) {
+//                    setQuery(lastQueryValue, false)
+//                }
+//            }
+//        }
+//        return true
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_clear_search_histor) {

@@ -2,6 +2,7 @@ package com.demo.logger
 
 import android.content.Context
 import android.os.Environment
+import com.demo.base.log.MyLog
 import java.io.File
 
 /**

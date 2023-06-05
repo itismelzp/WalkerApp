@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.R
 import com.demo.customview.utils.ViewUtils
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 
 class MemoriesAlbumSetFragmentBeta2 : AlbumBaseFragment() {
 

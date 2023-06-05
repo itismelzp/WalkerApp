@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.demo.logger.MyLog;
+import com.demo.base.log.MyLog;
 
 import java.lang.reflect.Method;
 import java.util.List;

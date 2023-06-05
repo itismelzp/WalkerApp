@@ -1,6 +1,6 @@
 package com.demo.coroutine
 
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlin.coroutines.CoroutineContext
 

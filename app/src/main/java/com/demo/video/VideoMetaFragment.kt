@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.demo.databinding.FragmentVideoMetaBinding
-import com.demo.fragment.BaseFragment
+import com.demo.base.BaseFragment
 import java.io.File
 
 
@@ -16,7 +16,7 @@ import java.io.File
  * Use the [VideoMetaFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class VideoMetaFragment : BaseFragment<FragmentVideoMetaBinding>() {
+class VideoMetaFragment : com.demo.base.BaseFragment<FragmentVideoMetaBinding>() {
 
     override fun initBaseViews(savedInstanceState: Bundle?) {
         super.initBaseViews(savedInstanceState)

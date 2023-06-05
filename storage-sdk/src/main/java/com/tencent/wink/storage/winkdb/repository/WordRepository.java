@@ -98,7 +98,7 @@ public class WordRepository {
             long begin = System.currentTimeMillis();
             mWordDao.deleteFuzzy(content);
             long cost = System.currentTimeMillis() - begin;
-            WinkDbLog.i(TAG, "delete finish, content: " + content + ", cost: " + cost);
+            WinkDbLog.i(TAG, "deleteFuzzy finish, content: " + content + ", cost: " + cost);
         });
     }
 
@@ -107,7 +107,7 @@ public class WordRepository {
             long begin = System.currentTimeMillis();
             mWordDao.update(word);
             long cost = System.currentTimeMillis() - begin;
-            WinkDbLog.i(TAG, "delete finish, word: " + word + ", cost: " + cost);
+            WinkDbLog.i(TAG, "update finish, word: " + word + ", cost: " + cost);
         });
     }
 

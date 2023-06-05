@@ -1,4 +1,4 @@
-package com.demo.logger
+package com.demo.base
 
 import android.Manifest
 import android.content.Intent
@@ -14,8 +14,6 @@ import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
-import com.demo.MyApplication
-import com.demo.network.CoroutineExceptionHandlerImpl
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.plus
 
@@ -60,7 +58,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
             // 先判断有没有权限
             if (!Environment.isExternalStorageManager()) {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-                intent.data = Uri.parse("package:" + MyApplication.getInstance().packageName)
+                intent.data = Uri.parse("package: $packageName")
                 startActivityForResult(intent, REQUEST_CODE)
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.demo.databinding.FragmentSyncDemoBinding
-import com.demo.fragment.BaseFragment
+import com.demo.base.BaseFragment
 
-class SyncDemoFragment : BaseFragment<FragmentSyncDemoBinding>() {
+class SyncDemoFragment : com.demo.base.BaseFragment<FragmentSyncDemoBinding>() {
 
     override fun getViewBinding(
         inflater: LayoutInflater,

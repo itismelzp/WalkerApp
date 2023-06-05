@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import com.demo.R
 import com.demo.databinding.ActivityScrollingBinding
-import com.demo.logger.BaseActivity
+import com.demo.base.BaseActivity
 
 
 class ScrollingActivity : BaseActivity<ActivityScrollingBinding>() {

@@ -1,4 +1,4 @@
-package com.demo.logger
+package com.demo.base.log
 
 import java.util.concurrent.atomic.AtomicBoolean
 

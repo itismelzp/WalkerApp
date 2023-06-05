@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commitNow
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

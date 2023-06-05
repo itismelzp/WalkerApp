@@ -11,7 +11,7 @@ import androidx.viewpager.widget.ViewPager
 import com.demo.R
 import com.demo.databinding.FragmentImagePagerBinding
 import com.demo.fragment.adapter.ImagePagerAdapter
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 
 
 /**
@@ -22,7 +22,7 @@ import com.demo.logger.MyLog
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-class ImagePagerFragment : BaseFragment<FragmentImagePagerBinding>() {
+class ImagePagerFragment : com.demo.base.BaseFragment<FragmentImagePagerBinding>() {
 
     override fun initBaseViews(savedInstanceState: Bundle?) {
         super.initBaseViews(savedInstanceState)

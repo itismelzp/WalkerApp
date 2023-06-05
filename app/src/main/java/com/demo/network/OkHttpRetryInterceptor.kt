@@ -1,6 +1,6 @@
 package com.demo.network
 
-import com.demo.logger.MyLog
+import com.demo.base.log.MyLog
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException

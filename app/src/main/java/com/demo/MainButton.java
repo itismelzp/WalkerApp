@@ -1,5 +1,7 @@
 package com.demo;
 
+import android.app.Activity;
+
 import com.demo.constant.ButtonTypeName;
 import com.demo.constant.Colors;
 
@@ -39,11 +41,11 @@ public class MainButton implements Comparable<MainButton> {
         TYPE_NAME_MAP.put(MainButtonType.TYPE_OTHER, ButtonTypeName.OTHER);
     }
 
-    public MainButton(String name, Class<?> jumpClass) {
+    public MainButton(String name, Class<? extends Activity> jumpClass) {
         this(name, MainButtonType.TYPE_OTHER, jumpClass);
     }
 
-    public MainButton(String name, int type, Class<?> jumpClass) {
+    public MainButton(String name, int type, Class<? extends Activity> jumpClass) {
         this.name = name;
         this.type = type;
         this.jumpClass = jumpClass;
@@ -84,7 +86,7 @@ public class MainButton implements Comparable<MainButton> {
 
         private int type = MainButtonType.TYPE_OTHER;
 
-        private Class<?> jumpClass;
+        private Class<? extends Activity> jumpClass;
 
         private OnClickListener clickListener;
 
@@ -101,7 +103,7 @@ public class MainButton implements Comparable<MainButton> {
             return this;
         }
 
-        public Builder jumpClass(Class<?> jumpClass) {
+        public Builder jumpClass(Class<? extends Activity> jumpClass) {
             this.jumpClass = jumpClass;
             return this;
         }

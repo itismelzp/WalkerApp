@@ -13,7 +13,7 @@ import androidx.work.WorkManager;
 import com.demo.customview.utils.ViewUtils;
 import com.demo.ipc.ProcessUtil;
 import com.demo.logger.LogUtil;
-import com.demo.logger.MyLog;
+import com.demo.base.log.MyLog;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;

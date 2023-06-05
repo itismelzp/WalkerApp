@@ -3,15 +3,15 @@
 apply plugin: com.dorongold.gradle.tasktree.TaskTreePlugin
 
 buildscript {
+
+    ext.kotlin_version = '1.6.20'
+
     repositories {
         mavenLocal()
-        jcenter()
         google()
         mavenCentral()
         maven { url uri('repo') }
 //        maven { url 'http://localhost:8081/repository/autotracktransform/' }
-        maven { url 'https://jitpack.io' }
-        maven { url "https://maven.aliyun.com/repository/public" }
         maven { url "https://plugins.gradle.org/m2" }
     }
     dependencies {
@@ -22,7 +22,7 @@ buildscript {
         classpath 'com.walker:autotrack.android:1.0.0'
         // 解决0.8.6报错：specified for property '$3' does not exist.
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.16'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.tencent.shadow.core:gradle-plugin:local-8d9c7a7f-SNAPSHOT"
 
         classpath "com.dorongold.plugins:task-tree:2.1.1"
@@ -50,20 +50,24 @@ allprojects {
 ext {
 
     appCompatVersion = '1.5.1'
-    constraintLayoutVersion = '2.1.4'
     lifecycleVersion = '2.5.1'
     materialVersion = '1.7.0'
-    roomVersion = '2.4.0-alpha03'
+
+    activityVersion = '1.4.0'
+    fragmentVersion = '1.4.0'
+
+    constraintLayoutVersion = '2.1.4'
+    roomVersion = '2.4.1'
+    coroutines = '1.6.0'
 
     gsonVersion = '2.9.0'
-    kotlinVersion = '1.6.0'
+    kotlinVersion = '1.6.10'
     ktxVersion = '1.8.0'
 
     protocPlatformForM1 = 'osx-x86_64'
 
     shadow_version = 'local-8d9c7a7f-SNAPSHOT'
     work_version = "2.8.0"
-
 
     // testing
     coreTestingVersion = '2.1.0'

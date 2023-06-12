@@ -2,6 +2,7 @@ package com.tencent.wink.storage.winkdb.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -25,7 +26,6 @@ public interface WordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<Word> words);
 
-//    @Delete
     @Query("DELETE FROM word_table")
     void deleteAll();
 

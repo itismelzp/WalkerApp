@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.demo.databinding.FragmentSyncDemoBinding
 import com.demo.base.BaseFragment
 
-class SyncDemoFragment : com.demo.base.BaseFragment<FragmentSyncDemoBinding>() {
+class SyncDemoFragment : BaseFragment<FragmentSyncDemoBinding>() {
 
     override fun getViewBinding(
         inflater: LayoutInflater,

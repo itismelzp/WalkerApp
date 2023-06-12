@@ -13,6 +13,7 @@ import java.util.*
  */
 object DeviceIdUtil {
 
+    @JvmStatic
     fun getDeviceId(context: Context): String? {
         val sbDeviceId = StringBuilder()
         val imei = getIMEI(context)

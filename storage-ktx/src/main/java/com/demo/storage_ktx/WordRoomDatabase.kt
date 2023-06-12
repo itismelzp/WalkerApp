@@ -5,6 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.demo.storage_ktx.dao.UserDao
+import com.demo.storage_ktx.dao.WordDao
+import com.demo.storage_ktx.model.User
+import com.demo.storage_ktx.model.Word
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -13,29 +17,31 @@ import kotlinx.coroutines.launch
  * <p>
  * description
  */
-@Database(entities = [Word::class], version = 1, exportSchema = false)
+@Database(entities = [Word::class, User::class], version = 1, exportSchema = false)
 abstract class WordRoomDatabase : RoomDatabase() {
 
     abstract fun wordDao(): WordDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
         private var INSTANCE: WordRoomDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): WordRoomDatabase {
+        fun getDatabase(
+            context: Context, scope: CoroutineScope
+        ): WordRoomDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
+                Room.databaseBuilder(
                     context.applicationContext,
                     WordRoomDatabase::class.java,
-                    "word_database_kt"
-                ).fallbackToDestructiveMigration()
+                    "word_database_kt.db"
+                )
+                    .fallbackToDestructiveMigration()
                     .addCallback(WordDatabaseCallback(scope))
-                    .build()/*.also {
+                    .build()
+                    .also {
                         INSTANCE = it
-                    }*/
-                INSTANCE = instance
-                // return instance
-                instance
+                    }
             }
         }
 

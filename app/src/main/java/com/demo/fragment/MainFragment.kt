@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.*
 import com.demo.MainListAdapter.MainDiffItemCallback
+import com.demo.base.BaseFragment
 import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.FragmentMainBinding
 import com.demo.ipc.ProcessUtil
@@ -29,7 +30,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MainFragment : com.demo.base.BaseFragment<FragmentMainBinding>() {
+class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     private var mainListAdapter: MainListAdapter? = null
     private var filterAdapter: FilterListAdapter? = null

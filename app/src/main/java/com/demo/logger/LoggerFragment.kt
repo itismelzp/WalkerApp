@@ -19,13 +19,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.demo.base.BaseActivity
 import com.demo.MyApplication
+import com.demo.base.BaseFragment
 import com.demo.base.log.MyLog
 import com.demo.databinding.ActivityLoggerLayoutBinding
 import kotlinx.coroutines.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-open class LoggerFragment : com.demo.base.BaseFragment<ActivityLoggerLayoutBinding>() {
+open class LoggerFragment : BaseFragment<ActivityLoggerLayoutBinding>() {
 
     private lateinit var logger: MyLog.ILog
 
@@ -45,7 +46,7 @@ open class LoggerFragment : com.demo.base.BaseFragment<ActivityLoggerLayoutBindi
     override fun createFragment(
         arg1: String,
         arg2: String
-    ): com.demo.base.BaseFragment<ActivityLoggerLayoutBinding> = createFragment()
+    ): BaseFragment<ActivityLoggerLayoutBinding> = createFragment()
 
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)

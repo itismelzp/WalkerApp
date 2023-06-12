@@ -7,56 +7,53 @@ import java.util.concurrent.atomic.AtomicBoolean
  * <p>
  * description
  */
-class MyLog {
+object MyLog {
 
-    companion object {
+    @Volatile
+    private var sLogInf: ILog? = null
+    private val mInitialized = AtomicBoolean(false)
 
-        @Volatile
-        private var sLogInf: ILog? = null
-        private val mInitialized = AtomicBoolean(false)
-
-        @JvmStatic
-        fun init(logInf: ILog?) {
-            if (logInf == null || !mInitialized.compareAndSet(false, true)) {
-                return
-            }
-            sLogInf = logInf
+    @JvmStatic
+    fun init(logInf: ILog?) {
+        if (logInf == null || !mInitialized.compareAndSet(false, true)) {
+            return
         }
+        sLogInf = logInf
+    }
 
-        @JvmStatic
-        fun v(tag: String?, msg: String?) {
-            sLogInf?.apply { v(tag, msg) }
-        }
+    @JvmStatic
+    fun v(tag: String?, msg: String?) {
+        sLogInf?.apply { v(tag, msg) }
+    }
 
-        @JvmStatic
-        fun d(tag: String?, msg: String?) {
-            sLogInf?.apply { d(tag, msg) }
-        }
+    @JvmStatic
+    fun d(tag: String?, msg: String?) {
+        sLogInf?.apply { d(tag, msg) }
+    }
 
-        @JvmStatic
-        fun i(tag: String?, msg: String?) {
-            sLogInf?.apply { i(tag, msg) }
-        }
+    @JvmStatic
+    fun i(tag: String?, msg: String?) {
+        sLogInf?.apply { i(tag, msg) }
+    }
 
-        @JvmStatic
-        fun w(tag: String?, msg: String?) {
-            sLogInf?.apply { w(tag, msg) }
-        }
+    @JvmStatic
+    fun w(tag: String?, msg: String?) {
+        sLogInf?.apply { w(tag, msg) }
+    }
 
-        @JvmStatic
-        fun e(tag: String?, msg: String?) {
-            sLogInf?.apply { e(tag, msg) }
-        }
+    @JvmStatic
+    fun e(tag: String?, msg: String?) {
+        sLogInf?.apply { e(tag, msg) }
+    }
 
-        @JvmStatic
-        fun e(tag: String?, msg: String?, t: Throwable?) {
-            sLogInf?.apply { e(tag, msg, t) }
-        }
+    @JvmStatic
+    fun e(tag: String?, msg: String?, t: Throwable?) {
+        sLogInf?.apply { e(tag, msg, t) }
+    }
 
-        @JvmStatic
-        fun getTimeCost(time: Long): Long {
-            return System.currentTimeMillis() - time
-        }
+    @JvmStatic
+    fun getTimeCost(time: Long): Long {
+        return System.currentTimeMillis() - time
     }
 
     /**

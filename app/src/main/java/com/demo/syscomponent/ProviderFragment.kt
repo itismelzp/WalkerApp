@@ -25,7 +25,7 @@ import java.util.UUID
  * Use the [ProviderFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ProviderFragment : com.demo.base.BaseFragment<FragmentProviderBinding>() {
+class ProviderFragment : BaseFragment<FragmentProviderBinding>() {
 
     private var textStr: String = ""
 

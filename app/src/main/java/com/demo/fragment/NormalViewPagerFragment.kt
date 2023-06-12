@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.demo.R
+import com.demo.base.BaseFragment
 import com.demo.databinding.FragmentSlideShowBinding
 import com.demo.fragment.adapter.SlideShowAdapter
 import com.demo.base.log.MyLog
@@ -27,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [NormalViewPagerFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class NormalViewPagerFragment : com.demo.base.BaseFragment<FragmentSlideShowBinding>() {
+class NormalViewPagerFragment : BaseFragment<FragmentSlideShowBinding>() {
 
     private var param1: String? = null
     private var param2: String? = null

@@ -13,7 +13,7 @@ import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.ExploreMainFragmentLayoutBinding
 import com.demo.base.BaseFragment
 
-class OppoGalleryFragment : com.demo.base.BaseFragment<ExploreMainFragmentLayoutBinding>() {
+class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
 
     private lateinit var explorerViewModel: ExplorerViewModel
     private lateinit var labelContainer: ExplorerCardLayout
@@ -35,7 +35,7 @@ class OppoGalleryFragment : com.demo.base.BaseFragment<ExploreMainFragmentLayout
         attachToRoot: Boolean
     ) = ExploreMainFragmentLayoutBinding.inflate(inflater, container, attachToRoot)
 
-    override fun createFragment(arg1: String, arg2: String): com.demo.base.BaseFragment<ExploreMainFragmentLayoutBinding> {
+    override fun createFragment(arg1: String, arg2: String): BaseFragment<ExploreMainFragmentLayoutBinding> {
         return newInstance()
     }
 

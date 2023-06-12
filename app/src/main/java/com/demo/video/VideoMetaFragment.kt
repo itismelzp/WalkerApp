@@ -16,7 +16,7 @@ import java.io.File
  * Use the [VideoMetaFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class VideoMetaFragment : com.demo.base.BaseFragment<FragmentVideoMetaBinding>() {
+class VideoMetaFragment : BaseFragment<FragmentVideoMetaBinding>() {
 
     override fun initBaseViews(savedInstanceState: Bundle?) {
         super.initBaseViews(savedInstanceState)

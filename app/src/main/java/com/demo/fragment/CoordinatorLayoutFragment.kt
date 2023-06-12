@@ -3,12 +3,13 @@ package com.demo.fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.demo.base.BaseFragment
 import com.demo.databinding.FragmentCoordinatorLayoutBinding
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class CoordinatorLayoutFragment : com.demo.base.BaseFragment<FragmentCoordinatorLayoutBinding>() {
+class CoordinatorLayoutFragment : BaseFragment<FragmentCoordinatorLayoutBinding>() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -30,7 +31,7 @@ class CoordinatorLayoutFragment : com.demo.base.BaseFragment<FragmentCoordinator
     override fun createFragment(
         arg1: String,
         arg2: String
-    ): com.demo.base.BaseFragment<FragmentCoordinatorLayoutBinding> {
+    ): BaseFragment<FragmentCoordinatorLayoutBinding> {
         return createFragment()
     }
 

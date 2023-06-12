@@ -1,10 +1,12 @@
-package com.demo.storage_ktx
+package com.demo.storage_ktx.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.demo.storage_ktx.model.Word
+import com.demo.storage_ktx.repository.WordRepository
 import kotlinx.coroutines.launch
 
 /**

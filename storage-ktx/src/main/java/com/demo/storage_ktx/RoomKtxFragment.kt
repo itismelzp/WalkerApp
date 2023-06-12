@@ -8,14 +8,35 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.demo.base.BaseFragment
 import com.demo.storage_ktx.databinding.FragmentMainRoomKtxBinding
+import com.demo.storage_ktx.model.User
+import com.demo.storage_ktx.repository.UserRepository
+import com.demo.storage_ktx.repository.WordRepository
+import com.demo.storage_ktx.viewmodel.UserViewModel
+import com.demo.storage_ktx.viewmodel.UserViewModelFactory
+import com.demo.storage_ktx.viewmodel.WordViewModel
+import com.demo.storage_ktx.viewmodel.WordViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
 
 class RoomKtxFragment : BaseFragment<FragmentMainRoomKtxBinding>() {
 
+    private val wordRepository: WordRepository by lazy {
+        val dao = WordRoomDatabase.getDatabase(requireContext(), applicationScope).wordDao()
+        WordRepository(dao)
+    }
+
+    private val userRepository: UserRepository by lazy {
+        val dao = WordRoomDatabase.getDatabase(requireContext(), applicationScope).userDao()
+        UserRepository(dao)
+    }
+
     private val wordViewModel: WordViewModel by viewModels {
-        WordViewModelFactory(WordRepository(WordRoomDatabase.getDatabase(requireContext(), applicationScope).wordDao()))
+        WordViewModelFactory(wordRepository)
+    }
+
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(userRepository)
     }
 
     override fun getViewBinding(
@@ -28,8 +49,7 @@ class RoomKtxFragment : BaseFragment<FragmentMainRoomKtxBinding>() {
     override fun createFragment(
         arg1: String,
         arg2: String
-    ): BaseFragment<FragmentMainRoomKtxBinding> =
-        newInstance()
+    ): BaseFragment<FragmentMainRoomKtxBinding> = newInstance()
 
     override fun initBaseViews(savedInstanceState: Bundle?) {
         super.initBaseViews(savedInstanceState)
@@ -46,7 +66,27 @@ class RoomKtxFragment : BaseFragment<FragmentMainRoomKtxBinding>() {
             }
         }
 
+        val user1 = User(
+            null,
+            "zp",
+            "lee",
+            listOf("baidu", "tencent"),
+            listOf("lily", "wawa"),
+            123456789L,
+            "test"
+        )
+        val user2 = User(
+            null,
+            "walker",
+            "lee",
+            null,
+            null,
+            123456789L,
+            "test"
+        )
+
         binding.fab.setOnClickListener {
+            userViewModel.insert(listOf(user1, user2))
             val intent = Intent(requireContext(), NewWordActivity::class.java)
             startActivity(intent)
         }
@@ -54,6 +94,8 @@ class RoomKtxFragment : BaseFragment<FragmentMainRoomKtxBinding>() {
     }
 
     companion object {
+
+        private const val TAG = "RoomKtxFragment"
 
         @JvmStatic
         val applicationScope = CoroutineScope(SupervisorJob())

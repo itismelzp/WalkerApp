@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.demo.databinding.FragmentBaseLoggerLayoutBinding
 import com.demo.base.BaseFragment
 
-open class BaseLoggerFragment : com.demo.base.BaseFragment<FragmentBaseLoggerLayoutBinding>() {
+open class BaseLoggerFragment : BaseFragment<FragmentBaseLoggerLayoutBinding>() {
 
     companion object {
         private const val TAG = "BaseLoggerFragment"
@@ -24,7 +24,7 @@ open class BaseLoggerFragment : com.demo.base.BaseFragment<FragmentBaseLoggerLay
     override fun createFragment(
         arg1: String,
         arg2: String
-    ): com.demo.base.BaseFragment<FragmentBaseLoggerLayoutBinding> = createFragment()
+    ): BaseFragment<FragmentBaseLoggerLayoutBinding> = createFragment()
 
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)

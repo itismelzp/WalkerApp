@@ -8,6 +8,10 @@ import androidx.activity.viewModels
 import com.demo.base.BaseActivity
 import com.demo.storage_ktx.RoomKtxFragment.Companion.applicationScope
 import com.demo.storage_ktx.databinding.ActivityNewWordBinding
+import com.demo.storage_ktx.model.Word
+import com.demo.storage_ktx.repository.WordRepository
+import com.demo.storage_ktx.viewmodel.WordViewModel
+import com.demo.storage_ktx.viewmodel.WordViewModelFactory
 
 class NewWordActivity : BaseActivity<ActivityNewWordBinding>() {
 

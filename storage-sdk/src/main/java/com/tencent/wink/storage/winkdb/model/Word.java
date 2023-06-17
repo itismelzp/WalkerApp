@@ -26,6 +26,7 @@ public class Word {
     @ColumnInfo(name = "createTime")
     private long mCreateTime;
 
+    public int status;
 
     public Word(@NonNull String content) {
         this.mContent = content;

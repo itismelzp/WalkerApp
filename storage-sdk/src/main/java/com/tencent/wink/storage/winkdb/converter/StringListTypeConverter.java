@@ -1,5 +1,6 @@
 package com.tencent.wink.storage.winkdb.converter;
 
+import androidx.annotation.Nullable;
 import androidx.room.TypeConverter;
 
 import com.google.gson.Gson;
@@ -14,14 +15,16 @@ import java.util.List;
 public class StringListTypeConverter implements IListTypeConverter<String> {
 
     @TypeConverter
+    @Nullable
     @Override
-    public String converter(List<String> list) {
+    public String converter(@Nullable List<String> list) {
         return new Gson().toJson(list);
     }
 
     @TypeConverter
+    @Nullable
     @Override
-    public List<String> revert(String str) {
+    public List<String> revert(@Nullable String str) {
         Type type = new TypeToken<List<String>>() {
         }.getType();
         return new Gson().fromJson(str, type);

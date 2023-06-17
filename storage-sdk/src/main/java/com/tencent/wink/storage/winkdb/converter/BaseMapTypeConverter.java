@@ -1,5 +1,6 @@
 package com.tencent.wink.storage.winkdb.converter;
 
+import androidx.annotation.Nullable;
 import androidx.room.TypeConverter;
 
 import java.util.Map;
@@ -10,7 +11,8 @@ import java.util.Map;
 public interface BaseMapTypeConverter<K, V> {
 
     @TypeConverter
-    String converter(Map<K, V> data);
+    @Nullable
+    String converter(@Nullable Map<K, V> data);
 
     @TypeConverter
     Map<K, V> revert(String str);

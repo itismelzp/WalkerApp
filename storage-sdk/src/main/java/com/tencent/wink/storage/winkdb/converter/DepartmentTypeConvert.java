@@ -1,5 +1,6 @@
 package com.tencent.wink.storage.winkdb.converter;
 
+import androidx.annotation.Nullable;
 import androidx.room.TypeConverter;
 
 import com.google.gson.Gson;
@@ -15,13 +16,15 @@ import java.lang.reflect.Type;
 public class DepartmentTypeConvert {
 
     @TypeConverter
-    public Department revert(String jsonStr) {
+    @Nullable
+    public Department revert(@Nullable String jsonStr) {
         Type type = new TypeToken<Department>() {}.getType();
         return new Gson().fromJson(jsonStr, type);
     }
 
     @TypeConverter
-    public String converter(Department department) {
+    @Nullable
+    public String converter(@Nullable Department department) {
         return new Gson().toJson(department);
     }
 

@@ -13,7 +13,7 @@ import com.demo.customview.utils.ViewUtils
 import com.demo.databinding.ExploreMainFragmentLayoutBinding
 import com.demo.base.BaseFragment
 
-class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
+class GalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
 
     private lateinit var explorerViewModel: ExplorerViewModel
     private lateinit var labelContainer: ExplorerCardLayout
@@ -24,10 +24,10 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
         const val INVALID_LABEL_ID = -1
 
         @JvmStatic
-        fun newInstance() = OppoGalleryFragment()
+        fun newInstance() = GalleryFragment()
     }
 
-    private lateinit var viewModel: OppoGalleryViewModel
+    private lateinit var viewModel: GalleryViewModel
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -41,7 +41,7 @@ class OppoGalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
 
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)
-        viewModel = ViewModelProvider(this)[OppoGalleryViewModel::class.java]
+        viewModel = ViewModelProvider(this)[GalleryViewModel::class.java]
         explorerViewModel = ViewModelProvider(this)[ExplorerViewModel::class.java]
     }
 

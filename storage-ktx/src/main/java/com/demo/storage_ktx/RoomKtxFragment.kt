@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.demo.base.BaseFragment
+import com.demo.base.log.MyLog
 import com.demo.storage_ktx.databinding.FragmentMainRoomKtxBinding
 import com.demo.storage_ktx.model.User
 import com.demo.storage_ktx.repository.UserRepository
@@ -16,7 +18,9 @@ import com.demo.storage_ktx.viewmodel.UserViewModelFactory
 import com.demo.storage_ktx.viewmodel.WordViewModel
 import com.demo.storage_ktx.viewmodel.WordViewModelFactory
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 
 class RoomKtxFragment : BaseFragment<FragmentMainRoomKtxBinding>() {
@@ -86,6 +90,9 @@ class RoomKtxFragment : BaseFragment<FragmentMainRoomKtxBinding>() {
         )
 
         binding.fab.setOnClickListener {
+            lifecycleScope.launch(Dispatchers.IO) {
+                MyLog.i(TAG, "getSingleUser: ${userViewModel.getSingleUser(2)}")
+            }
             userViewModel.insert(listOf(user1, user2))
             val intent = Intent(requireContext(), NewWordActivity::class.java)
             startActivity(intent)

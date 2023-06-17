@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewbinding.ViewBinding;
 
-import com.demo.album.OppoGalleryFragment;
+import com.demo.album.GalleryFragment;
 import com.demo.animator.AnimatorActivity;
 import com.demo.appbar.ScrollingActivity;
 import com.demo.apt.AptDemoActivity;
@@ -144,7 +144,7 @@ public class MainButtonModel {
         customViews.add(new MainButton("aige custom view", MainButtonType.TYPE_CUSTOM_VIEW, AigeActivity.class));
         customViews.add(new MainButton("shape background", MainButtonType.TYPE_CUSTOM_VIEW, ShapeBgActivity.class));
         customViews.add(new MainButton("wink page", MainButtonType.TYPE_CUSTOM_VIEW, WinkActivity.class));
-        customViews.add(new MainButton("相册demo", MainButtonType.TYPE_CUSTOM_VIEW, bindFragmentListener(OppoGalleryFragment.newInstance())));
+        customViews.add(new MainButton("相册demo", MainButtonType.TYPE_CUSTOM_VIEW, bindFragmentListener(GalleryFragment.newInstance())));
         typeMap.put(MainButtonType.TYPE_CUSTOM_VIEW, customViews);
 
         List<MainButton> systemViews = new ArrayList<>();

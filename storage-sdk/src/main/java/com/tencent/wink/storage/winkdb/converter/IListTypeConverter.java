@@ -1,6 +1,8 @@
 package com.tencent.wink.storage.winkdb.converter;
 
+import androidx.annotation.Nullable;
 import androidx.room.TypeConverter;
+
 
 
 import java.util.List;
@@ -11,9 +13,11 @@ import java.util.List;
 public interface IListTypeConverter<T> {
 
     @TypeConverter
-    String converter(List<T> list);
+    @Nullable
+    String converter(@Nullable List<T> list);
 
     @TypeConverter
-    List<T> revert(String str);
+    @Nullable
+    List<T> revert(@Nullable String str);
 
 }

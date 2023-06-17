@@ -2,6 +2,6 @@ package com.demo.album
 
 import androidx.lifecycle.ViewModel
 
-class OppoGalleryViewModel : ViewModel() {
+class GalleryViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

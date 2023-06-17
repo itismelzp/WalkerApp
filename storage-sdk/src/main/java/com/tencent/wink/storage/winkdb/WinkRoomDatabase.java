@@ -54,7 +54,7 @@ public abstract class WinkRoomDatabase extends RoomDatabase {
             synchronized (WinkRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            WinkRoomDatabase.class, "wink_database")
+                            WinkRoomDatabase.class, "wink_database.db")
 //                            .openHelperFactory(FACTORY)
                             .addCallback(sRoomDatabaseCallback) // 数据库创建的时候回调
                             .fallbackToDestructiveMigration()

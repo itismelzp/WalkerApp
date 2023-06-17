@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import androidx.work.Configuration;
 import androidx.work.WorkManager;
 
+import com.demo.base.ActivityLifecycle;
 import com.demo.customview.utils.ViewUtils;
 import com.demo.ipc.ProcessUtil;
 import com.demo.logger.LogUtil;
@@ -81,6 +82,8 @@ public class MyApplication extends Application {
         initWorkManager();
 
         MyLog.e(TAG, "onCreate");
+
+        registerActivityLifecycleCallbacks(ActivityLifecycle.INSTANCE);
     }
 
     public static Context getInstance() {

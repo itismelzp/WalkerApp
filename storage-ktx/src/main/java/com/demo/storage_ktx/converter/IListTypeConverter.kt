@@ -10,5 +10,5 @@ interface IListTypeConverter<T> {
     fun converter(list: List<T>?): String?
 
     @TypeConverter
-    fun revert(str: String?): List<T>
+    fun revert(str: String?): List<T>?
 }

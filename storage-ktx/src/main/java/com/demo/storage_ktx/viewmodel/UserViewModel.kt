@@ -20,6 +20,10 @@ class UserViewModel(private val mRepository: UserRepository) : ViewModel() {
         return mRepository.getUser(id)
     }
 
+    fun getSingleUser(id: Int): User {
+        return mRepository.getSingleUser(id)
+    }
+
     val allUsers: LiveData<List<User>>
         get() = mAllUsers
 

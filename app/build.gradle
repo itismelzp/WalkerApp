@@ -8,6 +8,8 @@ plugins {
 //    id 'com.dorongold.gradle.tasktree.TaskTreePlugin'
 }
 
+apply from: '../jacoco-report.gradle'
+
 android {
     compileSdkVersion project.ANDROID_COMPILE_SDK_VERSION as int
 //    buildToolsVersion "28.0.3"
@@ -26,6 +28,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        coverageDebug {
+            minifyEnabled false
+            testCoverageEnabled true
         }
     }
 

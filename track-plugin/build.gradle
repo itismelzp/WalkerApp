@@ -47,16 +47,67 @@ afterEvaluate {
     publishing {
 //    配置maven-publishing插件的输出物
         publications {
-            maven(MavenPublication) {
+
+            // 下面的maven、debug、release为发布名，可以任意命名
+            // 相应的会生成，以下任务：
+            // 1) generateMetadataFileForXXXPublication
+            // 2) generatePomFileFromForXXXPublication：为名为XXX的发布创建一个POM文件，填充已知元数据，如项目名称、项目版本和依赖项。生成的POM文件默认放在 build/publications/$pubName/pom-default.xml.
+            // 3) publishXXXPublicationToMavenLocal：将PubName发布复制到本地Maven缓存—通常是*$USER_HOME/.m2/repository*——连同发布的POM文件和其他元数据一起。
+            // 4) publishXXXPublicationToMavenRepository：将名为PubName的发布发布到名为RepoName的存储库中。如果您有一个没有显式名称的存储库定义，那么RepoName将是Maven。
+            // 5) publish：依赖于所有publishPubNamePublicationToRepoNameRepository任务。将所有已定义的发布发布到所有已定义存储库的聚合任务。它不包括将发布复制到本地Maven缓存。
+            // 6) publishToMavenLocal：依赖于所有publishPubNamePublicationToMavenLocal任务。将所有已定义的发布复制到本地Maven缓存，包括它们的元数据(POM文件等)。
+            // 7) publishAllPublicationsToMavenRepository
+            maven(MavenPublication) { // 发布名$pubName（=maven）可以更改
                 groupId = 'com.walker'
                 artifactId = 'autotrack.android'
                 version = '1.0.0'
-
+//                pom {
+//                    name = "pom.xml"
+//                    description = "some description."
+//                    url = "http://com.walker"
+//
+//                    licenses {
+//                        license {
+//                            name = 'The Apache License, Version 2.0'
+//                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                        }
+//                    }
+//                    developers {
+//                        developer {
+//                            id = "1218"
+//                            name = "walker"
+//                        }
+//                    }
+//                    scm {
+//                        url = "http://scm.walker"
+//                        connection = ""
+//                        developerConnection = ""
+//                    }
+//                }
             }
+//            debug(MavenPublication) {
+//                artifact androidSourceJar // 打包源码
+//                from components.debug // 这里有components.java、components.debug、components.release
+//                groupId = 'com.walker'
+//                artifactId = 'autotrack.android'
+//                version = '1.0.0-SNAPSHOT'
+//            }
+//            release(MavenPublication) {
+//                artifact androidSourceJar // 打包源码
+//                from.components.release
+//                groupId = 'com.walker'
+//                artifactId = 'autotrack.android'
+//                version = '1.0.0'
+//            }
         }
         repositories {
-            maven {
+            maven { // 仓库名$repoName（=maven）不可以更改
+                allowInsecureProtocol = true
                 url = uri('../repo')
+//                credentials {
+//                    username = 'admin'
+//                    password = 'admin123'
+//                }
             }
         }
     }

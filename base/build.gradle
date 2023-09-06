@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
 }
 
+apply from: '../jacoco-report.gradle'
+
 android {
     namespace 'com.demo.base'
     compileSdkVersion ANDROID_COMPILE_SDK_VERSION as int
@@ -20,6 +22,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        coverageDebug {
+            minifyEnabled false
+            testCoverageEnabled true
         }
     }
     compileOptions {

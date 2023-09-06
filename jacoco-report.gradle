@@ -1,0 +1,52 @@
+apply plugin: 'jacoco'
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+}
+
+ext {
+    getFileFilter = { ->
+        def jacocoSkipClasses = null
+        if (project.hasProperty('jacocoSkipClasses')) {
+            jacocoSkipClasses = project.property('jacocoSkipClasses')
+        }
+        // 忽略类文件配置
+        def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*$ViewInjector*.*']
+        if (jacocoSkipClasses != null) {
+            fileFilter.addAll(jacocoSkipClasses)
+        }
+        println "jacocoSkipClasses: $jacocoSkipClasses"
+        return fileFilter
+    }
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testCoverageDebugUnitTest', 'createCoverageDebugCoverageReport']) {
+    group = "reporting"
+    description = "Generate Jacoco coverage reports"
+    reports {
+        xml {
+            required = true
+            destination file("build/reports/jacoco/jacoco.xml")
+        }
+        html {
+            required = true
+            destination file("build/reports/jacoco")
+        }
+    }
+
+    def fileFilter = project.getFileFilter()
+    // 检测覆盖率的class所在目录(以项目class所在目录为准)
+    def coverageDebugTree = fileTree(dir: "$project.buildDir/intermediates/javac/coverageDebug/classes", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+
+    // 设置需要检测覆盖率的目录
+    sourceDirectories.from(files([mainSrc]))
+    // 兼容gradle版本
+    classDirectories.from(files([coverageDebugTree]))
+    // 以下路径也需要检查
+    executionData.from(fileTree(dir: project.buildDir, includes: [
+            'outputs/unit_test_code_coverage/coverageDebugUnitTest/testCoverageDebugUnitTest.exec',
+            'outputs/code-coverage/debugAndroidTest/connected/coverage.ec'
+    ]))
+}

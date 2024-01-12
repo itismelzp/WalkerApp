@@ -21,7 +21,7 @@ public class DispatchView extends View implements GestureDetector.OnGestureListe
 
     private static final String TAG = "DispatchView";
 
-    private GestureDetector mGestureDetector;
+    private final GestureDetector mGestureDetector;
 
 
     public DispatchView(Context context) {

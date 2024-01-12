@@ -22,6 +22,7 @@ import com.demo.customview.aige.activity.AigeActivity;
 import com.demo.customview.ryg.ViewDispatchDemoActivity;
 import com.demo.customview.sloop.activity.CustomSloopMenuActivity;
 import com.demo.customview.zhy.activity.CustomViewActivity;
+import com.demo.face.FaceFragment;
 import com.demo.fragment.CoordinatorLayoutFragment;
 import com.demo.fragment.GridFragment;
 import com.demo.fragment.ViewPagerCollectionFragment;
@@ -207,6 +208,11 @@ public class MainButtonModel {
         other.add(new MainButton("进程通信demo", IPCDemoActivity.class));
 //        other.add(new MainButton("日志demo2", bindFragmentListener(LoggerFragment.newInstance())));
         other.add(new MainButton("插件demo", pluginClickListener));
+        other.add(new MainButton.Builder()
+                .name("人脸demo")
+                .type(MainButtonType.TYPE_OTHER)
+                .onClickListener(bindFragmentListener(FaceFragment.newInstance()))
+                .build());
         typeMap.put(MainButtonType.TYPE_OTHER, other);
     }
 

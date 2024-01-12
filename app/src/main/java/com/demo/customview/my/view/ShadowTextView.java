@@ -64,6 +64,8 @@ public class ShadowTextView extends View {
     private int mBgShowStartColor;
     private int mBgShowEndColor;
 
+    private RectF mRectF;
+
     public ShadowTextView(Context context) {
         this(context, null);
     }
@@ -107,6 +109,7 @@ public class ShadowTextView extends View {
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mRectF = new RectF();
     }
 
 
@@ -199,13 +202,13 @@ public class ShadowTextView extends View {
         super.onDraw(canvas);
         setBgPaint();
         setMaskPaint();
-        RectF rectF = new RectF(mMaskRadius, mMaskRadius, mWidth - mMaskRadius, mHight - mMaskRadius);
+        mRectF.set(mMaskRadius, mMaskRadius, mWidth - mMaskRadius, mHight - mMaskRadius);
         if (isShowShadow) {
-            canvas.drawRoundRect(rectF, mRadius, mRadius, mMaskPaint);
+            canvas.drawRoundRect(mRectF, mRadius, mRadius, mMaskPaint);
         }
-        canvas.drawRoundRect(rectF, mRadius, mRadius, mBgPaint);
+        canvas.drawRoundRect(mRectF, mRadius, mRadius, mBgPaint);
         if (!TextUtils.isEmpty(mTextContent)) {
-            drawMyText(rectF, canvas);
+            drawMyText(mRectF, canvas);
         }
     }
 

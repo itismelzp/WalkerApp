@@ -29,7 +29,7 @@ message SearchRequest {
 //    enum EnumNotAllowingAlias {
 //        UNKNOWN = 0;
 //        STARTED = 1;
-////         RUNNING = 1;  // Uncommenting this line will cause a compile error inside Google and a warning message outside.
+//         RUNNING = 1;  // Uncommenting this line will cause a compile error inside Google and a warning message outside.
 //    }
 
 }

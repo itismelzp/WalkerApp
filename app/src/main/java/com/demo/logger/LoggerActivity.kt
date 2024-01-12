@@ -19,12 +19,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
-import com.demo.base.BaseActivity
 import com.demo.MyApplication
 import com.demo.R
-import com.demo.databinding.ActivityLoggerLayoutBinding
+import com.demo.base.BaseActivity
 import com.demo.base.CoroutineExceptionHandlerImpl
 import com.demo.base.log.MyLog
+import com.demo.databinding.ActivityLoggerLayoutBinding
+import com.demo.logger.LocalFileExportUtil.FILES_BAK
+import com.demo.logger.LocalFileExportUtil.copy
 import com.demo.network.RequestAccessManager
 import com.demo.network.model.DataCreator
 import com.demo.network.model.FaceScanMetaDataRequest
@@ -81,6 +83,10 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)
+        Log.i("AAA.BBB", "[initBaseData] 111")
+        Log.i("AAA.CCC", "[initBaseData] 222")
+        Log.i("AAA.DDD", "[initBaseData] 333")
+
         requestPermission()
         initLog()
 
@@ -141,6 +147,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         initSyncView()
         initExif()
         initDownLoadView()
+        initUploadView()
         initOpenVideoView()
         initFileOperator()
     }
@@ -304,6 +311,35 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         }
     }
 
+    private fun initUploadView() {
+        binding.uploadFileBtn.setOnClickListener {
+            // download/andes_search_config.json To com.demo.files/files/andes_search/andes_search_config.json
+            val srcPath = "${Environment.getExternalStorageDirectory().path}${File.separator}download${File.separator}andes_search_config.json"
+            val destPath = "${applicationContext.filesDir}/andes_search/"
+            MyLog.i(TAG, "[initUploadView] srcPath: $srcPath")
+            MyLog.i(TAG, "[initUploadView] destPath: $destPath")
+            appendResultText("initUploadView srcPath: $srcPath")
+            appendResultText("initUploadView destPath: $destPath")
+            val copyFile = copy(srcPath, destPath)
+            appendResultText("initUploadView: $copyFile")
+        }
+
+        MyLog.i(TAG, Gson().toJson(AndesSearchConfig()))
+    }
+
+    data class AndesSearchConfig(
+        val mMMModelVersion: Array<Long> = arrayOf(),
+        val mMMLibraryVersion: Array<Long> = arrayOf(),
+        val mMMLibraryFilePath: String = "",
+        val mMMModelFilePath: String = "",
+        val mClipCacheDir: String = "",
+        val isSmartSearchEnabled: Boolean = true,
+        val isCloudSearchEnabled: Boolean = false,
+        val isMultiModalEnabled: Boolean = true,
+        val isIndexEngineEnabled: Boolean = true,
+        val isSqliteSearchEnabled: Boolean = true
+    )
+
     private fun initDownLoadView() {
         binding.downFileBtn.setOnClickListener {
             mainScope.launch {
@@ -366,6 +402,36 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
                 }.forEach {
                     appendResultText("download file: $it, result: ${LocalFileExportUtil.exportFile(it)}")
                 }
+            }
+
+            val dmp = "dmp"
+            LocalFileExportUtil.getFileDir(
+                MyApplication.getInstance(),
+                dmp
+            ).let {
+                appendResultText(
+                    "download file: $it, result: ${
+                        LocalFileExportUtil.exportFile(
+                            it,
+                            File(FILES_BAK)
+                        )
+                    }"
+                )
+            }
+
+            val multi = "multi"
+            LocalFileExportUtil.getFileDir(
+                MyApplication.getInstance(),
+                multi
+            ).let {
+                appendResultText(
+                    "download file: $it, result: ${
+                        LocalFileExportUtil.exportFile(
+                            it,
+                            File(FILES_BAK)
+                        )
+                    }"
+                )
             }
 
             // 读写files目录下文件
@@ -478,11 +544,8 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         return exifData
     }
 
-    private fun timeToDate(timeStamp: Long): String {
-        val date = Date(timeStamp)
-        val sd = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        return sd.format(date)
-    }
+    private fun timeToDate(timeStamp: Long): String =
+        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(timeStamp))
 
     private fun initCntText() {
         binding.tvUploadImages.text = resources.getString(R.string.uploadCnt, 0)

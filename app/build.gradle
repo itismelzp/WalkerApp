@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.application'
-//    id 'com.walker.autotrack'
+    id 'com.walker.autotrack'
     id 'com.google.protobuf'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
@@ -94,6 +94,7 @@ dependencies {
     implementation project(':track-sdk')
     implementation project(':storage-sdk')
     implementation project(':storage-ktx')
+    implementation project(':face')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.appcompat:appcompat:${rootProject.appCompatVersion}"
     implementation "androidx.constraintlayout:constraintlayout:${rootProject.constraintLayoutVersion}"

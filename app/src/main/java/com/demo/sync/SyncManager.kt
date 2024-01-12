@@ -97,8 +97,9 @@ class SyncManager(private val textView: TextView, private val fragment: Fragment
 //        testFuture()
 //        testCompletableFuture()
 
-
-        testFutureGeek()
+//        testFutureGeek()
+//        testFutureTaskGeek()
+        testFutureTask2Geek()
 //        testCompletableFutureGeek()
 //        testCompletionServiceGeek()
     }
@@ -221,7 +222,7 @@ class SyncManager(private val textView: TextView, private val fragment: Fragment
     private fun testsRxjava(start: Long = System.currentTimeMillis()) {}
 
     // 11. Coroutine
-    private fun testCoroutine(start: Long = System.currentTimeMillis()) {
+    private suspend fun testCoroutine(start: Long = System.currentTimeMillis()) {
         runBlocking {
 //            val c1: Deferred<String> = async(Dispatchers.IO) {
 //                task1()
@@ -229,15 +230,18 @@ class SyncManager(private val textView: TextView, private val fragment: Fragment
 //            val c2 = async(Dispatchers.IO) {
 //                task2()
 //            }
-            val result = mutableListOf<Deferred<String>>().apply {
+            val asyncList = mutableListOf<Deferred<String>>().apply {
                 repeat(10) {
                     add(async(Dispatchers.IO) {
                         task1()
                     })
                 }
-            }.awaitAll().reduce { acc, s ->
+            }
+            val awaitAllResults: List<String> = asyncList.awaitAll()
+            val result = awaitAllResults.reduce { acc, s ->
                 "$s, $acc"
             }
+
 //            val await1 = c1.await()
 //            val await2 = c2.await()
 //            appendText("[testCoroutine] result: ${task3(await1, await2)}, timeCost: ${MyLog.getTimeCost(start)}")
@@ -287,11 +291,17 @@ class SyncManager(private val textView: TextView, private val fragment: Fragment
         repeat(10) {
             futures.add(executor.submit(task1))
         }
+
+        val fStart = System.currentTimeMillis()
         val results: List<String> = futures.map {
             runCatching {
-                it.get(4000, TimeUnit.MILLISECONDS)
+                it.get(4000, TimeUnit.MILLISECONDS).also {
+                    appendText("[testFutureTaskGeek] get: $it, cost: ${MyLog.getTimeCost(fStart)}ms")
+                }
             }.getOrElse {
-                "null"
+                "null".also {
+                    appendText("[testFutureTaskGeek] error: $it, cost: ${MyLog.getTimeCost(fStart)}ms")
+                }
             }
         }
         val reduce = results.reduce { acc, s ->
@@ -301,21 +311,26 @@ class SyncManager(private val textView: TextView, private val fragment: Fragment
     }
 
     private fun testFutureTaskGeek(start: Long = System.currentTimeMillis()) {
-        val fts = mutableListOf<FutureTask<String>>()
+        val ft = mutableListOf<FutureTask<String>>()
         val executor = Executors.newFixedThreadPool(10)
         repeat(10) {
-            fts.add(FutureTask(T1Task(it)))
+            ft.add(FutureTask(T1Task(it)))
         }
 
-        fts.forEach {
+        ft.forEach {
             executor.execute(it)
         }
 
-        val results: List<String> = fts.map {
+        val ftsStart = System.currentTimeMillis()
+        val results: List<String> = ft.map {
             runCatching {
-                it.get(5000, TimeUnit.MILLISECONDS)
+                it.get(5_000, TimeUnit.MILLISECONDS).also {
+                    appendText("[testFutureTaskGeek] get: $it, cost: ${MyLog.getTimeCost(ftsStart)}ms")
+                }
             }.getOrElse {
-                ""
+                "error".also {
+                    appendText("[testFutureTaskGeek] error: $it, cost: ${MyLog.getTimeCost(ftsStart)}ms")
+                }
             }
         }
 
@@ -323,6 +338,56 @@ class SyncManager(private val textView: TextView, private val fragment: Fragment
             "$acc, $s"
         }
         appendText("[testFutureTaskGeek] result: $reduce, cost: ${MyLog.getTimeCost(start)}ms")
+    }
+
+    private fun testFutureTask2Geek(start: Long = System.currentTimeMillis()) {
+        val executor = Executors.newFixedThreadPool(3)
+        val futureTask1 = FutureTask(FutureTask1())
+        val futureTask2 = FutureTask(FutureTask2())
+        val futureTask3 = FutureTask(FutureTask3())
+
+
+        executor.submit(futureTask1)
+        executor.submit(futureTask2)
+        executor.submit(futureTask3)
+
+        val list = mutableListOf<Int>()
+
+        val ftsStart1 = System.currentTimeMillis()
+        val result1 = runCatching {
+            futureTask1.get(5_000, TimeUnit.MILLISECONDS).also {
+                appendText("[testFutureTask2Geek] get: $it, cost: ${MyLog.getTimeCost(ftsStart1)}ms")
+            }
+        }.getOrElse {
+            "error".also {
+                appendText("[testFutureTask2Geek] error: $it, cost: ${MyLog.getTimeCost(ftsStart1)}ms")
+            }
+        }
+
+        val ftsStart2 = System.currentTimeMillis()
+        val result2 = runCatching {
+            futureTask2.get(5_000, TimeUnit.MILLISECONDS).also {
+                appendText("[testFutureTask2Geek] get: $it, cost: ${MyLog.getTimeCost(ftsStart2)}ms")
+            }
+        }.getOrElse {
+            "error".also {
+                appendText("[testFutureTask2Geek] error: $it, cost: ${MyLog.getTimeCost(ftsStart2)}ms")
+            }
+        }
+
+        val ftsStart3 = System.currentTimeMillis()
+        val result3 = runCatching {
+            futureTask3.get(5_000, TimeUnit.MILLISECONDS).also {
+                appendText("[testFutureTask2Geek] get: $it, cost: ${MyLog.getTimeCost(ftsStart3)}ms")
+            }
+        }.getOrElse {
+            "error".also {
+                appendText("[testFutureTask2Geek] error: $it, cost: ${MyLog.getTimeCost(ftsStart3)}ms")
+            }
+        }
+        val result = "$result1, $result2, $result3"
+        appendText("[testFutureTask2Geek] result: $result, cost: ${MyLog.getTimeCost(start)}ms")
+
     }
 
     // 适合做一些拓扑图类的任务结构
@@ -380,6 +445,46 @@ class T1Task(private val idx: Int) : Callable<String> {
         println("T1: START...")
         println("T1: END")
         return task1() + "-$idx"
+    }
+}
+
+class FutureTask1(private val delayMs: Long = 6_000) : Callable<String> {
+    override fun call(): String {
+        sleep(delayMs)
+        return "FutureTask1".also {
+            val msg = "FutureTask1 finished $it\n"
+            MyLog.i(TAG, msg)
+        }
+    }
+}
+
+class FutureTask2(private val delayMs: Long = 6_000) : Callable<String> {
+    override fun call(): String {
+        sleep(delayMs)
+        return "FutureTask2".also {
+            val msg = "FutureTask2 finished $it\n"
+            MyLog.i(TAG, msg)
+        }
+    }
+}
+
+class FutureTask3(private val delayMs: Long = 6_000) : Callable<String> {
+    override fun call(): String {
+        sleep(delayMs)
+        return "FutureTask3".also {
+            val msg = "FutureTask3 finished $it\n"
+            MyLog.i(TAG, msg)
+        }
+    }
+}
+
+class CountTask(private val taskId: Int) : Callable<Int> {
+    override fun call(): Int {
+        sleep(500)
+        return taskId.also {
+            val msg = "$taskId finished $it\n"
+            MyLog.i(TAG, msg)
+        }
     }
 }
 

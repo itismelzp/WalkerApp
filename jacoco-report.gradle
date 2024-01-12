@@ -1,6 +1,6 @@
 apply plugin: 'jacoco'
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
     jacoco.includeNoLocationClasses = true
     jacoco.excludes = ['jdk.internal.*']
 }
@@ -21,7 +21,8 @@ ext {
     }
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testCoverageDebugUnitTest', 'createCoverageDebugCoverageReport']) {
+tasks.register('jacocoTestReport', JacocoReport) {
+    dependsOn['testCoverageDebugUnitTest', 'createCoverageDebugCoverageReport']
     group = "reporting"
     description = "Generate Jacoco coverage reports"
     reports {

@@ -75,7 +75,7 @@ public class MyApplication extends Application {
         WinkDbLog.init(new LogUtil.DefaultLog());
 
         MyLog.init(new LogUtil.TimberLog());
-        initPlugin(this);
+        // initPlugin(this);
 
         initVideoSdk();
 

@@ -56,5 +56,35 @@
       <option name="name" value="maven3" />
       <option name="url" value="https://plugins.gradle.org/m2/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven9" />
+      <option name="name" value="maven9" />
+      <option name="url" value="http://nexus.os.adc.com/nexus/content/repositories/branch_io/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven4" />
+      <option name="name" value="maven4" />
+      <option name="url" value="http://mirror-maven.myoas.com/repository/ars-sdk-release/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven10" />
+      <option name="name" value="maven10" />
+      <option name="url" value="http://maven.scm.adc.com:8081/nexus/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven6" />
+      <option name="name" value="maven6" />
+      <option name="url" value="http://nexus.os.adc.com/nexus/content/repositories/iss_official_releases" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven8" />
+      <option name="name" value="maven8" />
+      <option name="url" value="http://m2repo.onepluscorp.cn:8081/nexus/content/repositories/oneplus_share_libs" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven5" />
+      <option name="name" value="maven5" />
+      <option name="url" value="http://maven.scm.adc.com:8081/nexus/content/groups/public/" />
+    </remote-repository>
   </component>
 </project>

@@ -192,11 +192,23 @@
             android:layout_height="wrap_content"
             android:text="Exif" />
 
-        <Button
-            android:id="@+id/down_file_btn"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="下载" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/down_file_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下载" />
+
+            <Button
+                android:id="@+id/upload_file_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="上传" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/open_video_btn"

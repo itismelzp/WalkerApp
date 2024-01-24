@@ -59,21 +59,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         mainButtonModel = MainButtonModel(this@MainFragment)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        MyLog.d(TAG, "[onCreateView] fragment: $this, binding: $_binding")
-        return _binding?.let {
-            isViewCreate = true
-            it.root
-        } ?: FragmentMainBinding.inflate(inflater, container, false).let {
-            _binding = it
-            isViewCreate = false
-            it.root
-        }
-    }
-
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,

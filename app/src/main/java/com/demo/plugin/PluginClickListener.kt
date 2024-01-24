@@ -21,7 +21,7 @@ class PluginClickListener : MainButton.OnClickListener {
 
     override fun onClickListener() {
 
-        val pluginManager = MyApplication.getPluginManager()
+        val pluginManager = MyApplication.pluginManager
         val bundle = Bundle()
         // 插件 zip，这几个参数也都可以不传，直接在 PluginManager 中硬编码
         bundle.putString("plugin_path", "/data/local/tmp/plugin-debug.zip")
@@ -32,8 +32,8 @@ class PluginClickListener : MainButton.OnClickListener {
         // 要传入到插件里的参数
         bundle.putBundle("extra_to_plugin_bundle", Bundle())
 
-        pluginManager.enter(
-            MyApplication.getInstance(),
+        pluginManager?.enter(
+            MyApplication.instance,
             FROM_ID_START_ACTIVITY,
             bundle,
             object : EnterCallback {

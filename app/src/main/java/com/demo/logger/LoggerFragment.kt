@@ -77,7 +77,7 @@ open class LoggerFragment : BaseFragment<ActivityLoggerLayoutBinding>() {
             // 先判断有没有权限
             if (!Environment.isExternalStorageManager()) {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-                intent.data = Uri.parse("package:" + MyApplication.getInstance().packageName)
+                intent.data = Uri.parse("package:" + MyApplication.instance.packageName)
                 startActivityForResult(intent, BaseActivity.REQUEST_CODE)
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

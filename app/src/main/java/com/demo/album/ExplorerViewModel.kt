@@ -75,7 +75,7 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
             ImageDataProvider.getRepeatableImages(MEMORIES_THUMB_COUNT).mapIndexed { index, resId ->
                 AlbumBindingData(
                     ResourcesCompat.getDrawable(
-                        MyApplication.getInstance().resources,
+                        MyApplication.instance.resources,
                         resId,
                         null
                     ), "幸福时刻$index", "2021-2012年", false
@@ -90,7 +90,7 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
             ImageDataProvider.getRepeatableImages(MEMORIES_ALL_THUMB_COUNT).mapIndexed { index, resId ->
                 AlbumBindingData(
                     ResourcesCompat.getDrawable(
-                        MyApplication.getInstance().resources,
+                        MyApplication.instance.resources,
                         resId,
                         null
                     ),
@@ -143,7 +143,7 @@ class ExplorerViewModel(application: Application) : AndroidViewModel(application
                 title = "title: $index",
                 subTitle = "subtitle: $index",
                 thumbnail = ResourcesCompat.getDrawable(
-                    MyApplication.getInstance().resources,
+                    MyApplication.instance.resources,
                     R.drawable.zhaoyun,
                     null
                 )

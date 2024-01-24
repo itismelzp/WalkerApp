@@ -42,7 +42,7 @@ object ActivityLifecycle : ActivityLifecycleCallbacks {
         activityCount++
         for (listener in listeners) {
             listener.onActivityStarted(activity)
-            if (activityCount == 0) {
+            if (activityCount == 1) {
                 listener.onForeground(activity)
             }
         }
@@ -64,7 +64,7 @@ object ActivityLifecycle : ActivityLifecycleCallbacks {
         activityCount--
         for (listener in listeners) {
             listener.onActivityStopped(activity)
-            if (activityCount == 1) {
+            if (activityCount == 0) {
                 listener.onBackground(activity)
             }
         }
@@ -89,19 +89,19 @@ object ActivityLifecycle : ActivityLifecycleCallbacks {
 
         fun onBackground(activity: Activity)
 
-        fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?)
+        fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
-        fun onActivityStarted(activity: Activity)
+        fun onActivityStarted(activity: Activity) {}
 
-        fun onActivityResumed(activity: Activity)
+        fun onActivityResumed(activity: Activity) {}
 
-        fun onActivityPaused(activity: Activity)
+        fun onActivityPaused(activity: Activity) {}
 
-        fun onActivityStopped(activity: Activity)
+        fun onActivityStopped(activity: Activity) {}
 
-        fun onActivitySaveInstanceState(activity: Activity, outState: Bundle)
+        fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 
-        fun onActivityDestroyed(activity: Activity)
+        fun onActivityDestroyed(activity: Activity) {}
     }
 
 }

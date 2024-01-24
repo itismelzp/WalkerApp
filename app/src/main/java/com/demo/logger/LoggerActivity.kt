@@ -392,7 +392,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
     private fun initFileOperator() {
         binding.databaseListBtn.setOnClickListener {
             clearResultText()
-            LocalFileExportUtil.getDatabaseFiles(MyApplication.getInstance()).let { files ->
+            LocalFileExportUtil.getDatabaseFiles(MyApplication.instance).let { files ->
                 appendResultText("$files")
                 files.map {
                     appendResultText("listDatabase file: $it")
@@ -406,7 +406,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
             val dmp = "dmp"
             LocalFileExportUtil.getFileDir(
-                MyApplication.getInstance(),
+                MyApplication.instance,
                 dmp
             ).let {
                 appendResultText(
@@ -421,7 +421,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
             val multi = "multi"
             LocalFileExportUtil.getFileDir(
-                MyApplication.getInstance(),
+                MyApplication.instance,
                 multi
             ).let {
                 appendResultText(
@@ -445,7 +445,7 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
 
     fun getUri(context: Context, authorites: String, file: File): Uri {
         val uri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            //设置7.0以上共享文件，分享路径定义在xml/file_paths.xml
+            // 设置7.0以上共享文件，分享路径定义在xml/file_paths.xml
             FileProvider.getUriForFile(context, authorites, file)
         } else {
             // 7.0以下,共享文件

@@ -82,23 +82,25 @@ public class MainButtonModel {
         // 要传入到插件里的参数
         bundle.putBundle("extra_to_plugin_bundle", new Bundle());
 
-        pluginManager.enter(MyApplication.getInstance(), FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
-            @Override
-            public void onShowLoadingView(View view) {
-                MyLog.i(TAG, "[onShowLoadingView]");
-            }
+        if (pluginManager != null) {
+            pluginManager.enter(MyApplication.getInstance(), FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
+                @Override
+                public void onShowLoadingView(View view) {
+                    MyLog.i(TAG, "[onShowLoadingView]");
+                }
 
-            @Override
-            public void onCloseLoadingView() {
-                MyLog.i(TAG, "[onCloseLoadingView]");
-            }
+                @Override
+                public void onCloseLoadingView() {
+                    MyLog.i(TAG, "[onCloseLoadingView]");
+                }
 
-            @Override
-            public void onEnterComplete() {
-                // 启动成功
-                MyLog.i(TAG, "[onEnterComplete]");
-            }
-        });
+                @Override
+                public void onEnterComplete() {
+                    // 启动成功
+                    MyLog.i(TAG, "[onEnterComplete]");
+                }
+            });
+        }
     };
 
     private class FragmentOnclickListener implements MainButton.OnClickListener {

@@ -25,8 +25,10 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
      * 比如fragment hide的时候，如果不将这里置为空，有可能引起内存泄漏。
      * 所以我们要在onCreateView中创建，onDestroyView置空。
      */
-    protected var _binding: T? = null
+    private var _binding: T? = null
     protected val binding get() = _binding!!
+
+    private var isViewCreate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +45,19 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     open fun getEnterTransitionRes(): Int = R.transition.slide_right
     open fun getExitTransitionRes(): Int = R.transition.grid_exit_transition
 
-    override fun onCreateView(
+    final override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = getViewBinding(inflater, container)
+        _binding?.let {
+            isViewCreate = true
+            it.root
+        } ?: getViewBinding(inflater, container).let {
+            _binding = it
+            isViewCreate = false
+            it.root
+        }
         initBaseData(savedInstanceState)
         initBaseViews(savedInstanceState)
         return binding.root

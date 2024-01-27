@@ -21,8 +21,6 @@ class NewWordActivity : BaseActivity<ActivityNewWordBinding>() {
         WordViewModelFactory(WordRepository(WordRoomDatabase.getDatabase(this, applicationScope).wordDao()))
     }
 
-    override fun getViewBinding(): ActivityNewWordBinding = ActivityNewWordBinding.inflate(layoutInflater)
-
     override fun initBaseViews(savedInstanceState: Bundle?) {
         super.initBaseViews(savedInstanceState)
 

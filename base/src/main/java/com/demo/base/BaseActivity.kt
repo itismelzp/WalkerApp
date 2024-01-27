@@ -9,18 +9,22 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Environment
 import android.provider.Settings
+import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
+import com.demo.base.ext.saveAs
+import com.demo.base.ext.saveAsUnChecked
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.plus
+import java.lang.reflect.ParameterizedType
 
 abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
 
     private lateinit var _binding: T
-    protected val binding get() = _binding;
+    protected val binding get() = _binding
 
     companion object {
         const val REQUEST_CODE = 0
@@ -37,7 +41,12 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
         initBaseViews(savedInstanceState)
     }
 
-    protected abstract fun getViewBinding(): T
+    private fun getViewBinding(): T {
+        val type = javaClass.genericSuperclass
+        val vbClass: Class<T> = type!!.saveAs<ParameterizedType>().actualTypeArguments[0].saveAs()
+        val method = vbClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
+        return method.invoke(this, layoutInflater)!!.saveAsUnChecked()
+    }
 
     open fun initBaseData(savedInstanceState: Bundle?) {}
     open fun initBaseViews(savedInstanceState: Bundle?) {}

@@ -880,8 +880,6 @@ class LoggerActivity : BaseActivity<ActivityLoggerLayoutBinding>() {
         return DataConverter.mediaPathList2MediaItemList(DataCreator.aggregation().data)
     }
 
-    override fun getViewBinding() = ActivityLoggerLayoutBinding.inflate(layoutInflater)
-
     /**
      * Ping命令格式为：ping -c 1 -w 5 ip
      * 其中参数 ：

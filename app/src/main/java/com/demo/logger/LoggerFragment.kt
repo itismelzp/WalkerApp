@@ -37,12 +37,6 @@ open class LoggerFragment : BaseFragment<ActivityLoggerLayoutBinding>() {
         fun newInstance(): LoggerFragment = LoggerFragment()
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = ActivityLoggerLayoutBinding.inflate(layoutInflater, container, attachToRoot)
-
     override fun createFragment(
         arg1: String,
         arg2: String

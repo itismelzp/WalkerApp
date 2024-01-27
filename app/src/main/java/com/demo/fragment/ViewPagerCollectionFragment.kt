@@ -41,12 +41,6 @@ class ViewPagerCollectionFragment : BaseFragment<FragmentViewPager2DemoBinding>(
         }
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) =  FragmentViewPager2DemoBinding.inflate(inflater, container, attachToRoot)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

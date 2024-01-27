@@ -72,9 +72,4 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements G
         toast(TAG + "：" + msg);
     }
 
-    @NonNull
-    @Override
-    protected ActivityMainBinding getViewBinding() {
-        return ActivityMainBinding.inflate(getLayoutInflater());
-    }
 }

@@ -29,12 +29,6 @@ class GalleryFragment : BaseFragment<ExploreMainFragmentLayoutBinding>() {
 
     private lateinit var viewModel: GalleryViewModel
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = ExploreMainFragmentLayoutBinding.inflate(inflater, container, attachToRoot)
-
     override fun createFragment(arg1: String, arg2: String): BaseFragment<ExploreMainFragmentLayoutBinding> {
         return newInstance()
     }

@@ -8,12 +8,6 @@ import com.demo.base.BaseFragment
 
 class SyncDemoFragment : BaseFragment<FragmentSyncDemoBinding>() {
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = FragmentSyncDemoBinding.inflate(inflater, container, attachToRoot)
-
     override fun createFragment(arg1: String, arg2: String) = SyncDemoFragment()
 
     override fun initBaseViews(savedInstanceState: Bundle?) {

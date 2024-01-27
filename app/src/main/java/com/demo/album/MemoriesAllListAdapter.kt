@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.demo.R
 import com.demo.customview.utils.ViewUtils
 import com.demo.base.log.MyLog
+import com.demo.databinding.ExploreMemoriesChoiceNessBlockBinding
 
 /**
  * Created by lizhiping on 2023/2/7.
@@ -29,25 +29,22 @@ class MemoriesAllListAdapter(diffCallback: DiffUtil.ItemCallback<AlbumBindingDat
         holder.bind(item)
     }
 
-    class MemoriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MemoriesViewHolder(binding: ExploreMemoriesChoiceNessBlockBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        private var blockImage: CornerImageView
-        private var titleText: TextView
-        private var subTitleText: TextView
-
-        init {
-            blockImage = itemView.findViewById(R.id.main_explorer_album_set_item_image)
-            titleText = itemView.findViewById(R.id.main_explorer_album_set_item_title_text)
-            subTitleText = itemView.findViewById(R.id.main_explorer_album_set_item_sub_title_text)
-        }
+        private var blockImage: CornerImageView = binding.mainExplorerAlbumSetItemImage
+        private var titleText: TextView = binding.mainExplorerAlbumSetItemTitleText
+        private var subTitleText: TextView = binding.mainExplorerAlbumSetItemSubTitleText
 
         companion object {
 
-            fun create(parent: ViewGroup): MemoriesViewHolder =
-                MemoriesViewHolder(
-                    LayoutInflater.from(parent.context)
-                        .inflate(R.layout.explore_memories_all_block, parent, false)
+            fun create(parent: ViewGroup): MemoriesViewHolder = MemoriesViewHolder(
+                ExploreMemoriesChoiceNessBlockBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
                 )
+            )
         }
 
         fun bind(data: AlbumBindingData) {
@@ -99,13 +96,19 @@ class MemoriesAllListAdapter(diffCallback: DiffUtil.ItemCallback<AlbumBindingDat
             private const val TAG = "MemoriesAllListAdapter"
         }
 
-        override fun areItemsTheSame(oldItem: AlbumBindingData, newItem: AlbumBindingData): Boolean {
+        override fun areItemsTheSame(
+            oldItem: AlbumBindingData,
+            newItem: AlbumBindingData
+        ): Boolean {
             val areItemsTheSame = oldItem === newItem
             MyLog.i(TAG, "areItemsTheSame: $areItemsTheSame")
             return areItemsTheSame
         }
 
-        override fun areContentsTheSame(oldItem: AlbumBindingData, newItem: AlbumBindingData): Boolean {
+        override fun areContentsTheSame(
+            oldItem: AlbumBindingData,
+            newItem: AlbumBindingData
+        ): Boolean {
             val areContentsTheSame = TextUtils.equals(oldItem.title, newItem.title) &&
                     TextUtils.equals(oldItem.subTitle, newItem.subTitle)
             MyLog.i(TAG, "areContentsTheSame: $areContentsTheSame")

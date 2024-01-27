@@ -11,8 +11,6 @@ import com.demo.base.BaseActivity
 class SearchOtherActivity : BaseActivity<ActivitySearchOtherBinding>() {
 
 
-    override fun getViewBinding() = ActivitySearchOtherBinding.inflate(layoutInflater)
-
     override fun initBaseViews(savedInstanceState: Bundle?) {
         super.initBaseViews(savedInstanceState)
 

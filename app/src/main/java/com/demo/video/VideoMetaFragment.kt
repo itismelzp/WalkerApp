@@ -51,12 +51,6 @@ class VideoMetaFragment : BaseFragment<FragmentVideoMetaBinding>() {
         fun newInstance() = VideoMetaFragment()
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = FragmentVideoMetaBinding.inflate(inflater, container, attachToRoot)
-
     override fun createFragment(
         arg1: String,
         arg2: String

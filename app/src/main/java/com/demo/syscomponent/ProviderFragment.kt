@@ -36,12 +36,6 @@ class ProviderFragment : BaseFragment<FragmentProviderBinding>() {
     private val uriUse: Uri = Uri.parse("${MyProvider.BASE_URI}/${DBHelper.USER_TABLE_NAME}")
     private val uriJob: Uri = Uri.parse("${MyProvider.BASE_URI}/${DBHelper.JOB_TABLE_NAME}")
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = FragmentProviderBinding.inflate(inflater, container, attachToRoot)
-
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)
         initResolverData()

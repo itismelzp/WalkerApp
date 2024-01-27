@@ -22,6 +22,4 @@ class ScrollingActivity : BaseActivity<ActivityScrollingBinding>() {
         }
     }
 
-    override fun getViewBinding() = ActivityScrollingBinding.inflate(layoutInflater)
-
 }

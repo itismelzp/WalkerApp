@@ -22,12 +22,6 @@ class CoordinatorLayoutFragment : BaseFragment<FragmentCoordinatorLayoutBinding>
         }
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = FragmentCoordinatorLayoutBinding.inflate(inflater, container, attachToRoot)
-
     override fun createFragment(
         arg1: String,
         arg2: String

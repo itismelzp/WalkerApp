@@ -59,12 +59,6 @@ class FaceFragment : BaseFragment<FragmentFaceBinding>() {
         fun newInstance(param1: String, param2: String) = FaceFragment()
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = FragmentFaceBinding.inflate(inflater, container, attachToRoot)
-
     override fun createFragment() = newInstance()
 
     override fun createFragment(arg1: String, arg2: String) = newInstance(arg1, arg2)

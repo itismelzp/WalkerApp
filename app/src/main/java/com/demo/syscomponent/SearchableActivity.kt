@@ -40,8 +40,6 @@ class SearchableActivity : BaseActivity<LayoutSearchActivityBinding>() {
     private var lastQueryValue = ""
 
 
-    override fun getViewBinding() = LayoutSearchActivityBinding.inflate(layoutInflater)
-
     override fun initBaseData(savedInstanceState: Bundle?) {
         super.initBaseData(savedInstanceState)
 

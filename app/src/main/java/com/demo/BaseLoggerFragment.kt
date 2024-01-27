@@ -15,12 +15,6 @@ open class BaseLoggerFragment : BaseFragment<FragmentBaseLoggerLayoutBinding>() 
         fun newInstance(): BaseLoggerFragment = BaseLoggerFragment()
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = FragmentBaseLoggerLayoutBinding.inflate(layoutInflater, container, attachToRoot)
-
     override fun createFragment(
         arg1: String,
         arg2: String

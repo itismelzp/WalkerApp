@@ -187,6 +187,15 @@ dependencies {
     // workManager
     implementation "androidx.work:work-runtime-ktx:${rootProject.work_version}"
 
+    implementation ("com.oplus.appcompat:base:${rootProject.coui_version}")
+    implementation ("com.oplus.appcompat:controls:${rootProject.coui_version}")
+    implementation ("com.oplus.appcompat:bars:${rootProject.coui_version}")
+    implementation ("com.oplus.appcompat:lists:${rootProject.coui_version}")
+    implementation ("com.oplus.appcompat:panel:${rootProject.coui_version}")
+    implementation ("com.oplus.appcompat:component:${rootProject.coui_version}")
+    implementation ("com.oplus.appcompat:responsiveui:${rootProject.coui_version}")
+    implementation ("com.oplus.appcompat:nearx:${rootProject.coui_version}")
+
     // test
     testImplementation "junit:junit:${rootProject.junitVersion}"
     androidTestImplementation "androidx.test.ext:junit:${rootProject.androidxJunitVersion}"

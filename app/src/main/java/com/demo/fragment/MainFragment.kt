@@ -59,12 +59,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         mainButtonModel = MainButtonModel(this@MainFragment)
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = FragmentMainBinding.inflate(inflater, container, attachToRoot)
-
     override fun createFragment(arg1: String, arg2: String) = newInstance("", "")
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

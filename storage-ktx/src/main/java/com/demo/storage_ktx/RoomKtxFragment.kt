@@ -43,13 +43,6 @@ class RoomKtxFragment : BaseFragment<FragmentMainRoomKtxBinding>() {
         UserViewModelFactory(userRepository)
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ): FragmentMainRoomKtxBinding =
-        FragmentMainRoomKtxBinding.inflate(inflater, container, attachToRoot)
-
     override fun createFragment(
         arg1: String,
         arg2: String

@@ -9,6 +9,9 @@ import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.demo.base.ext.saveAs
+import com.demo.base.ext.saveAsUnChecked
+import java.lang.reflect.ParameterizedType
 
 /**
  * Created by lizhiping on 2023/1/30.
@@ -63,11 +66,16 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         return binding.root
     }
 
-    protected abstract fun getViewBinding(
+    protected fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
         attachToRoot: Boolean = false
-    ): T
+    ): T {
+        val type = javaClass.genericSuperclass
+        val vbClass: Class<T> = type!!.saveAs<ParameterizedType>().actualTypeArguments[0].saveAs()
+        val method = vbClass.getDeclaredMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+        return method.invoke(this, inflater, container, attachToRoot)!!.saveAsUnChecked()
+    }
 
     open fun createFragment(): BaseFragment<T> {
         return createFragment("", "")

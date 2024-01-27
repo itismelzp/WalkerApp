@@ -57,12 +57,6 @@ class GridFragment : BaseFragment<MainFragmentGridBinding>() {
         MyLog.i(TAG, "[onCreate]")
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        attachToRoot: Boolean
-    ) = MainFragmentGridBinding.inflate(inflater, container, attachToRoot)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

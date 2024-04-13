@@ -73,7 +73,12 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     ): T {
         val type = javaClass.genericSuperclass
         val vbClass: Class<T> = type!!.saveAs<ParameterizedType>().actualTypeArguments[0].saveAs()
-        val method = vbClass.getDeclaredMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+        val method = vbClass.getDeclaredMethod(
+            "inflate",
+            LayoutInflater::class.java,
+            ViewGroup::class.java,
+            Boolean::class.java
+        )
         return method.invoke(this, inflater, container, attachToRoot)!!.saveAsUnChecked()
     }
 

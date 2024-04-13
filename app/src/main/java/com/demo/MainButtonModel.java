@@ -25,6 +25,7 @@ import com.demo.customview.zhy.activity.CustomViewActivity;
 import com.demo.face.FaceFragment;
 import com.demo.fragment.CoordinatorLayoutFragment;
 import com.demo.fragment.GridFragment;
+import com.demo.fragment.QrCodeFragment;
 import com.demo.fragment.ViewPagerCollectionFragment;
 import com.demo.ipc.IPCDemoActivity;
 import com.demo.logger.LoggerActivity;
@@ -216,8 +217,14 @@ public class MainButtonModel {
                 .onClickListener(bindFragmentListener(FaceFragment.newInstance()))
                 .build());
         typeMap.put(MainButtonType.TYPE_OTHER, other);
-    }
 
+        other.add(new MainButton.Builder()
+                .name("二维码")
+                .type(MainButtonType.TYPE_OTHER)
+                .onClickListener(bindFragmentListener(QrCodeFragment.newInstance()))
+                .build());
+        typeMap.put(MainButtonType.TYPE_OTHER, other);
+    }
 
     public void initData() {
         initStaticData();

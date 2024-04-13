@@ -1,11 +1,9 @@
 package com.demo
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.demo.databinding.FragmentMainFilterItemBinding
 
 /**
  * Created by lizhiping on 2023/1/17.
@@ -13,21 +11,18 @@ import androidx.recyclerview.widget.RecyclerView
  * description
  */
 class FilterViewHolder(
-    itemView: View,
+    private val binding: FragmentMainFilterItemBinding,
     private val checkedCallback: (type: Int, isChecked: Boolean) -> Unit?
-) : RecyclerView.ViewHolder(itemView) {
-
-    private val checkBox = itemView.findViewById<CheckBox>(R.id.filter_cb)
-    private val filterTitle = itemView.findViewById<TextView>(R.id.filter_title)
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(mainButton: MainButton) {
-        checkBox.isChecked = !mainButton.isHide
-        checkBox.setBackgroundColor(mainButton.color)
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
+        binding.filterCb.isChecked = !mainButton.isHide
+        binding.filterCb.setBackgroundColor(mainButton.color)
+        binding.filterCb.setOnCheckedChangeListener { _, isChecked ->
             mainButton.isHide = !isChecked
             checkedCallback(mainButton.type, isChecked)
         }
-        filterTitle.text = mainButton.typeName
+        binding.filterTitle.text = mainButton.typeName
     }
 
     companion object {
@@ -35,10 +30,12 @@ class FilterViewHolder(
             parent: ViewGroup,
             checkedCallback: (type: Int, isChecked: Boolean) -> Unit?
         ): FilterViewHolder = FilterViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.fragment_main_filter_item, parent, false), checkedCallback
+            FragmentMainFilterItemBinding.inflate(
+                LayoutInflater.from(
+                    parent.context
+                ), parent, false
+            ), checkedCallback
         )
-
     }
 
 }

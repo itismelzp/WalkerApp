@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.application'
-    id 'com.tencent.shadow.plugin'
+//    id 'com.tencent.shadow.plugin'
 }
 
 android {
@@ -46,7 +46,7 @@ dependencies {
 
     //Shadow Transform后业务代码会有一部分实际引用runtime中的类
     //如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
-    compileOnly "com.tencent.shadow.core:runtime:$shadow_version"
+//    compileOnly "com.tencent.shadow.core:runtime:$shadow_version"
 
     implementation "androidx.appcompat:appcompat:${rootProject.appCompatVersion}"
     implementation "com.google.android.material:material:${rootProject.materialVersion}"
@@ -58,43 +58,43 @@ dependencies {
 
 
 
-shadow {
-    packagePlugin {
-        pluginTypes {
-            debug {
-                loaderApkConfig = new Tuple2('my-loader-debug.apk', ':my-loader:assembleDebug')
-                runtimeApkConfig = new Tuple2('my-runtime-debug.apk', ':my-runtime:assembleDebug')
-                pluginApks {
-                    pluginApk1 {
-                        businessName = 'my-plugin'//businessName相同的插件，context获取的Dir是相同的。businessName留空，表示和宿主相同业务，直接使用宿主的Dir。
-                        partKey = 'my-plugin'
-                        buildTask = 'assembleDebug'
-                        apkPath = 'plugin-app/build/outputs/apk/plugin/debug/plugin-app-plugin-debug.apk'
-                        // hostWhiteList = ["com.tencent.shadow.sample.host.lib"] // 配置允许插件访问宿主的类
-                    }
-                }
-            }
-
-            release {
-                loaderApkConfig = new Tuple2('my-loader-release-unsigned.apk', ':my-loader:assembleRelease')
-                runtimeApkConfig = new Tuple2('my-runtime-release-unsigned.apk', ':my-runtime:assembleRelease')
-                pluginApks {
-                    pluginApk1 {
-                        businessName = 'my-plugin'
-                        partKey = 'my-plugin'
-                        buildTask = 'assembleRelease'
-                        apkPath = 'plugin-app/build/outputs/apk/plugin/release/plugin-app-plugin-release-unsigned.apk'
-                        // hostWhiteList = ["com.tencent.shadow.sample.host.lib"] // 配置允许插件访问宿主的类
-                    }
-                }
-            }
-        }
-
-        loaderApkProjectPath = 'my-loader'
-        runtimeApkProjectPath = 'my-runtime'
-
-        version = 4
-        compactVersion = [1, 2, 3]
-        uuidNickName = "1.1.5"
-    }
-}
+//shadow {
+//    packagePlugin {
+//        pluginTypes {
+//            debug {
+//                loaderApkConfig = new Tuple2('my-loader-debug.apk', ':my-loader:assembleDebug')
+//                runtimeApkConfig = new Tuple2('my-runtime-debug.apk', ':my-runtime:assembleDebug')
+//                pluginApks {
+//                    pluginApk1 {
+//                        businessName = 'my-plugin'//businessName相同的插件，context获取的Dir是相同的。businessName留空，表示和宿主相同业务，直接使用宿主的Dir。
+//                        partKey = 'my-plugin'
+//                        buildTask = 'assembleDebug'
+//                        apkPath = 'plugin-app/build/outputs/apk/plugin/debug/plugin-app-plugin-debug.apk'
+//                        // hostWhiteList = ["com.tencent.shadow.sample.host.lib"] // 配置允许插件访问宿主的类
+//                    }
+//                }
+//            }
+//
+//            release {
+//                loaderApkConfig = new Tuple2('my-loader-release-unsigned.apk', ':my-loader:assembleRelease')
+//                runtimeApkConfig = new Tuple2('my-runtime-release-unsigned.apk', ':my-runtime:assembleRelease')
+//                pluginApks {
+//                    pluginApk1 {
+//                        businessName = 'my-plugin'
+//                        partKey = 'my-plugin'
+//                        buildTask = 'assembleRelease'
+//                        apkPath = 'plugin-app/build/outputs/apk/plugin/release/plugin-app-plugin-release-unsigned.apk'
+//                        // hostWhiteList = ["com.tencent.shadow.sample.host.lib"] // 配置允许插件访问宿主的类
+//                    }
+//                }
+//            }
+//        }
+//
+//        loaderApkProjectPath = 'my-loader'
+//        runtimeApkProjectPath = 'my-runtime'
+//
+//        version = 4
+//        compactVersion = [1, 2, 3]
+//        uuidNickName = "1.1.5"
+//    }
+//}

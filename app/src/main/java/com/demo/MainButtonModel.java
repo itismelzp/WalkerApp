@@ -40,8 +40,8 @@ import com.demo.video.VideoMetaFragment;
 import com.demo.widget.activity.ScaleActivity;
 import com.demo.widget.activity.ShapeBgActivity;
 import com.demo.wink.WinkActivity;
-import com.tencent.shadow.dynamic.host.EnterCallback;
-import com.tencent.shadow.dynamic.host.PluginManager;
+//import com.tencent.shadow.dynamic.host.EnterCallback;
+//import com.tencent.shadow.dynamic.host.PluginManager;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -70,38 +70,38 @@ public class MainButtonModel {
     private final List<MainButton> buttons = new ArrayList<>();
     private static final Map<Integer, List<MainButton>> typeMap = new HashMap<>();
 
-    private static final MainButton.OnClickListener pluginClickListener = () -> {
-        PluginManager pluginManager = MyApplication.getPluginManager();
-        Bundle bundle = new Bundle();
-        // 插件 zip，这几个参数也都可以不传，直接在 PluginManager 中硬编码
-        bundle.putString("plugin_path", "/data/local/tmp/plugin-debug.zip");
-        // partKey 每个插件都有自己的 partKey 用来区分多个插件，如何配置在下面讲到
-        bundle.putString("part_key", "my-plugin");
-        // 路径举例：com.google.samples.apps.sunflower.GardenActivity
-        bundle.putString("activity_class_name", "com.example.demo_plugin.MainActivity");
-        // 要传入到插件里的参数
-        bundle.putBundle("extra_to_plugin_bundle", new Bundle());
-
-        if (pluginManager != null) {
-            pluginManager.enter(MyApplication.getInstance(), FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
-                @Override
-                public void onShowLoadingView(View view) {
-                    MyLog.i(TAG, "[onShowLoadingView]");
-                }
-
-                @Override
-                public void onCloseLoadingView() {
-                    MyLog.i(TAG, "[onCloseLoadingView]");
-                }
-
-                @Override
-                public void onEnterComplete() {
-                    // 启动成功
-                    MyLog.i(TAG, "[onEnterComplete]");
-                }
-            });
-        }
-    };
+//    private static final MainButton.OnClickListener pluginClickListener = () -> {
+//        PluginManager pluginManager = MyApplication.getPluginManager();
+//        Bundle bundle = new Bundle();
+//        // 插件 zip，这几个参数也都可以不传，直接在 PluginManager 中硬编码
+//        bundle.putString("plugin_path", "/data/local/tmp/plugin-debug.zip");
+//        // partKey 每个插件都有自己的 partKey 用来区分多个插件，如何配置在下面讲到
+//        bundle.putString("part_key", "my-plugin");
+//        // 路径举例：com.google.samples.apps.sunflower.GardenActivity
+//        bundle.putString("activity_class_name", "com.example.demo_plugin.MainActivity");
+//        // 要传入到插件里的参数
+//        bundle.putBundle("extra_to_plugin_bundle", new Bundle());
+//
+//        if (pluginManager != null) {
+//            pluginManager.enter(MyApplication.getInstance(), FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
+//                @Override
+//                public void onShowLoadingView(View view) {
+//                    MyLog.i(TAG, "[onShowLoadingView]");
+//                }
+//
+//                @Override
+//                public void onCloseLoadingView() {
+//                    MyLog.i(TAG, "[onCloseLoadingView]");
+//                }
+//
+//                @Override
+//                public void onEnterComplete() {
+//                    // 启动成功
+//                    MyLog.i(TAG, "[onEnterComplete]");
+//                }
+//            });
+//        }
+//    };
 
     private class FragmentOnclickListener implements MainButton.OnClickListener {
 

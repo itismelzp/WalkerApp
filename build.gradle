@@ -9,7 +9,10 @@ buildscript {
     repositories {
         mavenLocal()
         google()
+//        maven { url 'https://maven.aliyun.com/repository/public/' }
         mavenCentral()
+        maven { url "https://jitpack.io" }
+        jcenter()
         maven { url uri('repo') }
 //        maven { url 'http://localhost:8081/repository/autotracktransform/' }
         maven { url "https://plugins.gradle.org/m2" }
@@ -38,7 +41,6 @@ allprojects {
     repositories {
         mavenLocal()
         //noinspection JcenterRepositoryObsolete
-        jcenter()
         google()
         mavenCentral()
 

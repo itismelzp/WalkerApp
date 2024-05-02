@@ -38,6 +38,9 @@ public class AnimatorActivity extends AppCompatActivity {
 
         initFloatTitleUI();
         initSwitcherUI();
+
+        BorderGlowView borderGlowView = findViewById(R.id.border_glow_view);
+        borderGlowView.startGlowAnimation();
     }
 
     private void initFloatTitleUI() {
